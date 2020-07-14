@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { StyleSheet, Button, ScrollView, Text, TextInput, View } from 'react-native';
 import { SimpleSurvey } from 'react-native-simple-survey';
-import { COLORS } from '../res/validColors';
+import { COLORS } from '../constants/validColors';
+import * as firebase from 'firebase';
+import 'firebase/firestore';
 
 const GREEN = 'rgba(141,196,63,1)';
 const BLUE = '#7BDAF8';
@@ -112,9 +114,53 @@ export default class QSurvey extends Component {
   onSurveyFinished(answers) {
     const infoQuestionsRemoved = [...answers];
 
-    const postanswers = this.props.route.params?.surveyAnswers ?? defaultPostAnswers;
-    for (const elem of infoQuestionsRemoved) { postanswers[elem.questionId] = elem.value; }
-    this.props.navigation.navigate('CompletedSurvey', { surveyAnswers: postanswers });
+    const answersAsObj = this.props.route.params?.surveyAnswers ?? defaultPostAnswers;
+    const db = this.props.route.params.database;
+    for (const elem of infoQuestionsRemoved) { answersAsObj[elem.questionId] = elem.value; }
+    db.collection("result").add({
+      timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
+      SPWB_1_autonomy : answersAsObj.SPWB_1_autonomy.value,
+      SPWB_2_environmentalMastery : answersAsObj.SPWB_2_environmentalMastery.value,
+      SPWB_3_personalGrowth : answersAsObj.SPWB_3_personalGrowth.value,
+      SPWB_4_positiveRelationsWithOthers : answersAsObj.SPWB_4_positiveRelationsWithOthers.value,
+      SPWB_5_purposeInLife : answersAsObj.SPWB_5_purposeInLife.value,
+      SPWB_6_selfAcceptance : answersAsObj.SPWB_6_selfAcceptance.value,
+      SPWB_7_autonomy : answersAsObj.SPWB_7_autonomy.value,
+      SPWB_8_environmentalMastery : answersAsObj.SPWB_8_environmentalMastery.value,
+      SPWB_9_personalGrowth : answersAsObj.SPWB_9_personalGrowth.value,
+      SPWB_10_positiveRelationsWithOthers : answersAsObj.SPWB_10_positiveRelationsWithOthers.value,
+      SPWB_11_purposeInLife : answersAsObj.SPWB_11_purposeInLife.value,
+      SPWB_12_selfAcceptance : answersAsObj.SPWB_12_selfAcceptance.value,
+      SPWB_13_autonomy : answersAsObj.SPWB_13_autonomy.value,
+      SPWB_14_environmentalMastery : answersAsObj.SPWB_14_environmentalMastery.value,
+      SPWB_15_personalGrowth : answersAsObj.SPWB_15_personalGrowth.value,
+      SPWB_16_positiveRelationsWithOthers : answersAsObj.SPWB_16_positiveRelationsWithOthers.value,
+      SPWB_17_purposeInLife : answersAsObj.SPWB_17_purposeInLife.value,
+      SPWB_18_selfAcceptance : answersAsObj.SPWB_18_selfAcceptance.value,
+      DASS_1_stress : answersAsObj.DASS_1_stress.value,
+      DASS_2_anxiety : answersAsObj.DASS_2_anxiety.value,
+      DASS_3_depression : answersAsObj.DASS_3_depression.value,
+      DASS_4_anxiety : answersAsObj.DASS_4_anxiety.value,
+      DASS_5_depression : answersAsObj.DASS_5_depression.value,
+      DASS_6_stress : answersAsObj.DASS_6_stress.value,
+      DASS_7_anxiety : answersAsObj.DASS_7_anxiety.value,
+      DASS_8_stress : answersAsObj.DASS_8_stress.value,
+      DASS_9_anxiety : answersAsObj.DASS_9_anxiety.value,
+      DASS_10_depression : answersAsObj.DASS_10_depression.value,
+      DASS_11_stress : answersAsObj.DASS_11_stress.value,
+      DASS_12_stress : answersAsObj.DASS_12_stress.value,
+      DASS_13_depression : answersAsObj.DASS_13_depression.value,
+      DASS_14_stress : answersAsObj.DASS_14_stress.value,
+      DASS_15_anxiety : answersAsObj.DASS_15_anxiety.value,
+      DASS_16_depression : answersAsObj.DASS_16_depression.value,
+      DASS_17_depression : answersAsObj.DASS_17_depression.value,
+      DASS_18_stress : answersAsObj.DASS_18_stress.value,
+      DASS_19_anxiety : answersAsObj.DASS_19_anxiety.value,
+      DASS_20_anxiety : answersAsObj.DASS_20_anxiety.value,
+      DASS_21_depression : answersAsObj.DASS_21_depression.value,
+      Q_Specialquestion : answersAsObj.Q_Specialquestion.value
+    })
+    this.props.navigation.navigate('CompletedSurvey', { surveyAnswers: answersAsObj });
   }
 
   onAnswerSubmitted(answer) {

@@ -6,11 +6,17 @@ import { HomeScreen } from './screens/HomeScreen'
 import Survey from './screens/Survey'
 import QSurvey from './screens/QSurvey'
 import CompletedSurvey from './screens/CompletedSurvey'
+import EvaluationResult from './screens/EvaluationResult'
+import * as firebase from 'firebase';
+import 'firebase/firestore';
 
 const Stack = createStackNavigator();
 
-
 export class App extends Component {
+  constructor(props) {
+    super(props);
+  }
+
   render() {
     return (
       <NavigationContainer>
@@ -27,6 +33,7 @@ export class App extends Component {
           <Stack.Screen name="Survey" component={Survey} />
           <Stack.Screen name="QSurvey" component={QSurvey} />
           <Stack.Screen name="CompletedSurvey" component={CompletedSurvey} />
+          <Stack.Screen name="EvaluationResult" component={EvaluationResult} />
         </Stack.Navigator>
       </NavigationContainer>
     )
