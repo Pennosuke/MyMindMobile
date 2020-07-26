@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, Button, ScrollView, Text, TextInput, View, Image } from 'react-native';
-import { SimpleSurvey } from 'react-native-simple-survey';
+import { TreatmentSurvey } from '../components/TreatmentSurvey';
 import { COLORS } from '../constants/validColors';
-import * as firebase from 'firebase';
-import 'firebase/firestore';
-import { ViewBase } from 'react-native';
 
 const GREEN = 'rgba(141,196,63,1)';
 const BLUE = '#7BDAF8';
@@ -38,58 +35,16 @@ export default class Survey extends Component {
   }
 
   onSurveyFinished(answers) {
-    /** 
-     * By using the spread operator, array entries with no values, such as info questions, are removed.
-     * This is also where a final cleanup of values, making them ready to insert into your DB or pass along
-     * to the rest of your code, can be done.
-     * 
-     * Answers are returned in an array, of the form 
-     * [
-     * {questionId: string, value: any},
-     * {questionId: string, value: any},
-     * ...
-     * ]
-     * Questions of type selection group are more flexible, the entirity of the 'options' object is returned
-     * to you.
-     * 
-     * As an example
-     * { 
-     *   questionId: "favoritePet", 
-     *   value: { 
-     *     optionText: "Dogs",
-     *     value: "dog"
-     *   }
-     * }
-     * This flexibility makes SelectionGroup an incredibly powerful component on its own. If needed it is a 
-     * separate NPM package, react-native-selection-group, which has additional features such as multi-selection.
-     */
 
     const infoQuestionsRemoved = [...answers];
 
-    // Convert from an array to a proper object. This won't work if you have duplicate questionIds
     const answersAsObj = {};
     for (const elem of infoQuestionsRemoved) {
-      answersAsObj[elem.questionId] = elem.value.value;
+      answersAsObj[elem.questionId] = elem.value;
     }
-
-    const depression = answersAsObj.DASS_3_depression + answersAsObj.DASS_5_depression + answersAsObj.DASS_10_depression + answersAsObj.DASS_16_depression + answersAsObj.DASS_17_depression + answersAsObj.DASS_21_depression;
-
-    const db = this.props.route.params.database;
-
-    if(depression >= 11) {
-      this.props.navigation.navigate('SurveyQ1', { surveyAnswers: answersAsObj, database : db });
-    } else {
-      answersAsObj['timestamp'] = firebase.firestore.Timestamp.fromDate(new Date());
-      db.collection("result").add(answersAsObj)
-      this.props.navigation.replace('CompletedSurvey', { surveyAnswers: answersAsObj});
-    }
+    this.props.navigation.navigate('CompletedSurvey', { surveyAnswers: answersAsObj});
   }
 
-  /**
-   * After each answer is submitted this function is called. Here you can take additional steps in response to the 
-   * user's answers. From updating a 'correct answers' counter to exiting out of an onboarding flow if the user is 
-   * is restricted (age, geo-fencing) from your app.
-   */
   onAnswerSubmitted(answer) {
     this.setState({ answersSoFar: JSON.stringify(this.surveyRef.getAnswers(), 2) });
     switch (answer.questionId) {
@@ -204,10 +159,15 @@ export default class Survey extends Component {
     />);
   }
 
-  renderInfoText(infoText) {
+  renderInfoText(infoText, hasImage, infoImage) {
     return (
       <View style={{ marginLeft: 10, marginRight: 10 }}>
         <Text style={styles.infoText}>{infoText}</Text>
+        {hasImage ? (
+          <Image source={infoImage} style={styles.charecterSize}/>
+        ) : (
+          <></>
+        )}
       </View>
     );
   }
@@ -215,9 +175,8 @@ export default class Survey extends Component {
   render() {
     const survey = this.props.route.params?.data ?? defaultSurvey;
     return (
-      <View style={[styles.background, { backgroundColor: this.state.backgroundColor }]}>
-        <View style={styles.container}>
-          <SimpleSurvey
+      <View style={styles.background}>
+          <TreatmentSurvey
             ref={(s) => { this.surveyRef = s; }}
             survey={survey}
             renderSelector={this.renderButton.bind(this)}
@@ -234,13 +193,6 @@ export default class Survey extends Component {
             renderNumericInput={this.renderNumericInput}
             renderInfo={this.renderInfoText}
           />
-          
-        </View>
-        
-        {/* <ScrollView style={styles.answersContainer}>
-          <Text style={{textAlign:'center'}}>JSON output</Text>
-          <Text>{this.state.answersSoFar}</Text>
-        </ScrollView> */}
         
       </View>
     );
@@ -249,10 +201,22 @@ export default class Survey extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
+    minWidth: '70%',
+    maxWidth: '90%',
     alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: 10,
+    flex: 1, 
+  },
+  surveyContainer: {
+    width: '85%',
+    /*minHeight: '70%',*/
+    alignSelf: 'center',
+    backgroundColor: 'white',
+    borderRadius: 5,
+    alignContent: 'center',
+    padding: 5,
+    flexGrow: 0,
   },
   answersContainer: {
     width: '90%',
@@ -265,19 +229,6 @@ const styles = StyleSheet.create({
     elevation: 20,
     borderRadius: 10,
   },
-  surveyContainer: {
-    minWidth: '70%',
-    maxWidth: '90%',
-    alignSelf: 'center',
-    backgroundColor: 'white',
-    borderBottomLeftRadius: 5,
-    borderBottomRightRadius: 5,
-    borderTopLeftRadius: 5,
-    borderTopRightRadius: 5,
-    alignContent: 'center',
-    padding: 5,
-    flexGrow: 0,
-  },
   selectionGroupContainer: {
     flexDirection: 'column',
     backgroundColor: 'white',
@@ -285,10 +236,11 @@ const styles = StyleSheet.create({
   },
   background: {
     flex: 1,
-    minHeight: 800,
-    maxHeight: 800,
+    /*minHeight: 800,
+    maxHeight: 800,*/
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: BLUE
   },
   questionText: {
     marginBottom: 20,
@@ -319,5 +271,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     fontSize: 20,
     marginLeft: 10
+  },
+  charecterSize: {
+    width: 60,
+    height: 184
   },
 });

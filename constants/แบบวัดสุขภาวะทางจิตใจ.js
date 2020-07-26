@@ -1,7 +1,8 @@
 export const mentalTest = [
+  /*
   {
     questionType: 'Info',
-    questionText: 'แบบวัดสุขภาวะทางจิตใจ\n\nข้อความต่อไปนี้เป็นข้อความเกี่ยวกับความรู้สึกและความคิดของคุณ\nกรุณาเลือกตัวเลือกที่ตรงกับที่คุณคิดหรือรู้สึกของคุณมากที่สุด'
+    questionText: 'แบบวัดการรับรู้สุขภาวะทางทางจิตใจ\n\nข้อความต่อไปนี้เป็นข้อความเกี่ยวกับความรู้สึกและความคิดของคุณ\nกรุณาเลือกตัวเลือกที่ตรงกับที่คุณคิดหรือรู้สึกของคุณมากที่สุด'
   },
   {
     questionType: 'SelectionGroup',
@@ -581,8 +582,493 @@ export const mentalTest = [
   },
   {
     questionType: 'Info',
-    questionText: 'โปรดอ่านข้อความในแต่ละข้อและเลือกตัวเลือกให้ตรงกับท่านมากที่สุด ในช่วงสัปดาห์ที่ผ่านมา\nทั้งนี้ไม่มีคำตอบที่ถูกหรือผิด ท่านไม่ควรใช้เวลามากนักในแต่ละข้อความ'
+    questionText: 'แบบวัดการมีสติ\nประโยคต่อไปนี้กล่าวถึงประสบการณ์ในชีวิตประจำวันของคุณ\nกรุณา ระบุว่าคุณมีประสบการณ์ดังกล่าวมากหรือน้อยเพียงใด\nโปรดเลือกคำตอบที่แสดงประสบการณ์จริง ๆ ของคุณ\nและไม่เลือกคำตอบที่คุณคิดว่าประสบการณ์ของคุณควรจะเป็นเช่นนั้น'
   },
+  {
+    questionType: 'SelectionGroup',
+    questionText:
+      '1.ฉันมักมีอารมณ์บางอย่างและไม่รู้สึกตัวจนกระทั่งเวลาผ่านไปพอสมควรแล้ว',
+    questionId: 'AWARENESS_1',
+    options: [
+      {
+        optionText: 'เกือบตลอดเวลา',
+        value: 1
+      },
+      {
+        optionText: 'บ่อยมาก',
+        value: 2
+      },
+      {
+        optionText: 'ค่อนข้างบ่อย',
+        value: 3
+      },
+      {
+        optionText: 'ค่อนข้างน้อย',
+        value: 4
+      },
+      {
+        optionText: 'ไม่บ่อยเลย',
+        value: 5
+      },
+      {
+        optionText: 'เกือบไม่เคยเลย',
+        value: 6
+      }
+    ]
+  },
+  {
+    questionType: 'SelectionGroup',
+    questionText:
+      '2.ฉันทำของแตกหักหรือหกหล่นเพราะขาดความระมัดระวัง ไม่ตั้งอกตั้งใจหรือกำลังคิดถึงสิ่งอื่นอยู่',
+    questionId: 'AWARENESS_2',
+    options: [
+      {
+        optionText: 'เกือบตลอดเวลา',
+        value: 1
+      },
+      {
+        optionText: 'บ่อยมาก',
+        value: 2
+      },
+      {
+        optionText: 'ค่อนข้างบ่อย',
+        value: 3
+      },
+      {
+        optionText: 'ค่อนข้างน้อย',
+        value: 4
+      },
+      {
+        optionText: 'ไม่บ่อยเลย',
+        value: 5
+      },
+      {
+        optionText: 'เกือบไม่เคยเลย',
+        value: 6
+      }
+    ]
+  },
+  {
+    questionType: 'SelectionGroup',
+    questionText:
+      '3. ฉันมีความยากลำบากในการทำให้จิตใจอยู่กับปัจจุบัน',
+    questionId: 'AWARENESS_3',
+    options: [
+      {
+        optionText: 'เกือบตลอดเวลา',
+        value: 1
+      },
+      {
+        optionText: 'บ่อยมาก',
+        value: 2
+      },
+      {
+        optionText: 'ค่อนข้างบ่อย',
+        value: 3
+      },
+      {
+        optionText: 'ค่อนข้างน้อย',
+        value: 4
+      },
+      {
+        optionText: 'ไม่บ่อยเลย',
+        value: 5
+      },
+      {
+        optionText: 'เกือบไม่เคยเลย',
+        value: 6
+      }
+    ]
+  },
+  {
+    questionType: 'SelectionGroup',
+    questionText:
+      '4.ฉันมักจะเดินเร็วๆเพื่อรีบไปให้ถึงจุดหมายโดยไม่ใส่ใจในประสบการณ์ที่เกิดขึ้นระหว่างทาง',
+    questionId: 'AWARENESS_4',
+    options: [
+      {
+        optionText: 'เกือบตลอดเวลา',
+        value: 1
+      },
+      {
+        optionText: 'บ่อยมาก',
+        value: 2
+      },
+      {
+        optionText: 'ค่อนข้างบ่อย',
+        value: 3
+      },
+      {
+        optionText: 'ค่อนข้างน้อย',
+        value: 4
+      },
+      {
+        optionText: 'ไม่บ่อยเลย',
+        value: 5
+      },
+      {
+        optionText: 'เกือบไม่เคยเลย',
+        value: 6
+      }
+    ]
+  },
+  {
+    questionType: 'SelectionGroup',
+    questionText:
+      '5.ฉันมักจะไม่สังเกตความตึงเครียดหรืออึดอัดในร่างกายจนกระทั่งมันมีผลต่อร่างกาย',
+    questionId: 'AWARENESS_5',
+    options: [
+      {
+        optionText: 'เกือบตลอดเวลา',
+        value: 1
+      },
+      {
+        optionText: 'บ่อยมาก',
+        value: 2
+      },
+      {
+        optionText: 'ค่อนข้างบ่อย',
+        value: 3
+      },
+      {
+        optionText: 'ค่อนข้างน้อย',
+        value: 4
+      },
+      {
+        optionText: 'ไม่บ่อยเลย',
+        value: 5
+      },
+      {
+        optionText: 'เกือบไม่เคยเลย',
+        value: 6
+      }
+    ]
+  },
+  {
+    questionType: 'SelectionGroup',
+    questionText:
+      '6.ฉันลืมชื่อผู้คนเกือบจะทันทีที่ถูกแนะนำให้รู้จักเป็นครั้งแรก',
+    questionId: 'AWARENESS_6',
+    options: [
+      {
+        optionText: 'เกือบตลอดเวลา',
+        value: 1
+      },
+      {
+        optionText: 'บ่อยมาก',
+        value: 2
+      },
+      {
+        optionText: 'ค่อนข้างบ่อย',
+        value: 3
+      },
+      {
+        optionText: 'ค่อนข้างน้อย',
+        value: 4
+      },
+      {
+        optionText: 'ไม่บ่อยเลย',
+        value: 5
+      },
+      {
+        optionText: 'เกือบไม่เคยเลย',
+        value: 6
+      }
+    ]
+  },
+  {
+    questionType: 'SelectionGroup',
+    questionText:
+      '7.ฉันมักทำสิ่งต่างๆ แบบอัตโนมัติโดยไม่ได้ตระหนักถึงสิ่งที่ทำอยู่มากนัก',
+    questionId: 'AWARENESS_7',
+    options: [
+      {
+        optionText: 'เกือบตลอดเวลา',
+        value: 1
+      },
+      {
+        optionText: 'บ่อยมาก',
+        value: 2
+      },
+      {
+        optionText: 'ค่อนข้างบ่อย',
+        value: 3
+      },
+      {
+        optionText: 'ค่อนข้างน้อย',
+        value: 4
+      },
+      {
+        optionText: 'ไม่บ่อยเลย',
+        value: 5
+      },
+      {
+        optionText: 'เกือบไม่เคยเลย',
+        value: 6
+      }
+    ]
+  },
+  {
+    questionType: 'SelectionGroup',
+    questionText:
+      '8.ฉันทำสิ่งต่างๆอย่างรีบร้อนโดยปราศจากความตั้งใจในสิ่งที่ทำอย่างจริงจัง',
+    questionId: 'AWARENESS_8',
+    options: [
+      {
+        optionText: 'เกือบตลอดเวลา',
+        value: 1
+      },
+      {
+        optionText: 'บ่อยมาก',
+        value: 2
+      },
+      {
+        optionText: 'ค่อนข้างบ่อย',
+        value: 3
+      },
+      {
+        optionText: 'ค่อนข้างน้อย',
+        value: 4
+      },
+      {
+        optionText: 'ไม่บ่อยเลย',
+        value: 5
+      },
+      {
+        optionText: 'เกือบไม่เคยเลย',
+        value: 6
+      }
+    ]
+  },
+  {
+    questionType: 'SelectionGroup',
+    questionText:
+      '9.ฉันมักมุ่งทำงานที่ตั้งใจให้สำเร็จอย่างมากจนทำให้สูญเสียความสัมพันธ์ต่อสิ่งที่ทำอยู่ในปัจจุบัน',
+    questionId: 'AWARENESS_9',
+    options: [
+      {
+        optionText: 'เกือบตลอดเวลา',
+        value: 1
+      },
+      {
+        optionText: 'บ่อยมาก',
+        value: 2
+      },
+      {
+        optionText: 'ค่อนข้างบ่อย',
+        value: 3
+      },
+      {
+        optionText: 'ค่อนข้างน้อย',
+        value: 4
+      },
+      {
+        optionText: 'ไม่บ่อยเลย',
+        value: 5
+      },
+      {
+        optionText: 'เกือบไม่เคยเลย',
+        value: 6
+      }
+    ]
+  },
+  {
+    questionType: 'SelectionGroup',
+    questionText:
+      '10. การทำงานหรือการทำสิ่งต่างๆของฉันเกิดขึ้นโดยอัตโนมัติขาดความตั้งใจในสิ่งที่ทำอยู่',
+    questionId: 'AWARENESS_10',
+    options: [
+      {
+        optionText: 'เกือบตลอดเวลา',
+        value: 1
+      },
+      {
+        optionText: 'บ่อยมาก',
+        value: 2
+      },
+      {
+        optionText: 'ค่อนข้างบ่อย',
+        value: 3
+      },
+      {
+        optionText: 'ค่อนข้างน้อย',
+        value: 4
+      },
+      {
+        optionText: 'ไม่บ่อยเลย',
+        value: 5
+      },
+      {
+        optionText: 'เกือบไม่เคยเลย',
+        value: 6
+      }
+    ]
+  },
+  {
+    questionType: 'SelectionGroup',
+    questionText:
+      '11. ฉันมักจะทำอะไรหลายๆสิ่งในเวลาเดียวกัน',
+    questionId: 'AWARENESS_11',
+    options: [
+      {
+        optionText: 'เกือบตลอดเวลา',
+        value: 1
+      },
+      {
+        optionText: 'บ่อยมาก',
+        value: 2
+      },
+      {
+        optionText: 'ค่อนข้างบ่อย',
+        value: 3
+      },
+      {
+        optionText: 'ค่อนข้างน้อย',
+        value: 4
+      },
+      {
+        optionText: 'ไม่บ่อยเลย',
+        value: 5
+      },
+      {
+        optionText: 'เกือบไม่เคยเลย',
+        value: 6
+      }
+    ]
+  },
+  {
+    questionType: 'SelectionGroup',
+    questionText:
+      '12. ฉันไปในที่ต่างๆโดยไม่รู้ตัวว่าฉันไปถึงที่นั่นได้อย่างไร',
+    questionId: 'AWARENESS_12',
+    options: [
+      {
+        optionText: 'เกือบตลอดเวลา',
+        value: 1
+      },
+      {
+        optionText: 'บ่อยมาก',
+        value: 2
+      },
+      {
+        optionText: 'ค่อนข้างบ่อย',
+        value: 3
+      },
+      {
+        optionText: 'ค่อนข้างน้อย',
+        value: 4
+      },
+      {
+        optionText: 'ไม่บ่อยเลย',
+        value: 5
+      },
+      {
+        optionText: 'เกือบไม่เคยเลย',
+        value: 6
+      }
+    ]
+  },
+  {
+    questionType: 'SelectionGroup',
+    questionText:
+      '13.ฉันพบว่าตัวเองมักหมกมุ่นอยู่กับอดีตหรืออนาคต',
+    questionId: 'AWARENESS_13',
+    options: [
+      {
+        optionText: 'เกือบตลอดเวลา',
+        value: 1
+      },
+      {
+        optionText: 'บ่อยมาก',
+        value: 2
+      },
+      {
+        optionText: 'ค่อนข้างบ่อย',
+        value: 3
+      },
+      {
+        optionText: 'ค่อนข้างน้อย',
+        value: 4
+      },
+      {
+        optionText: 'ไม่บ่อยเลย',
+        value: 5
+      },
+      {
+        optionText: 'เกือบไม่เคยเลย',
+        value: 6
+      }
+    ]
+  },
+  {
+    questionType: 'SelectionGroup',
+    questionText:
+      '14.ฉันพบว่าตัวเองทำสิ่งต่างๆ โดยปราศจากความตั้งใจ',
+    questionId: 'AWARENESS_14',
+    options: [
+      {
+        optionText: 'เกือบตลอดเวลา',
+        value: 1
+      },
+      {
+        optionText: 'บ่อยมาก',
+        value: 2
+      },
+      {
+        optionText: 'ค่อนข้างบ่อย',
+        value: 3
+      },
+      {
+        optionText: 'ค่อนข้างน้อย',
+        value: 4
+      },
+      {
+        optionText: 'ไม่บ่อยเลย',
+        value: 5
+      },
+      {
+        optionText: 'เกือบไม่เคยเลย',
+        value: 6
+      }
+    ]
+  },
+  {
+    questionType: 'SelectionGroup',
+    questionText:
+      '15.ฉันกินของจุบจิบโดยไม่รู้สึกตัวว่ากำลังกินอยู่',
+    questionId: 'AWARENESS_15',
+    options: [
+      {
+        optionText: 'เกือบตลอดเวลา',
+        value: 1
+      },
+      {
+        optionText: 'บ่อยมาก',
+        value: 2
+      },
+      {
+        optionText: 'ค่อนข้างบ่อย',
+        value: 3
+      },
+      {
+        optionText: 'ค่อนข้างน้อย',
+        value: 4
+      },
+      {
+        optionText: 'ไม่บ่อยเลย',
+        value: 5
+      },
+      {
+        optionText: 'เกือบไม่เคยเลย',
+        value: 6
+      }
+    ]
+  },
+  {
+    questionType: 'Info',
+    questionText: 'แบบสอบถามวัดภาวะสุขภาพจิต\nโปรดอ่านข้อความในแต่ละข้อและเลือกตัวเลือกให้ตรงกับท่านมากที่สุด ในช่วงสัปดาห์ที่ผ่านมา\nทั้งนี้ไม่มีคำตอบที่ถูกหรือผิด ท่านไม่ควรใช้เวลามากนักในแต่ละข้อความ'
+  },
+  */
   {
     questionType: 'SelectionGroup',
     questionText:
@@ -1086,9 +1572,5 @@ export const mentalTest = [
         value: 3
       },
     ]
-  },
-  {
-    questionType: 'Info',
-    questionText: 'ตอนนี้นักเรียนได้ทำแบบทดสอบครบทุกข้อแล้ว\nนักเรียนสามารถกดปุ่มเสร็จสิ้นเพื่อดูผลลัพธ์ได้เลย'
-  },
+  }
 ]

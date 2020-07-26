@@ -4,36 +4,97 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { HomeScreen } from './screens/HomeScreen'
 import Survey from './screens/Survey'
-import QSurvey from './screens/QSurvey'
+import SurveyQ1 from './screens/SurveyQ1'
+import SurveyQ2 from './screens/SurveyQ2'
+import SurveyQ3 from './screens/SurveyQ3'
+import SurveyQ4 from './screens/SurveyQ4'
 import CompletedSurvey from './screens/CompletedSurvey'
 import EvaluationResult from './screens/EvaluationResult'
-import * as firebase from 'firebase';
-import 'firebase/firestore';
+import TreatmentScreen from './screens/TreatmentScreen'
+import MockupScreen from './screens/MockupScreen'
+
+import LoadingScreen from './screens/LoadingScreen'
+import LoginScreen from './screens/LoginScreen'
+import SignupScreen from './screens/SignupScreen'
+import Dashboard from './screens/Dashboard'
+
+const AppStack = createStackNavigator();
+class AppStackScreen extends Component {
+  render() {
+    return(
+      <AppStack.Navigator>
+        <AppStack.Screen
+          name="MUMyMind"
+          component={HomeScreen}
+          options={{
+            headerStyle: {backgroundColor: '#3CFB72'},
+            headerTintColor: '#fff',
+            headerTitleStyle: { alignSelf: 'center' }
+          }}
+        />
+        <AppStack.Screen name="Survey" component={Survey} />
+        <AppStack.Screen name="SurveyQ1" component={SurveyQ1} />
+        <AppStack.Screen name="SurveyQ2" component={SurveyQ2} />
+        <AppStack.Screen name="SurveyQ3" component={SurveyQ3} />
+        <AppStack.Screen name="SurveyQ4" component={SurveyQ4} />
+        <AppStack.Screen name="CompletedSurvey" component={CompletedSurvey} />
+        <AppStack.Screen name="EvaluationResult" component={EvaluationResult} />
+        <AppStack.Screen name="TreatmentScreen" component={TreatmentScreen} />
+        <AppStack.Screen name="MockupScreen" component={MockupScreen} />
+      </AppStack.Navigator>
+    )
+  }
+}
 
 const Stack = createStackNavigator();
-
 export class App extends Component {
   constructor(props) {
     super(props);
+    this.state = { isLoading : true , user : false};
   }
 
   render() {
     return (
       <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="MUMyMind"
-            component={HomeScreen}
-            options={{
-              headerStyle: {backgroundColor: '#3CFB72'},
-              headerTintColor: '#fff',
-              headerTitleStyle: { alignSelf: 'center' }
-            }}
+        <Stack.Navigator
+          initialRouteName="Login"
+          screenOptions={{
+            headerTitleAlign: 'center',
+            headerStyle: {
+              backgroundColor: '#3740FE',
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+            },
+          }}
+        >
+          <Stack.Screen 
+            name="Login" 
+            component={LoginScreen} 
+            options={
+              {title: 'Login'},
+              {headerLeft: null} 
+            }
           />
-          <Stack.Screen name="Survey" component={Survey} />
-          <Stack.Screen name="QSurvey" component={QSurvey} />
-          <Stack.Screen name="CompletedSurvey" component={CompletedSurvey} />
-          <Stack.Screen name="EvaluationResult" component={EvaluationResult} />
+          <Stack.Screen 
+            name="Signup" 
+            component={SignupScreen} 
+            options={{ title: 'Signup' }}
+          />       
+          {/* <Stack.Screen 
+            name="Dashboard" 
+            component={Dashboard} 
+            options={
+              {title: 'Dashboard'},
+              {headerLeft: null} 
+            }
+          /> */}
+          <Stack.Screen 
+            name="AppStackScreen" 
+            component={AppStackScreen} 
+            options={{ headerShown: false }}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     )

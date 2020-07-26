@@ -4,94 +4,39 @@ import { SimpleSurvey } from 'react-native-simple-survey';
 import { COLORS } from '../constants/validColors';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
+import { suicidalTestPart2 } from '../constants/แบบประเมินการฆ่าตัวตาย';
 
 const GREEN = 'rgba(141,196,63,1)';
 const BLUE = '#7BDAF8';
 const SELECTED = '#22459E';
 
 const defaultPostAnswers = { 
-  SPWB_1_autonomy : { value : 0 },
-  SPWB_2_environmentalMastery : { value : 0 },
-  SPWB_3_personalGrowth : { value : 0 },
-  SPWB_4_positiveRelationsWithOthers : { value : 0 },
-  SPWB_5_purposeInLife : { value : 0 },
-  SPWB_6_selfAcceptance : { value : 0 },
-  SPWB_7_autonomy : { value : 0 },
-  SPWB_8_environmentalMastery : { value : 0 },
-  SPWB_9_personalGrowth : { value : 0 },
-  SPWB_10_positiveRelationsWithOthers : { value : 0 },
-  SPWB_11_purposeInLife : { value : 0 },
-  SPWB_12_selfAcceptance : { value : 0 },
-  SPWB_13_autonomy : { value : 0 },
-  SPWB_14_environmentalMastery : { value : 0 },
-  SPWB_15_personalGrowth : { value : 0 },
-  SPWB_16_positiveRelationsWithOthers : { value : 0 },
-  SPWB_17_purposeInLife : { value : 0 },
-  SPWB_18_selfAcceptance : { value : 0 },
-  DASS_1_stress : { value : 0 },
-  DASS_2_anxiety : { value : 0 },
-  DASS_3_depression : { value : 0 },
-  DASS_4_anxiety : { value : 0 },
-  DASS_5_depression : { value : 0 },
-  DASS_6_stress : { value : 0 },
-  DASS_7_anxiety : { value : 0 },
-  DASS_8_stress : { value : 0 },
-  DASS_9_anxiety : { value : 0 },
-  DASS_10_depression : { value : 0 },
-  DASS_11_stress : { value : 0 },
-  DASS_12_stress : { value : 0 },
-  DASS_13_depression : { value : 0 },
-  DASS_14_stress : { value : 0 },
-  DASS_15_anxiety : { value : 0 },
-  DASS_16_depression : { value : 0 },
-  DASS_17_depression : { value : 0 },
-  DASS_18_stress : { value : 0 },
-  DASS_19_anxiety : { value : 0 },
-  DASS_20_anxiety : { value : 0 },
-  DASS_21_depression : { value : 0 },
-  Q_Specialquestion : { value : 0 }
+  DASS_1_stress : 0,
+  DASS_2_anxiety : 0,
+  DASS_3_depression : 0,
+  DASS_4_anxiety : 0,
+  DASS_5_depression : 0,
+  DASS_6_stress : 0,
+  DASS_7_anxiety : 0,
+  DASS_8_stress : 0,
+  DASS_9_anxiety : 0,
+  DASS_10_depression : 0,
+  DASS_11_stress : 0,
+  DASS_12_stress : 0,
+  DASS_13_depression : 0,
+  DASS_14_stress : 0,
+  DASS_15_anxiety : 0,
+  DASS_16_depression : 0,
+  DASS_17_depression : 0,
+  DASS_18_stress : 0,
+  DASS_19_anxiety : 0,
+  DASS_20_anxiety : 0,
+  DASS_21_depression : 0,
 };
 
-const survey = [
-  {
-    questionType: 'Info',
-    questionText: 'Oh no! You are too depressed, let\'s do more quiz'
-  },
-  {
-    questionType: 'SelectionGroup',
-    questionText:
-      'Are you really want to kill yourself? ;_;',
-    questionId: 'Q_Specialquestion',
-    options: [
-      {
-        optionText: 'ไม่เห็นด้วยอย่างยิ่ง',
-        value: 6
-      },
-      {
-        optionText: 'ไม่เห็นด้วยมาก',
-        value: 5
-      },
-      {
-        optionText: 'ไม่เห็นด้วยบางครั้ง',
-        value: 4
-      },
-      {
-        optionText: 'เห็นด้วยบางครั้ง',
-        value: 3
-      },
-      {
-        optionText: 'เห็นด้วยมาก',
-        value: 2
-      },
-      {
-        optionText: 'เห็นด้วยอย่างยิ่ง',
-        value: 1
-      }
-    ]
-  },
-]
+const survey = suicidalTestPart2
 
-export default class QSurvey extends Component {
+export default class SurveyQ1 extends Component {
   static navigationOptions = () => {
     return {
       headerStyle: {
@@ -116,51 +61,13 @@ export default class QSurvey extends Component {
 
     const answersAsObj = this.props.route.params?.surveyAnswers ?? defaultPostAnswers;
     const db = this.props.route.params.database;
-    for (const elem of infoQuestionsRemoved) { answersAsObj[elem.questionId] = elem.value; }
-    db.collection("result").add({
-      timestamp: firebase.firestore.Timestamp.fromDate(new Date()),
-      SPWB_1_autonomy : answersAsObj.SPWB_1_autonomy.value,
-      SPWB_2_environmentalMastery : answersAsObj.SPWB_2_environmentalMastery.value,
-      SPWB_3_personalGrowth : answersAsObj.SPWB_3_personalGrowth.value,
-      SPWB_4_positiveRelationsWithOthers : answersAsObj.SPWB_4_positiveRelationsWithOthers.value,
-      SPWB_5_purposeInLife : answersAsObj.SPWB_5_purposeInLife.value,
-      SPWB_6_selfAcceptance : answersAsObj.SPWB_6_selfAcceptance.value,
-      SPWB_7_autonomy : answersAsObj.SPWB_7_autonomy.value,
-      SPWB_8_environmentalMastery : answersAsObj.SPWB_8_environmentalMastery.value,
-      SPWB_9_personalGrowth : answersAsObj.SPWB_9_personalGrowth.value,
-      SPWB_10_positiveRelationsWithOthers : answersAsObj.SPWB_10_positiveRelationsWithOthers.value,
-      SPWB_11_purposeInLife : answersAsObj.SPWB_11_purposeInLife.value,
-      SPWB_12_selfAcceptance : answersAsObj.SPWB_12_selfAcceptance.value,
-      SPWB_13_autonomy : answersAsObj.SPWB_13_autonomy.value,
-      SPWB_14_environmentalMastery : answersAsObj.SPWB_14_environmentalMastery.value,
-      SPWB_15_personalGrowth : answersAsObj.SPWB_15_personalGrowth.value,
-      SPWB_16_positiveRelationsWithOthers : answersAsObj.SPWB_16_positiveRelationsWithOthers.value,
-      SPWB_17_purposeInLife : answersAsObj.SPWB_17_purposeInLife.value,
-      SPWB_18_selfAcceptance : answersAsObj.SPWB_18_selfAcceptance.value,
-      DASS_1_stress : answersAsObj.DASS_1_stress.value,
-      DASS_2_anxiety : answersAsObj.DASS_2_anxiety.value,
-      DASS_3_depression : answersAsObj.DASS_3_depression.value,
-      DASS_4_anxiety : answersAsObj.DASS_4_anxiety.value,
-      DASS_5_depression : answersAsObj.DASS_5_depression.value,
-      DASS_6_stress : answersAsObj.DASS_6_stress.value,
-      DASS_7_anxiety : answersAsObj.DASS_7_anxiety.value,
-      DASS_8_stress : answersAsObj.DASS_8_stress.value,
-      DASS_9_anxiety : answersAsObj.DASS_9_anxiety.value,
-      DASS_10_depression : answersAsObj.DASS_10_depression.value,
-      DASS_11_stress : answersAsObj.DASS_11_stress.value,
-      DASS_12_stress : answersAsObj.DASS_12_stress.value,
-      DASS_13_depression : answersAsObj.DASS_13_depression.value,
-      DASS_14_stress : answersAsObj.DASS_14_stress.value,
-      DASS_15_anxiety : answersAsObj.DASS_15_anxiety.value,
-      DASS_16_depression : answersAsObj.DASS_16_depression.value,
-      DASS_17_depression : answersAsObj.DASS_17_depression.value,
-      DASS_18_stress : answersAsObj.DASS_18_stress.value,
-      DASS_19_anxiety : answersAsObj.DASS_19_anxiety.value,
-      DASS_20_anxiety : answersAsObj.DASS_20_anxiety.value,
-      DASS_21_depression : answersAsObj.DASS_21_depression.value,
-      Q_Specialquestion : answersAsObj.Q_Specialquestion.value
-    })
-    this.props.navigation.navigate('CompletedSurvey', { surveyAnswers: answersAsObj });
+    for (const elem of infoQuestionsRemoved) { answersAsObj[elem.questionId] = elem.value.value; }
+
+    if(answersAsObj.Q_3 > 0) {
+      this.props.navigation.navigate('SurveyQ3', { surveyAnswers: answersAsObj, database : db });
+    } else {
+      this.props.navigation.navigate('SurveyQ4', { surveyAnswers: answersAsObj, database : db });
+    }
   }
 
   onAnswerSubmitted(answer) {

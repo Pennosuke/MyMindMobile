@@ -1,23 +1,42 @@
 import React, { Component } from 'react';
-import { StyleSheet, Button, ScrollView, Text, TextInput, View, Image } from 'react-native';
+import { StyleSheet, Button, ScrollView, Text, TextInput, View } from 'react-native';
 import { SimpleSurvey } from 'react-native-simple-survey';
 import { COLORS } from '../constants/validColors';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
-import { ViewBase } from 'react-native';
+import { suicidalTestPart4 } from '../constants/แบบประเมินการฆ่าตัวตาย';
 
 const GREEN = 'rgba(141,196,63,1)';
 const BLUE = '#7BDAF8';
 const SELECTED = '#22459E';
 
-const defaultSurvey = [
-  {
-    questionType: 'Info',
-    questionText: 'This is a defaultSurvey'
-  }
-]
+const defaultPostAnswers = { 
+  DASS_1_stress : 0,
+  DASS_2_anxiety : 0,
+  DASS_3_depression : 0,
+  DASS_4_anxiety : 0,
+  DASS_5_depression : 0,
+  DASS_6_stress : 0,
+  DASS_7_anxiety : 0,
+  DASS_8_stress : 0,
+  DASS_9_anxiety : 0,
+  DASS_10_depression : 0,
+  DASS_11_stress : 0,
+  DASS_12_stress : 0,
+  DASS_13_depression : 0,
+  DASS_14_stress : 0,
+  DASS_15_anxiety : 0,
+  DASS_16_depression : 0,
+  DASS_17_depression : 0,
+  DASS_18_stress : 0,
+  DASS_19_anxiety : 0,
+  DASS_20_anxiety : 0,
+  DASS_21_depression : 0,
+};
 
-export default class Survey extends Component {
+const survey = suicidalTestPart4
+
+export default class SurveyQ1 extends Component {
   static navigationOptions = () => {
     return {
       headerStyle: {
@@ -38,58 +57,17 @@ export default class Survey extends Component {
   }
 
   onSurveyFinished(answers) {
-    /** 
-     * By using the spread operator, array entries with no values, such as info questions, are removed.
-     * This is also where a final cleanup of values, making them ready to insert into your DB or pass along
-     * to the rest of your code, can be done.
-     * 
-     * Answers are returned in an array, of the form 
-     * [
-     * {questionId: string, value: any},
-     * {questionId: string, value: any},
-     * ...
-     * ]
-     * Questions of type selection group are more flexible, the entirity of the 'options' object is returned
-     * to you.
-     * 
-     * As an example
-     * { 
-     *   questionId: "favoritePet", 
-     *   value: { 
-     *     optionText: "Dogs",
-     *     value: "dog"
-     *   }
-     * }
-     * This flexibility makes SelectionGroup an incredibly powerful component on its own. If needed it is a 
-     * separate NPM package, react-native-selection-group, which has additional features such as multi-selection.
-     */
-
     const infoQuestionsRemoved = [...answers];
 
-    // Convert from an array to a proper object. This won't work if you have duplicate questionIds
-    const answersAsObj = {};
-    for (const elem of infoQuestionsRemoved) {
-      answersAsObj[elem.questionId] = elem.value.value;
-    }
-
-    const depression = answersAsObj.DASS_3_depression + answersAsObj.DASS_5_depression + answersAsObj.DASS_10_depression + answersAsObj.DASS_16_depression + answersAsObj.DASS_17_depression + answersAsObj.DASS_21_depression;
-
+    const answersAsObj = this.props.route.params?.surveyAnswers ?? defaultPostAnswers;
     const db = this.props.route.params.database;
+    for (const elem of infoQuestionsRemoved) { answersAsObj[elem.questionId] = elem.value.value; }
 
-    if(depression >= 11) {
-      this.props.navigation.navigate('SurveyQ1', { surveyAnswers: answersAsObj, database : db });
-    } else {
-      answersAsObj['timestamp'] = firebase.firestore.Timestamp.fromDate(new Date());
-      db.collection("result").add(answersAsObj)
-      this.props.navigation.replace('CompletedSurvey', { surveyAnswers: answersAsObj});
-    }
+    answersAsObj['timestamp'] = firebase.firestore.Timestamp.fromDate(new Date());
+    db.collection("result").add(answersAsObj)
+    this.props.navigation.navigate('CompletedSurvey', { surveyAnswers: answersAsObj});
   }
 
-  /**
-   * After each answer is submitted this function is called. Here you can take additional steps in response to the 
-   * user's answers. From updating a 'correct answers' counter to exiting out of an onboarding flow if the user is 
-   * is restricted (age, geo-fencing) from your app.
-   */
   onAnswerSubmitted(answer) {
     this.setState({ answersSoFar: JSON.stringify(this.surveyRef.getAnswers(), 2) });
     switch (answer.questionId) {
@@ -213,7 +191,6 @@ export default class Survey extends Component {
   }
 
   render() {
-    const survey = this.props.route.params?.data ?? defaultSurvey;
     return (
       <View style={[styles.background, { backgroundColor: this.state.backgroundColor }]}>
         <View style={styles.container}>
@@ -237,10 +214,10 @@ export default class Survey extends Component {
           
         </View>
         
-        {/* <ScrollView style={styles.answersContainer}>
+        <ScrollView style={styles.answersContainer}>
           <Text style={{textAlign:'center'}}>JSON output</Text>
           <Text>{this.state.answersSoFar}</Text>
-        </ScrollView> */}
+        </ScrollView>
         
       </View>
     );
@@ -249,10 +226,12 @@ export default class Survey extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    minWidth: '70%',
+    maxWidth: '90%',
+    alignItems: 'stretch',
     justifyContent: 'center',
-    alignItems: 'center',
     borderRadius: 10,
+    flex: 1, 
   },
   answersContainer: {
     width: '90%',
@@ -266,8 +245,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   surveyContainer: {
-    minWidth: '70%',
-    maxWidth: '90%',
+    width: 'auto',
     alignSelf: 'center',
     backgroundColor: 'white',
     borderBottomLeftRadius: 5,

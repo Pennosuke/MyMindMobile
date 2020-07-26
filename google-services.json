@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "219883441033",
+    "firebase_url": "https://mymindmobile-d9d9b.firebaseio.com",
+    "project_id": "mymindmobile-d9d9b",
+    "storage_bucket": "mymindmobile-d9d9b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:219883441033:android:1640c42e71f9630967ef58",
+        "android_client_info": {
+          "package_name": "com.ku.MUMyMindMobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "219883441033-b6dl7bnhseohm65i9frgsf6sf1h9mnkm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ku.MUMyMindMobile",
+            "certificate_hash": "bf369bf537cb8b1d789082c5ede3ccbcf496b0a1"
+          }
+        },
+        {
+          "client_id": "219883441033-geeop0cc1a4jp3iejro23gu7r9ibn3c6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-hQd3v5p-U9LLQpG2Kx123vADJ6Pp-O0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "219883441033-geeop0cc1a4jp3iejro23gu7r9ibn3c6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

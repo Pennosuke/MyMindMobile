@@ -1,17 +1,14 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Button, Alert, TouchableWithoutFeedback, TouchableHighlight } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import * as firebase from 'firebase';
-import 'firebase/firestore';
 import { mentalTest } from '../constants/แบบวัดสุขภาวะทางจิตใจ';
-import { firebaseConfig } from '../constants/ApiKey';
+import firebase from '../constants/firebase';
+import 'firebase/firestore';
 
 export function tabA() {
-
-  firebase.initializeApp(firebaseConfig);
+  
   const db = firebase.firestore();
   const navigation = useNavigation();
-
   const getFirestoreData = () => {
     const fbData = [];
     db.collection("result").get().then((snapshot => {
@@ -22,6 +19,7 @@ export function tabA() {
     }));
     navigation.navigate('EvaluationResult', { data : fbData })
   }
+  
 
   return (
     <View style={

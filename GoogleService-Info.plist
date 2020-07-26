@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>219883441033-0dln4gm436qvccinoug91jm1br9g24e3.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.219883441033-0dln4gm436qvccinoug91jm1br9g24e3</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>219883441033-b6dl7bnhseohm65i9frgsf6sf1h9mnkm.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDuJ7KiAj_bfLKleEsArpwBDP8qxIwvEwM</string>
+	<key>GCM_SENDER_ID</key>
+	<string>219883441033</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.ku.MUMyMindMobile</string>
+	<key>PROJECT_ID</key>
+	<string>mymindmobile-d9d9b</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mymindmobile-d9d9b.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:219883441033:ios:3a8b1d00280a0d0267ef58</string>
+	<key>DATABASE_URL</key>
+	<string>https://mymindmobile-d9d9b.firebaseio.com</string>
+</dict>
+</plist>
