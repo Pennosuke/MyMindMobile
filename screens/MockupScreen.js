@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Button, ScrollView, Text, TextInput, View, Image } from 'react-native';
+import { StyleSheet, Button, ScrollView, Text, TextInput, View, Image, TouchableOpacity } from 'react-native';
 
 const GREEN = 'rgba(141,196,63,1)';
 const BLUE = '#7BDAF8';
@@ -7,7 +7,7 @@ const SELECTED = '#22459E';
 
 const defaultSurvey = [
   {
-    contentID: '1',
+    contentId: '1',
     contentType: 'Info',
     contentText: 'This is default content',
     hasImage: false,
@@ -86,10 +86,89 @@ export default class MockupScreen extends Component {
     }
   }
 
-  updateInputVal = (val, prop, currentAnswerIndex) => {
+  handleSelection(emotionName, currentAnswerIndex, maxEmotions) {
     const state = this.state;
-    const questionID = state.answers[currentAnswerIndex].value.findIndex(question => question.questionText === prop);
-    state.answers[currentAnswerIndex].value[questionID].value = val;
+    const emotionIndex = state.answers[currentAnswerIndex].value.findIndex(elem => elem.emotion === emotionName);
+    if(emotionIndex !== -1) {
+      state.answers[currentAnswerIndex].value.splice(emotionIndex, 1);
+      this.setState(state);
+    }
+    else if(state.answers[currentAnswerIndex].value.length < maxEmotions) {
+      state.answers[currentAnswerIndex].value.push({
+        emotion: emotionName,
+        value: ''
+      });
+      this.setState(state);
+    }
+    console.log('state', state);
+  }
+
+  isThisEmotionSelected(emotionName, currentAnswerIndex) {
+    const state = this.state;
+    return !!(state.answers[currentAnswerIndex].value.find(elem => elem.emotion === emotionName) !== undefined)
+  }
+
+  renderEmotionButtons(survey,stepIndex) {
+    const state = this.state;
+    const { currentStep } = this.state;
+    const { contentText, emotions, minEmotions, maxEmotions } = survey[stepIndex]
+    const currentContentId = survey[stepIndex].contentId;
+    if (state.answers.find(ans => ans.contentId === currentContentId) === undefined) {
+      const defaultValue = [];
+      state.answers.push({
+        contentId : currentContentId,
+        value: defaultValue
+      });
+      console.log('state', state);
+      this.setState(state);
+    }
+    const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
+    return (
+      <View style={styles.surveyContainer}>
+        <View style={{ marginLeft: 10, marginRight: 10 }}>
+          <Text style={styles.infoText}>{contentText}</Text>
+          <View style={{flex: 4, flexDirection: 'row', flexWrap: "wrap", justifyContent: 'space-between', alignItems: 'center', alignSelf: "center", maxWidth: 335}}>
+            {emotions.map(( emotion, index ) =>
+              <View key={index}>
+                <TouchableOpacity style={{alignItems: 'center', justifyContent: 'center'}} onPress={(e) => this.handleSelection(emotion.name, currentAnswerIndex, maxEmotions)}>
+                  <View style={this.isThisEmotionSelected(emotion.name,currentAnswerIndex) ? styles.selectedButton : styles.emotionButton}>
+                    <Image source={emotion.imageUri} style={styles.coverImage}/>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
+        </View>
+        <View style={styles.navButtonContainerStyle}>
+          {
+            this.renderPrevButton(
+              () => {
+                this.setState({ currentStep: currentStep - 1});
+              },
+              !!(currentStep !== 0)
+            )
+          }
+          {
+            this.renderNextOrFinishButton(
+              survey,
+              () => {
+                this.setState({ currentStep: currentStep + 1});
+              },
+              () => {
+                this.onSurveyFinished();
+              },
+              !!(state.answers[currentAnswerIndex].value.length >= minEmotions)
+            )
+          }
+        </View>
+      </View>
+    )
+  }
+
+  updateInputVal(val, prop, currentAnswerIndex) {
+    const state = this.state;
+    const questionId = state.answers[currentAnswerIndex].value.findIndex(question => question.questionText === prop);
+    state.answers[currentAnswerIndex].value[questionId].value = val;
     this.setState(state);
     console.log(state);
   }
@@ -98,9 +177,8 @@ export default class MockupScreen extends Component {
     const state = this.state;
     const { currentStep } = this.state;
     const { contentText, questions } = survey[stepIndex]
-    const currentContentId = survey[stepIndex].contentID;
-    console.log('survey[stepIndex]', survey[stepIndex])
-    if (state.answers.find(ans => ans.contentID === currentContentId) === undefined) {
+    const currentContentId = survey[stepIndex].contentId;
+    if (state.answers.find(ans => ans.contentId === currentContentId) === undefined) {
       const defaultValue = [];
       for (const question of questions) {
         defaultValue.push(
@@ -111,14 +189,14 @@ export default class MockupScreen extends Component {
         );
       }
       state.answers.push({
-        contentID : currentContentId,
+        contentId : currentContentId,
         value: defaultValue
       });
       console.log('state', state);
       this.setState(state);
     }
     console.log('this.state', this.state);
-    const currentAnswerIndex = state.answers.findIndex(ans => ans.contentID === currentContentId);
+    const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
     return (
       <View style={styles.surveyContainer}>
         <View style={{ marginLeft: 10, marginRight: 10 }}>
@@ -210,8 +288,9 @@ export default class MockupScreen extends Component {
       return this.renderInfo(survey,stepIndex);
     } else if (contentType === 'TextInput') {
       return this.renderTextInput(survey,stepIndex);
-    }
-    else {
+    } else if (contentType === 'EmotionButtons') {
+      return this.renderEmotionButtons(survey,stepIndex);
+    } else {
       return <Text>Unknown stepIndex</Text>;
     }
   }
@@ -314,4 +393,23 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     borderWidth: 1
   },
+  emotionButton: {
+    backgroundColor: 'transparent',
+    width: 100,
+    height: 100,
+    margin: 5,
+    borderRadius: 10
+  },
+  selectedButton: {
+    backgroundColor: '#A4D6D5',
+    width: 100,
+    height: 100,
+    margin: 5,
+    borderRadius: 10
+  },
+  coverImage: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "center"
+  }
 });
