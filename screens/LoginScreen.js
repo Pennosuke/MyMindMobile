@@ -8,20 +8,8 @@ export default class LoginScreen extends Component {
     this.state = { 
       email: '', 
       password: '',
-      isLoading: true,
-      isLogin: false
+      isLoading: false,
     }
-  }
-
-  componentDidMount() {
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        this.props.navigation.replace('AppStackScreen', { screen: 'MUMyMind'});
-      }
-      else {
-        this.setState({isLoading: false});
-      }
-    });
   }
 
   updateInputVal = (val, prop) => {
@@ -45,7 +33,6 @@ export default class LoginScreen extends Component {
           isLoading: false,
           email: '', 
           password: '',
-          isLogin: true
         })
         this.props.navigation.replace('AppStackScreen', { screen: 'MUMyMind'})
       })

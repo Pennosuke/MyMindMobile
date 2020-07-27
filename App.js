@@ -16,7 +16,9 @@ import MockupScreen from './screens/MockupScreen'
 import LoadingScreen from './screens/LoadingScreen'
 import LoginScreen from './screens/LoginScreen'
 import SignupScreen from './screens/SignupScreen'
-import Dashboard from './screens/Dashboard'
+import InitScreen from './screens/InitScreen'
+
+import * as Font from 'expo-font';
 
 const AppStack = createStackNavigator();
 class AppStackScreen extends Component {
@@ -48,56 +50,68 @@ class AppStackScreen extends Component {
 
 const Stack = createStackNavigator();
 export class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { isLoading : true , user : false};
+  state = {
+    fontsLoaded: false,
+  };
+
+  async componentDidMount() {
+    await Font.loadAsync({
+      'Kanit-Bold': require('./assets/fonts/Kanit-Bold.ttf'),
+      'Kanit-ExtraLight': require('./assets/fonts/Kanit-ExtraLight.ttf'),
+      'Kanit-Light': require('./assets/fonts/Kanit-Light.ttf'),
+      'Kanit-Medium': require('./assets/fonts/Kanit-Medium.ttf'),
+      'Kanit-Regular': require('./assets/fonts/Kanit-Regular.ttf')
+    });
+    this.setState({ fontsLoaded: true });
   }
 
   render() {
-    return (
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName="Login"
-          screenOptions={{
-            headerTitleAlign: 'center',
-            headerStyle: {
-              backgroundColor: '#3740FE',
-            },
-            headerTintColor: '#fff',
-            headerTitleStyle: {
-              fontWeight: 'bold',
-            },
-          }}
-        >
-          <Stack.Screen 
-            name="Login" 
-            component={LoginScreen} 
-            options={
-              {title: 'Login'},
-              {headerLeft: null} 
-            }
-          />
-          <Stack.Screen 
-            name="Signup" 
-            component={SignupScreen} 
-            options={{ title: 'Signup' }}
-          />       
-          {/* <Stack.Screen 
-            name="Dashboard" 
-            component={Dashboard} 
-            options={
-              {title: 'Dashboard'},
-              {headerLeft: null} 
-            }
-          /> */}
-          <Stack.Screen 
-            name="AppStackScreen" 
-            component={AppStackScreen} 
-            options={{ headerShown: false }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    )
+    const { fontsLoaded } = this.state;
+    if( fontsLoaded ) {
+      return (
+        <NavigationContainer>
+          <Stack.Navigator
+            initialRouteName="Init"
+            screenOptions={{
+              headerTitleAlign: 'center',
+              headerStyle: {
+                backgroundColor: '#3740FE',
+              },
+              headerTintColor: '#fff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+            }}
+          >
+            <Stack.Screen 
+              name="Init" 
+              component={InitScreen} 
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen 
+              name="Login" 
+              component={LoginScreen} 
+              options={
+                {title: 'Login'},
+                {headerLeft: null} 
+              }
+            />
+            <Stack.Screen 
+              name="Signup" 
+              component={SignupScreen} 
+              options={{ title: 'Signup' }}
+            />       
+            <Stack.Screen 
+              name="AppStackScreen" 
+              component={AppStackScreen} 
+              options={{ headerShown: false }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      )
+    } else {
+      return ( <LoadingScreen /> );
+    }
   }
 }
 

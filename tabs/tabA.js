@@ -55,7 +55,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 8,
     paddingLeft: 10,
-    paddingRight: 10
+    paddingRight: 10,
+    fontFamily: 'Kanit-Medium',
+    fontSize: 20
   },
   topLeftButton: {
     alignItems: 'center',

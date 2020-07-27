@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { StyleSheet, Button, ScrollView, Text, TextInput, View, Image, TouchableOpacity, Picker } from 'react-native';
+import { StyleSheet, Button, ScrollView, Text, TextInput, View, Image, TouchableOpacity, Picker, Dimensions } from 'react-native';
 import { emotions } from '../constants/MockupData';
 
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const GREEN = 'rgba(141,196,63,1)';
 const BLUE = '#7BDAF8';
@@ -89,6 +91,9 @@ export default class MockupScreen extends Component {
   }
 
   updateInputVal(val, targetId, currentAnswerIndex) {
+    console.log('val', val);
+    console.log('targetId', targetId);
+    console.log('currentAnswerIndex', currentAnswerIndex);
     const state = this.state;
     state.answers[currentAnswerIndex].value[targetId].value = val;
     this.setState(state);
@@ -130,12 +135,31 @@ export default class MockupScreen extends Component {
     return ratings
   }
 
-  renderEmotionRating(survey,stepIndex) {
+  sortingQuestionChoices(choices) {
+    const allChoices = [];
+    let choiceIndex = 0;
+    for(const elem of choices) {
+      allChoices.push(
+        <Picker.Item label={elem} value={elem} key={choiceIndex}/>
+      )
+      choiceIndex++;
+    }
+    return allChoices
+  }
+
+  renderSortingQuestion(survey,stepIndex) {
     const state = this.state;
     const { currentStep } = this.state;
-    const { contentText, answerIdRef } = survey[stepIndex]
-    if (state.answers.find(ans => ans.contentId === answerIdRef) === undefined) {
+    const { contentText, choices } = survey[stepIndex]
+    const currentContentId = survey[stepIndex].contentId;
+    if (state.answers.find(ans => ans.contentId === currentContentId) === undefined) {
       const defaultValue = [];
+      for (let i = 1; i <= choices.length; i++) {
+        defaultValue.push({
+          order: String(i),
+          value: choices[0]
+        })
+      }
       state.answers.push({
         contentId : currentContentId,
         value: defaultValue
@@ -143,37 +167,25 @@ export default class MockupScreen extends Component {
       console.log('state', state);
       this.setState(state);
     }
-    const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === answerIdRef);
-    const emotionsImages = {};
-    for(const elem of emotions) {
-      emotionsImages[elem.name] = elem.imageUri;
-    }
+    const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
     return (
       <View style={styles.surveyContainer}>
         <View style={{ marginLeft: 10, marginRight: 10 }}>
           <Text style={styles.infoText}>{contentText}</Text>
           {
-            this.state.answers[currentAnswerIndex].value.map(( ansEmotion, index ) =>
-              <View style={{flex: 1, flexDirection: 'row', paddingTop: 20}} key={index}>
-                <View style={{flex: 1, alignItems: 'center'}}>
-                  <View style={styles.emotionButton}>
-                    <Image source={emotionsImages[ansEmotion.emotion]} style={styles.coverImage}/>
-                  </View>
-                </View>
-                <View style={{flex: 1, alignItems: 'center'}}>
-                  <Text style={{textAlign: 'center', padding: 20}}>เลือกระดับความรู้สึก(1-10)</Text>
-                  <Picker
-                    style = {{ height: 40, width: 100, paddingHorizontal: 10 }}
-                    selectedValue={this.state.answers[currentAnswerIndex].value[index].value}
-                    onValueChange={(val, index) => this.updateInputVal(
-                      val,
-                      state.answers[currentAnswerIndex].value.findIndex(elem => elem.emotion === ansEmotion.emotion),
-                      currentAnswerIndex
-                    )}
-                  >
-                    {this.emotionRatingChoices()}
-                  </Picker>
-                </View>
+            this.state.answers[currentAnswerIndex].value.map(( question, index ) =>
+              <View key={index}>
+                <Picker
+                  style={styles.dropDownStyle}
+                  selectedValue={this.state.answers[currentAnswerIndex].value[index].value}
+                  onValueChange={(val) => this.updateInputVal(
+                    val,
+                    index,
+                    currentAnswerIndex
+                  )}
+                >
+                  {this.sortingQuestionChoices(choices)}
+                </Picker>
               </View>
             )
           }
@@ -202,6 +214,82 @@ export default class MockupScreen extends Component {
         </View>
       </View>
     )
+  }
+
+  renderEmotionRating(survey,stepIndex) {
+    const state = this.state;
+    const { currentStep } = this.state;
+    const { contentText, answerIdRef } = survey[stepIndex]
+    if (state.answers.find(ans => ans.contentId === answerIdRef) === undefined) {
+      const defaultValue = [];
+      state.answers.push({
+        contentId : currentContentId,
+        value: defaultValue
+      });
+      console.log('state', state);
+      this.setState(state);
+    }
+    const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === answerIdRef);
+    const emotionsImages = {};
+    for(const elem of emotions) {
+      emotionsImages[elem.name] = elem.imageUri;
+    }
+    return (
+      <ScrollView>
+        <View style={styles.surveyContainer}>
+          <View style={{ marginLeft: 10, marginRight: 10 }}>
+            <Text style={styles.infoText}>{contentText}</Text>
+            {
+              this.state.answers[currentAnswerIndex].value.map(( ansEmotion, index ) =>
+                <View style={{flex: 1, flexDirection: 'row', paddingTop: 20}} key={index}>
+                  <View style={{flex: 1, alignItems: 'center'}}>
+                    <View style={styles.emotionButton}>
+                      <Image source={emotionsImages[ansEmotion.emotion]} style={styles.coverImage}/>
+                    </View>
+                  </View>
+                  <View style={{flex: 1, alignItems: 'center'}}>
+                    <Text style={{textAlign: 'center', padding: 20}}>เลือกระดับความรู้สึก(1-10)</Text>
+                    <Picker
+                      style = {{ height: 40, width: 100, paddingHorizontal: 10 }}
+                      selectedValue={this.state.answers[currentAnswerIndex].value[index].value}
+                      onValueChange={(val, index) => this.updateInputVal(
+                        val,
+                        state.answers[currentAnswerIndex].value.findIndex(elem => elem.emotion === ansEmotion.emotion),
+                        currentAnswerIndex
+                      )}
+                    >
+                      {this.emotionRatingChoices()}
+                    </Picker>
+                  </View>
+                </View>
+              )
+            }
+          </View>
+          <View style={styles.navButtonContainerStyle}>
+            {
+              this.renderPrevButton(
+                () => {
+                  this.setState({ currentStep: currentStep - 1});
+                },
+                !!(currentStep !== 0)
+              )
+            }
+            {
+              this.renderNextOrFinishButton(
+                survey,
+                () => {
+                  this.setState({ currentStep: currentStep + 1});
+                },
+                () => {
+                  this.onSurveyFinished();
+                },
+                true
+              )
+            }
+          </View>
+        </View>
+      </ScrollView>
+    )
     
   }
 
@@ -221,44 +309,46 @@ export default class MockupScreen extends Component {
     }
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
     return (
-      <View style={styles.surveyContainer}>
-        <View style={{ marginLeft: 10, marginRight: 10 }}>
-          <Text style={styles.infoText}>{contentText}</Text>
-          <View style={{flex: 4, flexDirection: 'row', flexWrap: "wrap", justifyContent: 'space-between', alignItems: 'center', alignSelf: "center", maxWidth: 335}}>
-            {emotions.map(( emotion, index ) =>
-              <View key={index}>
-                <TouchableOpacity style={{alignItems: 'center', justifyContent: 'center'}} onPress={(e) => this.handleSelection(emotion.name, currentAnswerIndex, maxEmotions)}>
-                  <View style={this.isThisEmotionSelected(emotion.name,currentAnswerIndex) ? styles.selectedButton : styles.emotionButton}>
-                    <Image source={emotion.imageUri} style={styles.coverImage}/>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            )}
+      <ScrollView>
+        <View style={styles.surveyContainer}>
+          <View>
+            <Text style={styles.infoText}>{contentText}</Text>
+            <View style={{flex: 10, flexDirection: 'row', flexWrap: "wrap", justifyContent: 'space-between', alignItems: 'center', alignSelf: "center"}}>
+              {emotions.map(( emotion, index ) =>
+                <View key={index}>
+                  <TouchableOpacity style={{alignItems: 'center', justifyContent: 'center'}} onPress={(e) => this.handleSelection(emotion.name, currentAnswerIndex, maxEmotions)}>
+                    <View style={this.isThisEmotionSelected(emotion.name,currentAnswerIndex) ? styles.selectedButton : styles.emotionButton}>
+                      <Image source={emotion.imageUri} style={styles.coverImage}/>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
+          </View>
+          <View style={styles.navButtonContainerStyle}>
+            {
+              this.renderPrevButton(
+                () => {
+                  this.setState({ currentStep: currentStep - 1});
+                },
+                !!(currentStep !== 0)
+              )
+            }
+            {
+              this.renderNextOrFinishButton(
+                survey,
+                () => {
+                  this.setState({ currentStep: currentStep + 1});
+                },
+                () => {
+                  this.onSurveyFinished();
+                },
+                !!(state.answers[currentAnswerIndex].value.length >= minEmotions)
+              )
+            }
           </View>
         </View>
-        <View style={styles.navButtonContainerStyle}>
-          {
-            this.renderPrevButton(
-              () => {
-                this.setState({ currentStep: currentStep - 1});
-              },
-              !!(currentStep !== 0)
-            )
-          }
-          {
-            this.renderNextOrFinishButton(
-              survey,
-              () => {
-                this.setState({ currentStep: currentStep + 1});
-              },
-              () => {
-                this.onSurveyFinished();
-              },
-              !!(state.answers[currentAnswerIndex].value.length >= minEmotions)
-            )
-          }
-        </View>
-      </View>
+      </ScrollView>
     )
   }
 
@@ -339,13 +429,14 @@ export default class MockupScreen extends Component {
   renderInfo(survey,stepIndex) {
     const { currentStep } = this.state;
     const { contentText, hasImage, imageUri } = survey[stepIndex];
-    console.log('survey[stepIndex]', survey[stepIndex])
     return (
       <View style={styles.surveyContainer}>
         <View style={{ marginLeft: 10, marginRight: 10 }}>
           <Text style={styles.infoText}>{contentText}</Text>
           {hasImage ? (
-            <Image source={imageUri} style={styles.charecterSize}/>
+            <View style={{alignItems: 'center', justifyContent: 'center'}}>
+              <Image source={imageUri} style={styles.charecterSize}/>
+            </View>
           ) : (
             <></>
           )}
@@ -385,6 +476,8 @@ export default class MockupScreen extends Component {
       return this.renderEmotionButtons(survey,stepIndex);
     } else if (contentType === 'EmotionRating') {
       return this.renderEmotionRating(survey,stepIndex);
+    } else if (contentType === 'SortingQuestion') {
+      return this.renderSortingQuestion(survey,stepIndex);
     } else {
       return <Text>Unknown stepIndex</Text>;
     }
@@ -412,7 +505,7 @@ const styles = StyleSheet.create({
     flex: 1, 
   },
   surveyContainer: {
-    width: '85%',
+    width: '90%',
     alignSelf: 'center',
     backgroundColor: 'white',
     borderRadius: 5,
@@ -488,23 +581,30 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     borderWidth: 1
   },
+  dropDownStyle: {
+    width: 300,
+    marginBottom: 15,
+    paddingBottom: 15,
+    alignSelf: "center"
+  },
   emotionButton: {
     backgroundColor: 'transparent',
-    width: 100,
-    height: 100,
+    width: (windowWidth * 0.2),
+    height: (windowWidth * 0.2),
     margin: 5,
-    borderRadius: 10
+    borderRadius: 5
   },
   selectedButton: {
     backgroundColor: '#A4D6D5',
-    width: 100,
-    height: 100,
+    width: (windowWidth * 0.2),
+    height: (windowWidth * 0.2),
     margin: 5,
     borderRadius: 10
   },
   coverImage: {
     flex: 1,
-    resizeMode: "cover",
-    justifyContent: "center"
+    resizeMode: 'cover',
+    width: 'auto',
+    justifyContent: 'center'
   }
 });

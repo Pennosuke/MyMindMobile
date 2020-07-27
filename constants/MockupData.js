@@ -70,6 +70,16 @@ export const MockupData = [
     imageUri: require(`../assets/charecters/Character-01.png`)
   },
   {
+    contentId: '6',
+    contentType: 'SortingQuestion',
+    contentText: 'This is sorting question',
+    choices: [
+      'สร้างนิสัยรับรู้อารมณ์และความรู้สึก',
+      'เล่าให้คนใกล้ชิดฟัง',
+      'ให้คะแนนอารมณ์ความรู้สึกที่เกิดขึ้น'
+    ]
+  },
+  {
     contentId: '2',
     contentType: 'EmotionButtons',
     contentText: 'This is emotion buttons',
