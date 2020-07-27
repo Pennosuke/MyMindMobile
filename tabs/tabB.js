@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, Button, Alert, TouchableWithoutFeedback, TouchableHighlight, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { demoTreatment } from '../constants/demoTreatment';
+import { MockupData } from '../constants/MockupData';
 
 export function tabB() {
 
@@ -16,7 +17,7 @@ export function tabB() {
       backgroundColor: 'white',
       padding: 20}}>
       <Text style={styles.title}>โปรแกรมการส่งเสริมสุขภาวะทางจิตใจ</Text>
-      <TouchableHighlight onPress={() => navigation.navigate('MockupScreen', { data : demoTreatment })}>
+      <TouchableHighlight onPress={() => navigation.navigate('MockupScreen', { data : MockupData })}>
         <View style={styles.roundedButton}>
           <Text style={{textAlign: 'center', padding: 20, color: 'white'}}>MockupScreen</Text>
         </View>

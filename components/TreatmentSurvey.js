@@ -265,7 +265,7 @@ export class TreatmentSurvey extends Component {
     this.validateSelectionGroupSettings(this.props.survey[currentQuestionIndex].questionSettings);
 
     if (!this.selectionHandlers[currentQuestionIndex]) {
-      if (this.props.survey[currentQuestionIndex].questionSettings.maxMultiSelect) {    
+      if (this.props.survey[currentQuestionIndex].questionSettings.maxMultiSelect) {
         if (defaultSelection !== undefined && !Array.isArray(defaultSelection)) {
           throw new Error(
             `Default Selection not specified as an array for multiple selection question ${currentQuestionIndex}`
