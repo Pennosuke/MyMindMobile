@@ -17,16 +17,16 @@ export function tabB() {
       backgroundColor: 'white',
       padding: 20}}>
       <Text style={styles.title}>โปรแกรมการส่งเสริมสุขภาวะทางจิตใจ</Text>
-      <TouchableHighlight onPress={() => navigation.navigate('MockupScreen', { data : MockupData })}>
+      <TouchableOpacity onPress={() => navigation.navigate('MockupScreen', { data : MockupData })}>
         <View style={styles.roundedButton}>
-          <Text style={{textAlign: 'center', padding: 20, color: 'white'}}>MockupScreen</Text>
+          <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>โปรแกรมฝึกปฏิบัติ</Text>
         </View>
-      </TouchableHighlight>
-      <TouchableHighlight onPress={() => navigation.navigate('TreatmentScreen', { data : demoTreatment })}>
+      </TouchableOpacity>
+      {/* <TouchableOpacity onPress={() => navigation.navigate('TreatmentScreen', { data : demoTreatment })}>
         <View style={styles.roundedButton}>
-          <Text style={{textAlign: 'center', padding: 20, color: 'white'}}>demoTreatment</Text>
+          <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>demoTreatment</Text>
         </View>
-      </TouchableHighlight>
+      </TouchableOpacity> */}
     </View>
   );
 }
@@ -42,7 +42,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 8,
     paddingLeft: 10,
-    paddingRight: 10
+    paddingRight: 10,
+    fontFamily: 'Kanit-Medium',
+    fontSize: 20
   },
   topLeftButton: {
     alignItems: 'center',

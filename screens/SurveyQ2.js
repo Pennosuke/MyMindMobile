@@ -217,8 +217,8 @@ export default class SurveyQ1 extends Component {
         </View>
         
         <ScrollView style={styles.answersContainer}>
-          <Text style={{textAlign:'center'}}>JSON output</Text>
-          <Text>{this.state.answersSoFar}</Text>
+          <Text style={{textAlign:'center', color: BLUE }}>JSON output</Text>
+          {/* <Text>{this.state.answersSoFar}</Text> */}
         </ScrollView>
         
       </View>
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     marginBottom: 20,
-    backgroundColor: 'white',
+    backgroundColor: BLUE,
     elevation: 20,
     borderRadius: 10,
   },

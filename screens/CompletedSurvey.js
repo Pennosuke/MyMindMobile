@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { ScrollView, StyleSheet, Text, View, Button } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native';
+import { MockupData } from '../constants/MockupData';
 
 const GREEN = 'rgba(141,196,63,1)';
 const BLUE = '#7BDAF8';
@@ -92,8 +93,8 @@ export default class CompletedSurvey extends Component {
   render() {
     const answers = this.props.route.params?.surveyAnswers ?? defaultAnswers;
     const depression = answers.DASS_3_depression + answers.DASS_5_depression + answers.DASS_10_depression + answers.DASS_16_depression + answers.DASS_17_depression + answers.DASS_21_depression;
-    const anxiety = answers.DASS_2_anxiety + answers.DASS_4_anxiety + answers.DASS_7_anxiety + answers.DASS_9_anxiety + answers.DASS_15_anxiety + answers.DASS_19_anxiety + answers.DASS_20_anxiety;
-    const stress = answers.DASS_1_stress + answers.DASS_6_stress + answers.DASS_8_stress + answers.DASS_11_stress + answers.DASS_12_stress + answers.DASS_14_stress + answers.DASS_18_stress;
+    //const anxiety = answers.DASS_2_anxiety + answers.DASS_4_anxiety + answers.DASS_7_anxiety + answers.DASS_9_anxiety + answers.DASS_15_anxiety + answers.DASS_19_anxiety + answers.DASS_20_anxiety;
+    //const stress = answers.DASS_1_stress + answers.DASS_6_stress + answers.DASS_8_stress + answers.DASS_11_stress + answers.DASS_12_stress + answers.DASS_14_stress + answers.DASS_18_stress;
     // const totalDASS = depression + anxiety + stress;
     const Q_1 = answers.Q_1?? 0;
     const Q_2 = answers.Q_2?? 0;
@@ -110,13 +111,11 @@ export default class CompletedSurvey extends Component {
       <View style={styles.background}>
         <View style={styles.container}>
           {this.mentalResult(depression)}
-          <View style={{ flexGrow: 1, maxWidth: 100, marginTop: 10, marginBottom: 10 }}>
-            <Button
-              title={'กลับสู่หน้าหลัก'}
-              onPress={() => this.props.navigation.navigate('MUMyMind')}
-              color='#22459E'
-            />
-          </View>
+          <TouchableOpacity onPress={() => this.props.navigation.replace('MockupScreen', { data : MockupData })}>
+            <View style={styles.roundedButton}>
+              <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>โปรแกรมฝึกปฏิบัติ</Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -143,4 +142,15 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     fontSize: 20
   },
+  roundedButton: {
+    justifyContent:"center",
+    alignItems:"center",
+    width: 292,
+    height: 62,
+    borderRadius:30,
+    backgroundColor:"#22459E",
+    display: "flex",
+    padding: 10,
+    margin: 10
+  }
 });

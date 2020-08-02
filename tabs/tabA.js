@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Button, Alert, TouchableWithoutFeedback, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, Button, Alert, TouchableOpacity, TouchableHighlight } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { mentalTest } from '../constants/แบบวัดสุขภาวะทางจิตใจ';
+import { mentalTest, SPWB } from '../constants/แบบวัดสุขภาวะทางจิตใจ';
 import firebase from '../constants/firebase';
 import 'firebase/firestore';
 
@@ -30,16 +30,21 @@ export function tabA() {
       backgroundColor: 'white',
       padding: 20}}>
       <Text style={styles.title}>ผลการประเมิน</Text>
-      <TouchableHighlight onPress={getFirestoreData}>
+      {/* <TouchableOpacity onPress={getFirestoreData}>
         <View style={styles.roundedButton}>
-          <Text style={{textAlign: 'center', padding: 20, color: 'white'}}>ดูผลการประเมิน</Text>
+          <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>ดูผลการประเมิน</Text>
         </View>
-      </TouchableHighlight>
-      <TouchableHighlight onPress={() => navigation.navigate('Survey', { data : mentalTest, database : db })}>
+      </TouchableOpacity> */}
+      {/* <TouchableOpacity onPress={() => navigation.navigate('Survey', { data : mentalTest, database : db })}>
         <View style={styles.roundedButton}>
-          <Text style={{textAlign: 'center', padding: 20, color: 'white'}}>เริ่มทำแบบประเมิน</Text>
+          <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>เริ่มทำแบบประเมิน</Text>
         </View>
-      </TouchableHighlight>
+      </TouchableOpacity> */}
+      <TouchableOpacity onPress={() => navigation.navigate('spwbScreen', { data : SPWB, database : db })}>
+        <View style={styles.roundedButton}>
+          <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>เริ่มทำแบบประเมิน</Text>
+        </View>
+      </TouchableOpacity>
     </View>
   );
 }

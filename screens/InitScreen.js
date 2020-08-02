@@ -26,7 +26,7 @@ export default class InitScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>MUMyMind</Text>
+        <Text style={{fontFamily: 'Kanit-Medium', fontSize: 48, color: 'green'}}>MUMyMind</Text>
         <ActivityIndicator size="large"></ActivityIndicator>
       </View>
     );

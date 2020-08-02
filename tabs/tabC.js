@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Button, Alert, TouchableWithoutFeedback, TouchableHighlight } from 'react-native';
+import { StyleSheet, Text, View, Button, Alert, TouchableWithoutFeedback, TouchableHighlight, TouchableOpacity } from 'react-native';
 import firebase from '../constants/firebase';
 
 export default class tabC extends Component {
@@ -37,19 +37,23 @@ export default class tabC extends Component {
         backgroundColor: 'white',
         padding: 20}}
       >
-        <Text style={styles.title}>ชื่อ : {this.state.displayName}</Text>
-        <Text style={styles.title}>email : {this.state.email}</Text>
-        {/* 
-        <Text style={styles.title}>วัน/เดือน/ปีเกิด : {this.state.birthDay} {this.state.birthMonth} พ.ศ.{this.state.birthYear}</Text>
-        <Text style={styles.title}>โรงเรียน : {this.state.school}</Text>
-         */}
-        <Text style={styles.title}>uid : {this.state.uid}</Text>
+        <Text style={styles.title}>โปรไฟล์</Text>
+        <View>
+          <Text style={styles.content}>ชื่อ : {this.state.displayName}</Text>
+          <Text style={styles.content}>email : {this.state.email}</Text>
+          {/* 
+          <Text style={styles.title}>วัน/เดือน/ปีเกิด : {this.state.birthDay} {this.state.birthMonth} พ.ศ.{this.state.birthYear}</Text>
+          <Text style={styles.title}>โรงเรียน : {this.state.school}</Text>
+          */}
+          <Text style={styles.content}>uid : {this.state.uid}</Text>
+        </View>
 
-        <Button
-          color="#3740FE"
-          title="ออกจากระบบ"
-          onPress={() => this.signOut()}
-        />
+        <TouchableOpacity onPress={() => this.signOut()}>
+          <View style={[styles.roundedButton,{backgroundColor: 'red'}]}>
+            <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>ออกจากระบบ</Text>
+          </View>
+        </TouchableOpacity>
+        
       </View>
     );
   }
@@ -66,7 +70,17 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 8,
     paddingLeft: 10,
-    paddingRight: 10
+    paddingRight: 10,
+    fontFamily: 'Kanit-Medium',
+    fontSize: 20
+  },
+  content: {
+    textAlign: 'left',
+    marginVertical: 8,
+    paddingLeft: 10,
+    paddingRight: 10,
+    fontFamily: 'Kanit-Regular',
+    fontSize: 18,
   },
   topLeftButton: {
     alignItems: 'center',

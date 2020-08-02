@@ -52,13 +52,13 @@ export default class LoginScreen extends Component {
       <View style={styles.container}>  
         <TextInput
           style={styles.inputStyle}
-          placeholder="Email"
+          placeholder="อีเมล"
           value={this.state.email}
           onChangeText={(val) => this.updateInputVal(val, 'email')}
         />
         <TextInput
           style={styles.inputStyle}
-          placeholder="Password"
+          placeholder="รหัสผ่าน"
           value={this.state.password}
           onChangeText={(val) => this.updateInputVal(val, 'password')}
           maxLength={15}

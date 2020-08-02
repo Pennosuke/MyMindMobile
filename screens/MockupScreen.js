@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { StyleSheet, Button, ScrollView, Text, TextInput, View, Image, TouchableOpacity, Picker, Dimensions } from 'react-native';
 import { emotions } from '../constants/MockupData';
+import { Video } from 'expo-av';
+import firebase from '../constants/firebase';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -26,7 +28,10 @@ export default class MockupScreen extends Component {
     this.state = {
       contents: defaultSurvey,
       currentStep: 0,
-      answers: []
+      answers: [],
+      totalPlayTime: 0,
+      playTime: 0,
+      checkpointVideo: 0
     };
   }
 
@@ -147,10 +152,84 @@ export default class MockupScreen extends Component {
     return allChoices
   }
 
+  _onPlaybackStatusUpdate(playbackStatus){
+    const state = this.state;
+    if(playbackStatus.isPlaying) {
+      state.playTime = (playbackStatus.positionMillis - state.checkpointVideo)
+      this.setState(state);
+    }
+    else {
+      state.totalPlayTime += state.playTime;
+      state.checkpointVideo = playbackStatus.positionMillis;
+      state.playTime = 0;
+      this.setState(state);
+    }
+    console.log('state',state);
+  };
+
+  renderVideo(survey,stepIndex) {
+    const { currentStep } = this.state;
+    const { contentText, videoUri } = survey[stepIndex];
+    console.log()
+    return (
+      <View style={styles.surveyContainer}>
+        <View style={{ marginLeft: 10, marginRight: 10 }}>
+          <Text style={styles.infoText}>{contentText}</Text>
+          {/* <Video
+            source={videoUri}
+            rate={1.0}
+            volume={1.0}
+            isMuted={false}
+            resizeMode="cover"
+            shouldPlay={false}
+            isLooping={false}
+            useNativeControls
+            style={{ width: 320, height: 180, alignSelf: "center"}}
+            onPlaybackStatusUpdate={(playbackStatus) => this._onPlaybackStatusUpdate(playbackStatus)}
+          /> */}
+          <Video
+            source={{uri: 'https://firebasestorage.googleapis.com/v0/b/mymindmobile-d9d9b.appspot.com/o/videos%2FVDO_%E0%B8%AB%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%A5%E0%B8%82_1._%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B9%82%E0%B8%A2%E0%B8%8A%E0%B8%99%E0%B9%8C%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%99%E0%B9%88%E0%B8%B2%E0%B8%97%E0%B8%B6%E0%B9%88%E0%B8%87%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%AB%E0%B8%B2%E0%B8%A2%E0%B9%83%E0%B8%88.mp4?alt=media&token=a0c0725e-8506-4773-8c40-db7839da76a1'}}
+            rate={1.0}
+            volume={1.0}
+            isMuted={false}
+            resizeMode="cover"
+            shouldPlay={false}
+            isLooping={false}
+            useNativeControls
+            style={{ width: 320, height: 180, alignSelf: "center"}}
+            onPlaybackStatusUpdate={(playbackStatus) => this._onPlaybackStatusUpdate(playbackStatus)}
+          />
+        </View>
+        <View style={styles.navButtonContainerStyle}>
+          {
+            this.renderPrevButton(
+              () => {
+                this.setState({ currentStep: currentStep - 1});
+              },
+              !!(currentStep !== 0)
+            )
+          }
+          {
+            this.renderNextOrFinishButton(
+              survey,
+              () => {
+                this.setState({ currentStep: currentStep + 1});
+              },
+              () => {
+                this.onSurveyFinished();
+              },
+              !!(this.state.totalPlayTime + this.state.playTime >= 8000)
+            )
+          }
+        </View>
+      </View>
+    )
+  }
+
   renderSortingQuestion(survey,stepIndex) {
     const state = this.state;
     const { currentStep } = this.state;
-    const { contentText, choices } = survey[stepIndex]
+    const { contentText, choices } = survey[stepIndex];
     const currentContentId = survey[stepIndex].contentId;
     if (state.answers.find(ans => ans.contentId === currentContentId) === undefined) {
       const defaultValue = [];
@@ -428,14 +507,15 @@ export default class MockupScreen extends Component {
 
   renderInfo(survey,stepIndex) {
     const { currentStep } = this.state;
-    const { contentText, hasImage, imageUri } = survey[stepIndex];
+    const { contentText } = survey[stepIndex];
+    const options = survey[stepIndex].options === undefined ? undefined : survey[stepIndex].options
     return (
       <View style={styles.surveyContainer}>
         <View style={{ marginLeft: 10, marginRight: 10 }}>
           <Text style={styles.infoText}>{contentText}</Text>
-          {hasImage ? (
+          {options !== undefined ? (
             <View style={{alignItems: 'center', justifyContent: 'center'}}>
-              <Image source={imageUri} style={styles.charecterSize}/>
+              <Image source={options.imageUri} style={styles.charecterSize}/>
             </View>
           ) : (
             <></>
@@ -478,6 +558,8 @@ export default class MockupScreen extends Component {
       return this.renderEmotionRating(survey,stepIndex);
     } else if (contentType === 'SortingQuestion') {
       return this.renderSortingQuestion(survey,stepIndex);
+    } else if (contentType === 'Video') {
+      return this.renderVideo(survey,stepIndex);
     } else {
       return <Text>Unknown stepIndex</Text>;
     }
@@ -487,9 +569,16 @@ export default class MockupScreen extends Component {
     const survey = this.props.route.params?.data ?? defaultSurvey;
     return (
       <View style={styles.background}>
-        <View style={styles.surveyContainer}>
-          {this.getStepContent(survey,this.state.currentStep)}
-        </View>
+        <ScrollView style={{flex:1 ,width:'100%'}}>
+          <View style={{width:'100%', height: '100%' }}>
+            <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>
+                {this.state.currentStep + 1} / {survey.length}
+            </Text>
+            <View style={styles.mainSurveyContainer}>
+              {this.getStepContent(survey,this.state.currentStep)}
+            </View>
+          </View>
+        </ScrollView>
       </View>
     );
   }
@@ -504,8 +593,18 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     flex: 1, 
   },
-  surveyContainer: {
+  mainSurveyContainer: {
     width: '90%',
+    alignSelf: 'center',
+    backgroundColor: 'white',
+    borderRadius: 5,
+    alignContent: 'center',
+    padding: 5,
+    marginBottom: 30,
+    flexGrow: 0,
+  },
+  surveyContainer: {
+    width: '100%',
     alignSelf: 'center',
     backgroundColor: 'white',
     borderRadius: 5,
@@ -531,8 +630,8 @@ const styles = StyleSheet.create({
   },
   background: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    /*justifyContent: 'center',
+    alignItems: 'center',*/
     backgroundColor: BLUE
   },
   questionText: {
@@ -562,8 +661,9 @@ const styles = StyleSheet.create({
   },
   infoText: {
     marginBottom: 20,
-    fontSize: 20,
-    marginLeft: 10
+    fontSize: 16,
+    marginLeft: 10,
+    fontFamily: 'Kanit-Regular'
   },
   charecterSize: {
     width: 60,
