@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, ActivityIndicator, Button, Alert, TouchableWithoutFeedback, TouchableHighlight } from 'react-native';
 import firebase from '../constants/firebase';
+import 'firebase/firestore';
+
+const db = firebase.firestore();
 
 export default class InitScreen extends Component {
   constructor() {
@@ -14,6 +17,7 @@ export default class InitScreen extends Component {
     setTimeout(() => {
       firebase.auth().onAuthStateChanged(user => {
         if (user) {
+          console.log('user', user);
           this.props.navigation.replace('AppStackScreen', { screen: 'MUMyMind'});
         }
         else {

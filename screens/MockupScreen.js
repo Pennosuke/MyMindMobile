@@ -3,6 +3,7 @@ import { StyleSheet, Button, ScrollView, Text, TextInput, View, Image, Touchable
 import { emotions } from '../constants/MockupData';
 import { Video } from 'expo-av';
 import firebase from '../constants/firebase';
+import SelectionGroup, { SelectionHandler } from 'react-native-selection-group';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -31,7 +32,8 @@ export default class MockupScreen extends Component {
       answers: [],
       totalPlayTime: 0,
       playTime: 0,
-      checkpointVideo: 0
+      checkpointVideo: 0,
+      selectionHandlers: []
     };
   }
 
@@ -55,41 +57,42 @@ export default class MockupScreen extends Component {
   renderPrevButton(onPressEvent, enabledCondition) {
     return (
       <View style={{ flexGrow: 1, maxWidth: 100, marginTop: 10, marginBottom: 10 }}>
-        <Button
-          color={GREEN}
-          onPress={onPressEvent}
-          disabled={!enabledCondition}
-          backgroundColor={GREEN}
-          title={'ย้อนกลับ'}
-        />
+        <TouchableOpacity onPress={onPressEvent} disabled={!enabledCondition}>
+          <View style={enabledCondition ? styles.navButton : styles.disableNavButton}>
+            <Text style={enabledCondition ? {textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16} : {textAlign: 'center', color: '#a3a3a3', fontFamily: 'Kanit-Regular', fontSize: 16}}>
+              ย้อนกลับ
+            </Text>
+          </View>
+        </TouchableOpacity>
       </View>
     );
   }
 
-  renderNextOrFinishButton(survey,NextEvent, FinishedEvent, enabledCondition) {
+  renderNextOrFinishButton(survey, NextEvent, FinishedEvent, enabledCondition) {
     const { currentStep, contents } = this.state;
     if(currentStep < survey.length - 1) {
       return (
         <View style={{ flexGrow: 1, maxWidth: 100, marginTop: 10, marginBottom: 10 }}>
-          <Button
-            color={GREEN}
-            onPress={NextEvent}
-            disabled={!enabledCondition}
-            backgroundColor={GREEN}
-            title={'ถัดไป'}
-          />
+          <TouchableOpacity onPress={NextEvent} disabled={!enabledCondition}>
+            <View style={enabledCondition ? styles.navButton : styles.disableNavButton}>
+              <Text style={enabledCondition ? {textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16} : {textAlign: 'center', color: '#a3a3a3', fontFamily: 'Kanit-Regular', fontSize: 16}}>
+                ถัดไป
+              </Text>
+            </View>
+          </TouchableOpacity>
         </View>
       );
     }
     else {
       return (
         <View style={{ flexGrow: 1, maxWidth: 100, marginTop: 10, marginBottom: 10 }}>
-          <Button
-            title={'เสร็จสิ้น'}
-            onPress={FinishedEvent}
-            disabled={!enabledCondition}
-            color={GREEN}
-          />
+          <TouchableOpacity onPress={FinishedEvent} disabled={!enabledCondition}>
+            <View style={enabledCondition ? styles.navButton : styles.disableNavButton}>
+              <Text style={enabledCondition ? {textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16} : {textAlign: 'center', color: '#a3a3a3', fontFamily: 'Kanit-Regular', fontSize: 16}}>
+                เสร็จสิ้น
+              </Text>
+            </View>
+          </TouchableOpacity>
         </View>
       );
     }
@@ -152,52 +155,89 @@ export default class MockupScreen extends Component {
     return allChoices
   }
 
-  _onPlaybackStatusUpdate(playbackStatus){
+  _onPlaybackStatusUpdate(playbackStatus, currentAnswerIndex){
     const state = this.state;
     if(playbackStatus.isPlaying) {
-      state.playTime = (playbackStatus.positionMillis - state.checkpointVideo)
+      state.answers[currentAnswerIndex].value.playTime = (playbackStatus.positionMillis - state.answers[currentAnswerIndex].value.checkpointVideo)
       this.setState(state);
     }
     else {
-      state.totalPlayTime += state.playTime;
-      state.checkpointVideo = playbackStatus.positionMillis;
-      state.playTime = 0;
+      if(state.answers[currentAnswerIndex].value.totalPlayTime === NaN) {
+        state.answers[currentAnswerIndex].value.totalPlayTime = 0;
+      }
+      state.answers[currentAnswerIndex].value.totalPlayTime += state.answers[currentAnswerIndex].value.playTime;
+      state.answers[currentAnswerIndex].value.checkpointVideo = playbackStatus.positionMillis;
+      state.answers[currentAnswerIndex].value.playTime = 0;
       this.setState(state);
     }
     console.log('state',state);
   };
 
-  renderVideo(survey,stepIndex) {
+  renderSelectionButton(data, index, isSelected, onPress) {
+    return (
+      <View
+        key={`selection_button_view_${index}`}
+        style={{ marginTop: 5, marginBottom: 5, justifyContent: 'flex-start' }}
+      >
+        <TouchableOpacity onPress={onPress} key={`button_${index}`}>
+          <View style={isSelected ? styles.selectionButton : styles.nonSelectionButton}>
+            <Text style={{textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>
+              {data.choiceText}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  updateAnswer(answerForCurrentQuestion,currentAnswerIndex) {
+    const { answers } = this.state;
+    answers[currentAnswerIndex] = answerForCurrentQuestion;
+    this.setState({ answers });
+  }
+
+  renderSelectionGroup(survey,stepIndex) {
+    const state = this.state;
     const { currentStep } = this.state;
-    const { contentText, videoUri } = survey[stepIndex];
-    console.log()
+    const { contentText, contentId, choices } = survey[stepIndex];
+    const currentContentId = contentId;
+    if (!state.selectionHandlers[currentStep]) {
+      state.selectionHandlers[currentStep] = new SelectionHandler({ maxMultiSelect: 1, allowDeselect: true });
+      this.setState(state);
+    }
+    if (state.answers.find(ans => ans.contentId === currentContentId) === undefined) {
+      const defaultValue = null;
+      state.answers.push({
+        contentId : currentContentId,
+        value: defaultValue
+      });
+      console.log('state', state);
+      this.setState(state);
+    }
+    const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
+    console.log('this.state', this.state);
     return (
       <View style={styles.surveyContainer}>
         <View style={{ marginLeft: 10, marginRight: 10 }}>
           <Text style={styles.infoText}>{contentText}</Text>
-          {/* <Video
-            source={videoUri}
-            rate={1.0}
-            volume={1.0}
-            isMuted={false}
-            resizeMode="cover"
-            shouldPlay={false}
-            isLooping={false}
-            useNativeControls
-            style={{ width: 320, height: 180, alignSelf: "center"}}
-            onPlaybackStatusUpdate={(playbackStatus) => this._onPlaybackStatusUpdate(playbackStatus)}
-          /> */}
-          <Video
-            source={{uri: 'https://firebasestorage.googleapis.com/v0/b/mymindmobile-d9d9b.appspot.com/o/videos%2FVDO_%E0%B8%AB%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%A5%E0%B8%82_1._%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B9%82%E0%B8%A2%E0%B8%8A%E0%B8%99%E0%B9%8C%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%99%E0%B9%88%E0%B8%B2%E0%B8%97%E0%B8%B6%E0%B9%88%E0%B8%87%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%AB%E0%B8%B2%E0%B8%A2%E0%B9%83%E0%B8%88.mp4?alt=media&token=a0c0725e-8506-4773-8c40-db7839da76a1'}}
-            rate={1.0}
-            volume={1.0}
-            isMuted={false}
-            resizeMode="cover"
-            shouldPlay={false}
-            isLooping={false}
-            useNativeControls
-            style={{ width: 320, height: 180, alignSelf: "center"}}
-            onPlaybackStatusUpdate={(playbackStatus) => this._onPlaybackStatusUpdate(playbackStatus)}
+          <SelectionGroup
+            onPress={state.selectionHandlers[currentStep].selectionHandler}
+            items={choices}
+            isSelected={state.selectionHandlers[currentStep].isSelected}
+            renderContent={this.renderSelectionButton}
+            containerStyle={styles.selectionGroupContainer}
+            onItemSelected={(item) => { 
+              this.updateAnswer({
+                contentId: contentId,
+                value: item
+              },currentAnswerIndex);
+            }}
+            onItemDeselected={() => {
+              this.updateAnswer({
+                contentId: contentId,
+                value: null
+              },currentAnswerIndex);
+            }}
           />
         </View>
         <View style={styles.navButtonContainerStyle}>
@@ -218,7 +258,69 @@ export default class MockupScreen extends Component {
               () => {
                 this.onSurveyFinished();
               },
-              !!(this.state.totalPlayTime + this.state.playTime >= 8000)
+              state.selectionHandlers[currentStep].selectedOption !== null
+            )
+          }
+        </View>
+      </View>
+    );
+  }
+
+  renderVideo(survey,stepIndex) {
+    const state = this.state;
+    const { currentStep } = this.state;
+    const { contentId, contentText, videoUri } = survey[stepIndex];
+    const currentContentId = contentId;
+    if (state.answers.find(ans => ans.contentId === currentContentId) === undefined) {
+      const defaultValue = {
+        totalPlayTime: 0,
+        playTime: 0,
+        checkpoint: 0
+      };
+      state.answers.push({
+        contentId : currentContentId,
+        value: defaultValue
+      });
+      console.log('state', state);
+      this.setState(state);
+    }
+    const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
+    return (
+      <View style={styles.surveyContainer}>
+        <View style={{ marginLeft: 10, marginRight: 10 }}>
+          <Text style={styles.infoText}>{contentText}</Text>
+          <Video
+            source={videoUri}
+            rate={1.0}
+            volume={1.0}
+            isMuted={false}
+            resizeMode="cover"
+            shouldPlay={false}
+            isLooping={false}
+            useNativeControls
+            style={{ width: '100%', height: (((windowWidth * 0.9) - 40) * 45 / 80), alignSelf: "center"}}
+            onPlaybackStatusUpdate={(playbackStatus) => this._onPlaybackStatusUpdate(playbackStatus,currentAnswerIndex)}
+          />
+        </View>
+        <View style={styles.navButtonContainerStyle}>
+          {
+            this.renderPrevButton(
+              () => {
+                this.setState({ currentStep: currentStep - 1});
+              },
+              !!(currentStep !== 0)
+            )
+          }
+          {
+            this.renderNextOrFinishButton(
+              survey,
+              () => {
+                this.setState({ currentStep: currentStep + 1});
+              },
+              () => {
+                this.onSurveyFinished();
+              },
+              !!(this.state.answers[currentAnswerIndex].value.totalPlayTime + this.state.answers[currentAnswerIndex].value.playTime >= 3000)
             )
           }
         </View>
@@ -326,8 +428,8 @@ export default class MockupScreen extends Component {
                       <Image source={emotionsImages[ansEmotion.emotion]} style={styles.coverImage}/>
                     </View>
                   </View>
-                  <View style={{flex: 1, alignItems: 'center'}}>
-                    <Text style={{textAlign: 'center', padding: 20}}>เลือกระดับความรู้สึก(1-10)</Text>
+                  <View style={{flex: 2, alignItems: 'center'}}>
+                    <Text style={[styles.infoText,{textAlign: 'center', marginBottom: 10, fontSize: 14}]}>เลือกระดับความรู้สึก(1-10)</Text>
                     <Picker
                       style = {{ height: 40, width: 100, paddingHorizontal: 10 }}
                       selectedValue={this.state.answers[currentAnswerIndex].value[index].value}
@@ -396,7 +498,7 @@ export default class MockupScreen extends Component {
               {emotions.map(( emotion, index ) =>
                 <View key={index}>
                   <TouchableOpacity style={{alignItems: 'center', justifyContent: 'center'}} onPress={(e) => this.handleSelection(emotion.name, currentAnswerIndex, maxEmotions)}>
-                    <View style={this.isThisEmotionSelected(emotion.name,currentAnswerIndex) ? styles.selectedButton : styles.emotionButton}>
+                    <View style={this.isThisEmotionSelected(emotion.name,currentAnswerIndex) ? styles.selectedemotionButton : styles.emotionButton}>
                       <Image source={emotion.imageUri} style={styles.coverImage}/>
                     </View>
                   </TouchableOpacity>
@@ -462,7 +564,9 @@ export default class MockupScreen extends Component {
           { 
             this.state.answers[currentAnswerIndex].value.map((question,index) => 
               <View key={index}>
-                <Text style = {{ textAlign: 'center', paddingBottom: 5 }}>{question.questionText}</Text>
+                <Text style = {[styles.infoText,{ textAlign: 'center', marginLeft: 0, marginBottom: 5, fontSize: 16 }]}>
+                  {question.questionText}
+                </Text>
                 <TextInput
                   style={styles.inputStyle}
                   placeholder={questions[index].placeholderText}
@@ -503,6 +607,54 @@ export default class MockupScreen extends Component {
         </View>
       </View>
     )
+  }
+
+  renderQuestionValidate(survey,stepIndex) {
+    const { currentStep, answers } = this.state;
+    const { contentTextPass, contentTextFail, minScore, answerIdRef } = survey[stepIndex];
+    const options = survey[stepIndex].options === undefined ? undefined : survey[stepIndex].options
+    let totalScore = 0;
+    let currentAnswerIndex = '0';
+    for (const elem of answerIdRef) {
+      currentAnswerIndex = answers.findIndex(ans => ans.contentId === elem);
+      totalScore += answers[currentAnswerIndex].value.value;
+    }
+    return (
+      <View style={styles.surveyContainer}>
+        <View style={{ marginLeft: 10, marginRight: 10 }}>
+          <Text style={styles.infoText}>{totalScore >= minScore ? contentTextPass : contentTextFail}</Text>
+          {options !== undefined ? (
+            <View style={{alignItems: 'center', justifyContent: 'center'}}>
+              <Image source={totalScore >= minScore ? options.imageUriPass : options.imageUriFail} style={styles.charecterSize}/>
+            </View>
+          ) : (
+            <></>
+          )}
+        </View>
+        <View style={styles.navButtonContainerStyle}>
+          {
+            this.renderPrevButton(
+              () => {
+                this.setState({ currentStep: currentStep - 1});
+              },
+              !!(currentStep !== 0)
+            )
+          }
+          {
+            this.renderNextOrFinishButton(
+              survey,
+              () => {
+                this.setState({ currentStep: currentStep + 1});
+              },
+              () => {
+                this.onSurveyFinished();
+              },
+              totalScore >= minScore
+            )
+          }
+        </View>
+      </View>
+    );
   }
 
   renderInfo(survey,stepIndex) {
@@ -560,6 +712,10 @@ export default class MockupScreen extends Component {
       return this.renderSortingQuestion(survey,stepIndex);
     } else if (contentType === 'Video') {
       return this.renderVideo(survey,stepIndex);
+    } else if (contentType === 'SelectionGroup') {
+      return this.renderSelectionGroup(survey,stepIndex);
+    } else if (contentType === 'QuestionValidate') {
+      return this.renderQuestionValidate(survey,stepIndex);
     } else {
       return <Text>Unknown stepIndex</Text>;
     }
@@ -661,8 +817,7 @@ const styles = StyleSheet.create({
   },
   infoText: {
     marginBottom: 20,
-    fontSize: 16,
-    marginLeft: 10,
+    fontSize: 18,
     fontFamily: 'Kanit-Regular'
   },
   charecterSize: {
@@ -674,15 +829,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around'
   },
   inputStyle: {
-    width: 300,
+    width: '70%',
     marginBottom: 15,
-    paddingBottom: 15,
+    paddingVertical: 5,
     alignSelf: "center",
     borderColor: "#ccc",
-    borderWidth: 1
+    borderWidth: 1,
+    textAlign: "center",
+    fontFamily: "Kanit-Regular",
+    fontSize: 16
   },
   dropDownStyle: {
-    width: 300,
+    width: '70%',
     marginBottom: 15,
     paddingBottom: 15,
     alignSelf: "center"
@@ -694,7 +852,7 @@ const styles = StyleSheet.create({
     margin: 5,
     borderRadius: 5
   },
-  selectedButton: {
+  selectedemotionButton: {
     backgroundColor: '#A4D6D5',
     width: (windowWidth * 0.2),
     height: (windowWidth * 0.2),
@@ -706,5 +864,41 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     width: 'auto',
     justifyContent: 'center'
+  },
+  selectionButton: {
+    justifyContent:"center",
+    alignItems:"center",
+    borderRadius:5,
+    backgroundColor: SELECTED,
+    display: "flex",
+    padding: 8,
+    margin: 2
+  },
+  nonSelectionButton: {
+    justifyContent:"center",
+    alignItems:"center",
+    borderRadius:5,
+    backgroundColor: GREEN,
+    display: "flex",
+    padding: 8,
+    margin: 2
+  },
+  navButton: {
+    justifyContent:"center",
+    alignItems:"center",
+    borderRadius:5,
+    backgroundColor: GREEN,
+    display: "flex",
+    padding: 8,
+    margin: 2
+  },
+  disableNavButton: {
+    justifyContent:"center",
+    alignItems:"center",
+    borderRadius:5,
+    backgroundColor: '#dfdfdf',
+    display: "flex",
+    padding: 8,
+    margin: 2
   }
 });

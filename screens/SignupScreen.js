@@ -1,23 +1,27 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, Alert, ActivityIndicator, Picker, Dimensions, ScrollView } from 'react-native';
 import firebase from '../constants/firebase';
+import 'firebase/firestore';
 
 const windowHeight = Dimensions.get('window').height;
+
+const db = firebase.firestore();
 
 export default class SignupScreen extends Component {
   
   constructor() {
     super();
     this.state = { 
-      displayName: '',
-      //phoneNumber: '',
+      userName: '',
+      realName: '',
+      phoneNumber: '',
       email: '',
       password: '',
-      /*birthDay: '',
+      birthDay: '',
       birthMonth: '',
       birthYear: '',
-      school: '',*/
-      isLoading: false
+      school: '',
+      isLoading: false,
     }
   }
 
@@ -63,7 +67,7 @@ export default class SignupScreen extends Component {
   yearChoices() {
     const allYears = [];
     let yearIndex = 0;
-    for(let i = 2563; i >= 2520; i--) {
+    for(let i = 2563; i >= 2500; i--) {
       const yearString = String(i)
       allYears.push(
         <Picker.Item label={yearString} value={yearString} key={yearIndex} />
@@ -80,44 +84,113 @@ export default class SignupScreen extends Component {
   }
 
   registerUser = () => {
-    if(this.state.email === '' && this.state.password === '') {
-      Alert.alert('Enter details to signup!')
-    } else {
+    this.setState({isLoading: true})
+    const usersRef = db.collection('userData');
+    usersRef.where('userName', '==', this.state.userName).get().then(snapshot => {
+      if (snapshot.empty) {
+        return firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password);
+      } else {
+        console.log('username already taken!');
+        Alert.alert('username already taken!');
+        throw new Error('username already taken');
+      } 
+    })
+    .then(createdUser => {
+      console.log(createdUser);
+      createdUser.user.updateProfile({
+        displayName: this.state.userName,
+      })
+      //Create the user doc in the users collection
+      db.collection('userData').doc(createdUser.user.uid).set({
+        userName: this.state.userName,
+        realName: this.state.realName,
+        phoneNumber: this.state.phoneNumber,
+        email: this.state.email,
+        birthDay: this.state.birthDay,
+        birthMonth: this.state.birthMonth,
+        birthYear: this.state.birthYear,
+        school: this.state.school
+      });
+      console.log('User registered successfully!');
       this.setState({
-        isLoading: true,
-      })
-      firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
-      .then((res) => {
-        console.log(res)
-        res.user.updateProfile({
-          displayName: this.state.displayName,
-          /*phoneNumber: this.state.phoneNumber,
-          birthDay: this.state.birthDay,
-          birthMonth: this.state.birthMonth,
-          birthYear: this.state.birthYear,
-          school: this.state.school*/
+        isLoading: false,
+        userName: '',
+        realName: '',
+        phoneNumber: '',
+        email: '', 
+        password: '',
+        birthDay: '',
+        birthMonth: '',
+        birthYear: '',
+        school: '',
+      });
+      this.props.navigation.replace('AppStackScreen', { screen: 'MUMyMind'})
+    })
+    .catch(error => {
+      console.log(error.message);
+      Alert.alert(error.message);
+    });
+    this.setState({isLoading: false})
+    /*db.collection("userData").doc(this.state.userName).get().then(function(doc) {
+      temp = doc.exists
+    }).catch(function(error) {
+      console.log("Error getting document:", error);
+    });
+    console.log('temp', temp)
+    if(temp) {
+      console.log('username validate success')
+      console.log('this.state', state)
+      console.log('this.state.email', this.state.email)
+      console.log('this.state.password', this.state.password)
+      if(this.state.email === '' && this.state.password === '') {
+        console.log('Enter details to signup!')
+        Alert.alert('Enter details to signup!')
+      }
+      else {
+        console.log('email password validate success')
+        this.setState({isLoading: true})
+        firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+        .then((res) => {
+          console.log(res)
+          res.user.updateProfile({
+            displayName: this.state.userName,
+          })
+          db.collection('userData').doc(this.state.userName).set({
+            userName: this.state.userName,
+            realName: this.state.realName,
+            phoneNumber: this.state.phoneNumber,
+            email: this.state.email,
+            birthDay: this.state.birthDay,
+            birthMonth: this.state.birthMonth,
+            birthYear: this.state.birthYear,
+            school: this.state.school
+          })
+          
+          console.log('User registered successfully!')
+          this.setState({
+            isLoading: false,
+            userName: '',
+            realName: '',
+            phoneNumber: '',
+            email: '', 
+            password: '',
+            birthDay: '',
+            birthMonth: '',
+            birthYear: '',
+            school: '',
+          })
+          this.props.navigation.navigate('Login')
         })
-        console.log('User registered successfully!')
-        this.setState({
-          isLoading: false,
-          displayName: '',
-          //phoneNumber: '',
-          email: '', 
-          password: '',
-          /*birthDay: '',
-          birthMonth: '',
-          birthYear: '',
-          school: '',*/
-        })
-        this.props.navigation.navigate('Login')
-      })
-      .catch(
-        (error) => {
-          this.setState({ errorMessage: error.message, isLoading: false })
-          Alert.alert(error.message)
-        }
-      )      
-    }
+        .catch(
+          (error) => {
+            console.log('error', error)
+            console.log('error.message', error.message)
+            this.setState({ errorMessage: error.message, isLoading: false })
+            Alert.alert(error.message)
+          }
+        )      
+      }
+    }*/
   }
 
   render() {
@@ -135,31 +208,23 @@ export default class SignupScreen extends Component {
           <View style={styles.container}>  
             <TextInput
               style={styles.inputStyle}
-              placeholder="ชื่อจริง-นามสกุล"
-              value={this.state.displayName}
-              onChangeText={(val) => this.updateInputVal(val, 'displayName')}
+              placeholder="ชื่อจริง นามสกุล"
+              value={this.state.realName}
+              onChangeText={(val) => this.updateInputVal(val, 'realName')}
             />
-            {/* <TextInput
+            <TextInput
               style={styles.inputStyle}
               placeholder="หมายเลขโทรศัพท์มือถือ"
               value={this.state.phoneNumber}
               onChangeText={(val) => this.updateInputVal(val, 'phoneNumber')}
-            /> */}
+            />
             <TextInput
               style={styles.inputStyle}
               placeholder="อีเมล"
               value={this.state.email}
               onChangeText={(val) => this.updateInputVal(val, 'email')}
             />
-            <TextInput
-              style={styles.inputStyle}
-              placeholder="รหัสผ่านใหม่"
-              value={this.state.password}
-              onChangeText={(val) => this.updateInputVal(val, 'password')}
-              maxLength={15}
-              secureTextEntry={true}
-            />
-            {/* <View style={{flex: 1, flexDirection: 'row', maxHeight: 80}}>
+            <View style={{flex: 1, flexDirection: 'row', maxHeight: 80}}>
               <View style={{flex: 1, alignItems: 'center'}}>
                 <Text>วันเกิด</Text>
                 <Picker
@@ -193,16 +258,31 @@ export default class SignupScreen extends Component {
             </View>
             <TextInput
               style={styles.inputStyle}
-              placeholder="โรงเรียน"
+              placeholder="ชื่อโรงเรียน"
               value={this.state.school}
               onChangeText={(val) => this.updateInputVal(val, 'school')}
-            /> */}
+            />
+            <TextInput
+              style={styles.inputStyle}
+              placeholder="ชื่อผู้ใช้"
+              value={this.state.userName}
+              onChangeText={(val) => this.updateInputVal(val, 'userName')}
+            />
+            <TextInput
+              style={styles.inputStyle}
+              placeholder="รหัสผ่านใหม่"
+              value={this.state.password}
+              onChangeText={(val) => this.updateInputVal(val, 'password')}
+              maxLength={15}
+              secureTextEntry={true}
+            />
+            
             <Button
               color="#3740FE"
               title="สมัครสมาชิก"
               onPress={() => this.registerUser()}
             />
-            
+
             <Text 
               style={styles.loginText}
               onPress={() => this.props.navigation.navigate('Login')}>
