@@ -6,7 +6,7 @@ import { emotions } from '../constants/MockupData';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import { db } from '../constants/firebase'
-import { awareness } from '../constants/แบบประเมิน';
+import { Q8 } from '../constants/แบบประเมิน';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -25,7 +25,7 @@ const defaultSurvey = [
   }
 ]
 
-export default class spwbScreen extends Component {
+export default class dassScreen extends Component {
 
   constructor(props) {
     super(props);
@@ -45,16 +45,25 @@ export default class spwbScreen extends Component {
   onSurveyFinished() {
     const { answers } = this.state;
     const answersAsObj = {};
+    const depressionID = [3,5,10,13,16,17,21];
+    let depressionScore = 0;
     for (const elem of answers) {
       answersAsObj[elem.contentId] = elem.value;
+      if(depressionID.find(id => id === elem.contentId) !== undefined) {
+        depressionScore += elem.value.value;
+      }
     }
     answersAsObj['timestamp'] = firebase.firestore.Timestamp.fromDate(new Date());
     answersAsObj['userName'] = firebase.auth().currentUser.displayName;
     console.log('answersAsObj', answersAsObj);
-    db.collection('แบบวัดสุขภาวะทางจิตใจ').add(answersAsObj)
-    this.props.navigation.navigate('awarenessScreen', { data : awareness });
+    db.collection('แบบสอบถามวัดภาวะสุขภาพจิต').add(answersAsObj)
+    if(depressionScore >= 11) {
+      this.props.navigation.navigate('q8Screen', { data : Q8, score : depressionScore });
+    }
+    else {
+      this.props.navigation.replace('CompletedSurvey', { score : depressionScore });
+    }
   }
-  
   renderSpecialButton(buttonText ,onPressEvent) {
     return (
       <View style={{ flexGrow: 1, marginTop: 10, marginBottom: 10 }}>

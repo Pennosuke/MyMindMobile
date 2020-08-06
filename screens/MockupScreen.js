@@ -1,9 +1,11 @@
-import React, { Component } from 'react';
-import { StyleSheet, Button, ScrollView, Text, TextInput, View, Image, TouchableOpacity, Picker, Dimensions } from 'react-native';
-import { emotions } from '../constants/MockupData';
 import { Video } from 'expo-av';
-import firebase from '../constants/firebase';
+import React, { Component } from 'react';
+import { Dimensions, Image, Picker, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import SelectionGroup, { SelectionHandler } from 'react-native-selection-group';
+import { emotions } from '../constants/MockupData';
+import * as firebase from 'firebase';
+import 'firebase/firestore';
+import { db } from '../constants/firebase'
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -33,11 +35,21 @@ export default class MockupScreen extends Component {
       totalPlayTime: 0,
       playTime: 0,
       checkpointVideo: 0,
-      selectionHandlers: []
+      selectionHandlers: [],
+      textInputHandlers: [],
     };
   }
 
   onSurveyFinished() {
+    const { answers } = this.state;
+    const answersAsObj = {};
+    for (const elem of answers) {
+      answersAsObj[elem.contentId] = elem.value;
+    }
+    answersAsObj['timestamp'] = firebase.firestore.Timestamp.fromDate(new Date());
+    answersAsObj['userName'] = firebase.auth().currentUser.displayName;
+    console.log('answersAsObj', answersAsObj);
+    db.collection("treatmentProgram1").add(answersAsObj)
     this.props.navigation.navigate('MUMyMind');
   }
 
@@ -53,6 +65,20 @@ export default class MockupScreen extends Component {
   onAnswerSubmitted(answer) {
     this.setState({ answersSoFar: JSON.stringify(this.surveyRef.getAnswers(), 2) });
   }*/
+  
+  renderSpecialButton(buttonText ,onPressEvent) {
+    return (
+      <View style={{ flexGrow: 1, marginTop: 10, marginBottom: 10 }}>
+        <TouchableOpacity onPress={onPressEvent}>
+          <View style={styles.nonSelectionButton}>
+            <Text style={{textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>
+              {buttonText}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    );
+  }
 
   renderPrevButton(onPressEvent, enabledCondition) {
     return (
@@ -98,12 +124,20 @@ export default class MockupScreen extends Component {
     }
   }
 
-  updateInputVal(val, targetId, currentAnswerIndex) {
+  updateInputVal(val, targetId, currentAnswerIndex, needAnswer) {
     console.log('val', val);
     console.log('targetId', targetId);
     console.log('currentAnswerIndex', currentAnswerIndex);
+    console.log('needAnswer', needAnswer);
     const state = this.state;
+    const { currentStep } = this.state;
     state.answers[currentAnswerIndex].value[targetId].value = val;
+    if(needAnswer) {
+      console.log('before', state.textInputHandlers[currentStep][targetId]);
+      console.log('!!(val.length)', !!(val.length));
+      state.textInputHandlers[currentStep][targetId] = !!(val.length);
+      console.log('after', state.textInputHandlers[currentStep][targetId]);
+    }
     this.setState(state);
     console.log(state);
   }
@@ -538,20 +572,32 @@ export default class MockupScreen extends Component {
     const { currentStep } = this.state;
     const { contentText, questions } = survey[stepIndex]
     const currentContentId = survey[stepIndex].contentId;
+    /*
+    if (!state.textInputHandlers[currentStep]) {
+      state.textInputHandlers[currentStep] = {
+        questionText: question.questionText,
+        value: ''
+      };
+      this.setState(state);
+    }
+    */
     if (state.answers.find(ans => ans.contentId === currentContentId) === undefined) {
       const defaultValue = [];
+      const defaultHandlers = [];
       for (const question of questions) {
         defaultValue.push(
           {
             questionText: question.questionText,
-            value: ''
+            value: '',
           }
         );
+        defaultHandlers.push(!question.needAnswer);
       }
       state.answers.push({
         contentId : currentContentId,
         value: defaultValue
       });
+      state.textInputHandlers[currentStep] = defaultHandlers;
       console.log('state', state);
       this.setState(state);
     }
@@ -568,7 +614,7 @@ export default class MockupScreen extends Component {
                   {question.questionText}
                 </Text>
                 <TextInput
-                  style={styles.inputStyle}
+                  style={questions[index].textBoxSize === 'small' ? styles.smallInputStyle : styles.inputStyle}
                   placeholder={questions[index].placeholderText}
                   multiline={questions[index].textBoxSize === 'large' ? true : false}
                   numberOfLines={questions[index].textBoxSize === 'large' ? 6 : 1}
@@ -576,7 +622,8 @@ export default class MockupScreen extends Component {
                   onChangeText={(val) => this.updateInputVal(
                     val,
                     state.answers[currentAnswerIndex].value.findIndex(elem => elem.questionText === question.questionText),
-                    currentAnswerIndex
+                    currentAnswerIndex,
+                    survey[stepIndex].questions[index].needAnswer
                   )}
                 />
               </View>
@@ -601,7 +648,7 @@ export default class MockupScreen extends Component {
               () => {
                 this.onSurveyFinished();
               },
-              true
+              !!(state.textInputHandlers[currentStep].find(elem => elem === false) === undefined)
             )
           }
         </View>
@@ -611,7 +658,7 @@ export default class MockupScreen extends Component {
 
   renderQuestionValidate(survey,stepIndex) {
     const { currentStep, answers } = this.state;
-    const { contentTextPass, contentTextFail, minScore, answerIdRef } = survey[stepIndex];
+    const { contentTextPass, contentTextFail, minScore, answerIdRef, backToVideo, backToFirstQuestion } = survey[stepIndex];
     const options = survey[stepIndex].options === undefined ? undefined : survey[stepIndex].options
     let totalScore = 0;
     let currentAnswerIndex = '0';
@@ -622,6 +669,9 @@ export default class MockupScreen extends Component {
     return (
       <View style={styles.surveyContainer}>
         <View style={{ marginLeft: 10, marginRight: 10 }}>
+          <Text style={styles.infoText}>
+            น้องได้ {totalScore}/{answerIdRef.length} คะแนน
+          </Text>
           <Text style={styles.infoText}>{totalScore >= minScore ? contentTextPass : contentTextFail}</Text>
           {options !== undefined ? (
             <View style={{alignItems: 'center', justifyContent: 'center'}}>
@@ -631,28 +681,41 @@ export default class MockupScreen extends Component {
             <></>
           )}
         </View>
-        <View style={styles.navButtonContainerStyle}>
-          {
-            this.renderPrevButton(
-              () => {
-                this.setState({ currentStep: currentStep - 1});
-              },
-              !!(currentStep !== 0)
-            )
-          }
-          {
-            this.renderNextOrFinishButton(
-              survey,
-              () => {
-                this.setState({ currentStep: currentStep + 1});
-              },
-              () => {
-                this.onSurveyFinished();
-              },
-              totalScore >= minScore
-            )
-          }
-        </View>
+        {
+          totalScore >= minScore ? (
+            <View style={styles.navButtonContainerStyle}>
+              {
+                this.renderPrevButton(
+                  () => {this.setState({ currentStep: currentStep - 1});},
+                  !!(currentStep !== 0)
+                )
+              }
+              {
+                this.renderNextOrFinishButton(
+                  survey,
+                  () => {this.setState({ currentStep: currentStep + 1});},
+                  () => {this.onSurveyFinished();},
+                  true
+                )
+              }
+            </View>
+          ) : (
+            <View style={{ marginTop: 5, marginBottom: 5, justifyContent: 'flex-start' }}>
+              {
+                this.renderSpecialButton(
+                  'กลับไปชม VDO',
+                  () => {this.setState({ currentStep: currentStep - backToVideo});}
+                )
+              }
+              {
+                this.renderSpecialButton(
+                  'ตอบแบบสอบถามใหม่อีกครั้ง',
+                  () => {this.setState({ currentStep: currentStep - backToFirstQuestion});},
+                )
+              }
+            </View>
+          )
+        }
       </View>
     );
   }
@@ -829,7 +892,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around'
   },
   inputStyle: {
-    width: '70%',
+    width: '90%',
+    marginBottom: 15,
+    paddingVertical: 5,
+    alignSelf: "center",
+    borderColor: "#ccc",
+    borderWidth: 1,
+    textAlign: "center",
+    fontFamily: "Kanit-Regular",
+    fontSize: 16
+  },
+  smallInputStyle: {
+    width: '60%',
     marginBottom: 15,
     paddingVertical: 5,
     alignSelf: "center",

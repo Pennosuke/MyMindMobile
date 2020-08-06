@@ -1,32 +1,11 @@
 import React, { Component } from 'react';
 import { ScrollView, StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native';
-import { MockupData } from '../constants/MockupData';
+import { Program1 } from '../constants/โปรแกรมฝึกปฏิบัติ';
 
 const GREEN = 'rgba(141,196,63,1)';
 const BLUE = '#7BDAF8';
-const defaultAnswers = { 
-  DASS_1_stress : 0,
-  DASS_2_anxiety : 0,
-  DASS_3_depression : 0,
-  DASS_4_anxiety : 0,
-  DASS_5_depression : 0,
-  DASS_6_stress : 0,
-  DASS_7_anxiety : 0,
-  DASS_8_stress : 0,
-  DASS_9_anxiety : 0,
-  DASS_10_depression : 0,
-  DASS_11_stress : 0,
-  DASS_12_stress : 0,
-  DASS_13_depression : 0,
-  DASS_14_stress : 0,
-  DASS_15_anxiety : 0,
-  DASS_16_depression : 0,
-  DASS_17_depression : 0,
-  DASS_18_stress : 0,
-  DASS_19_anxiety : 0,
-  DASS_20_anxiety : 0,
-  DASS_21_depression : 0,
-};
+const defaultAnswers = 0;
+
 export default class CompletedSurvey extends Component {
   static navigationOptions = () => {
     return {
@@ -91,29 +70,14 @@ export default class CompletedSurvey extends Component {
   }
 
   render() {
-    const answers = this.props.route.params?.surveyAnswers ?? defaultAnswers;
-    const depression = answers.DASS_3_depression + answers.DASS_5_depression + answers.DASS_10_depression + answers.DASS_16_depression + answers.DASS_17_depression + answers.DASS_21_depression;
-    //const anxiety = answers.DASS_2_anxiety + answers.DASS_4_anxiety + answers.DASS_7_anxiety + answers.DASS_9_anxiety + answers.DASS_15_anxiety + answers.DASS_19_anxiety + answers.DASS_20_anxiety;
-    //const stress = answers.DASS_1_stress + answers.DASS_6_stress + answers.DASS_8_stress + answers.DASS_11_stress + answers.DASS_12_stress + answers.DASS_14_stress + answers.DASS_18_stress;
-    // const totalDASS = depression + anxiety + stress;
-    const Q_1 = answers.Q_1?? 0;
-    const Q_2 = answers.Q_2?? 0;
-    const Q_3 = answers.Q_3?? 0;
-    const Q_4 = answers.Q_4?? 0;
-    const Q_5 = answers.Q_5?? 0;
-    const Q_6 = answers.Q_6?? 0;
-    const Q_7 = answers.Q_7?? 0;
-    const Q_8 = answers.Q_8?? 0;
-    const Q_9 = answers.Q_9?? 0;
-    const Q = Q_1 + Q_2 + Q_3 + Q_4 + Q_5 + Q_6 + Q_7 + Q_8 + Q_9;
-
+    const depression = this.props.route.params?.score ?? defaultAnswers;
     return (
       <View style={styles.background}>
         <View style={styles.container}>
           {this.mentalResult(depression)}
-          <TouchableOpacity onPress={() => this.props.navigation.replace('MockupScreen', { data : MockupData })}>
+          <TouchableOpacity onPress={() => this.props.navigation.replace('TreatmentScreen', { data : Program1, collection : 'โปรแกรมที่_1_หายใจคลายเครียด' })}>
             <View style={styles.roundedButton}>
-              <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>โปรแกรมฝึกปฏิบัติ</Text>
+              <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14}}>เริ่มทำโปรแกรมการส่งเสริมสุขภาวะทางจิตใจ</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -137,20 +101,23 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     maxHeight: '80%',
+    padding: 20,
   },
   questionText: {
     marginBottom: 20,
-    fontSize: 20
+    fontFamily: 'Kanit-Regular',
+    fontSize: 14
   },
   roundedButton: {
     justifyContent:"center",
     alignItems:"center",
-    width: 292,
+    width: '100%',
     height: 62,
     borderRadius:30,
     backgroundColor:"#22459E",
     display: "flex",
     padding: 10,
-    margin: 10
-  }
+    margin: 10,
+    alignSelf: "center"
+  },
 });

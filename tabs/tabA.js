@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, Button, Alert, TouchableOpacity, TouchableHighlight } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { mentalTest, SPWB } from '../constants/แบบวัดสุขภาวะทางจิตใจ';
 import firebase from '../constants/firebase';
 import 'firebase/firestore';
+import { db } from '../constants/firebase'
+import { SPWB, Q8 } from '../constants/แบบประเมิน';
 
 export function tabA() {
   
-  const db = firebase.firestore();
   const navigation = useNavigation();
   const getFirestoreData = () => {
     const fbData = [];
@@ -28,7 +28,8 @@ export function tabA() {
       justifyContent: 'space-between',
       alignItems: 'center',
       backgroundColor: 'white',
-      padding: 20}}>
+      paddingVertical: 20,
+      paddingHorizontal: 10}}>
       <Text style={styles.title}>ผลการประเมิน</Text>
       {/* <TouchableOpacity onPress={getFirestoreData}>
         <View style={styles.roundedButton}>
@@ -40,11 +41,16 @@ export function tabA() {
           <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>เริ่มทำแบบประเมิน</Text>
         </View>
       </TouchableOpacity> */}
-      <TouchableOpacity onPress={() => navigation.navigate('spwbScreen', { data : SPWB, database : db })}>
+      <TouchableOpacity onPress={() => navigation.navigate('spwbScreen', { data : SPWB })}>
         <View style={styles.roundedButton}>
           <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>เริ่มทำแบบประเมิน</Text>
         </View>
       </TouchableOpacity>
+      {/* <TouchableOpacity onPress={() => navigation.navigate('q8Screen', { data : Q8, score : 11 })}>
+        <View style={styles.roundedButton}>
+          <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>testQ</Text>
+        </View>
+      </TouchableOpacity> */}
     </View>
   );
 }
@@ -77,13 +83,14 @@ const styles = StyleSheet.create({
   roundedButton: {
     justifyContent:"center",
     alignItems:"center",
-    width: 292,
+    width: '100%',
     height: 62,
     borderRadius:30,
     backgroundColor:"#22459E",
     display: "flex",
     padding: 10,
-    margin: 10
+    margin: 10,
+    alignSelf: "center"
   },
   hiddenButton: {
     justifyContent:"center",

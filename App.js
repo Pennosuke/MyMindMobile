@@ -18,6 +18,11 @@ import LoginScreen from './screens/LoginScreen'
 import SignupScreen from './screens/SignupScreen'
 import InitScreen from './screens/InitScreen'
 
+import spwbScreen from './screens/spwbScreen'
+import awarenessScreen from './screens/awarenessScreen'
+import dassScreen from './screens/dassScreen'
+import q8Screen from './screens/q8Screen'
+
 import * as Font from 'expo-font';
 
 const AppStack = createStackNavigator();
@@ -31,18 +36,24 @@ class AppStackScreen extends Component {
           options={{
             headerStyle: {backgroundColor: '#3CFB72'},
             headerTintColor: '#fff',
-            headerTitleStyle: { alignSelf: 'center' }
+            headerTitleStyle: { alignSelf: 'center', fontFamily: 'Kanit-Regular' }
           }}
         />
-        <AppStack.Screen name="Survey" component={Survey} />
+        <AppStack.Screen name="spwbScreen" component={spwbScreen} />
+        <AppStack.Screen name="awarenessScreen" component={awarenessScreen} />
+        <AppStack.Screen name="dassScreen" component={dassScreen} />
+        <AppStack.Screen name="q8Screen" component={q8Screen} />
+        <AppStack.Screen name="CompletedSurvey" component={CompletedSurvey} />
+        <AppStack.Screen name="TreatmentScreen" component={TreatmentScreen} />
+        
+
+        {/* <AppStack.Screen name="Survey" component={Survey} />
         <AppStack.Screen name="SurveyQ1" component={SurveyQ1} />
         <AppStack.Screen name="SurveyQ2" component={SurveyQ2} />
         <AppStack.Screen name="SurveyQ3" component={SurveyQ3} />
         <AppStack.Screen name="SurveyQ4" component={SurveyQ4} />
-        <AppStack.Screen name="CompletedSurvey" component={CompletedSurvey} />
         <AppStack.Screen name="EvaluationResult" component={EvaluationResult} />
-        <AppStack.Screen name="TreatmentScreen" component={TreatmentScreen} />
-        <AppStack.Screen name="MockupScreen" component={MockupScreen} />
+        <AppStack.Screen name="MockupScreen" component={MockupScreen} /> */}
       </AppStack.Navigator>
     )
   }

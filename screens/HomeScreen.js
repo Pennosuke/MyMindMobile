@@ -11,9 +11,21 @@ export function HomeScreen() {
 
   return (
     <Tab.Navigator>
-      <Tab.Screen name="แบบประเมิน" component={tabA} />
-      <Tab.Screen name="โปรแกรมฝึกปฏิบัติ" component={tabB} />
-      <Tab.Screen name="โปรไฟล์" component={tabC} />
+      <Tab.Screen
+        name="แบบประเมิน"
+        component={tabA}
+        tabBarOptions={{labelStyle: { fontFamily: 'Kanit-Regular' }}}
+      />
+      <Tab.Screen
+        name="โปรแกรมฝึกปฏิบัติ"
+        component={tabB}
+        tabBarOptions={{labelStyle: { fontFamily: 'Kanit-Regular' }}}
+      />
+      <Tab.Screen
+        name="โปรไฟล์"
+        component={tabC}
+        tabBarOptions={{labelStyle: { fontFamily: 'Kanit-Regular' }}}
+      />
     </Tab.Navigator>
   );
 }

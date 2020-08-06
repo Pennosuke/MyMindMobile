@@ -6,7 +6,7 @@ import { emotions } from '../constants/MockupData';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import { db } from '../constants/firebase'
-import { awareness } from '../constants/แบบประเมิน';
+import { DASS } from '../constants/แบบประเมิน';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -25,7 +25,7 @@ const defaultSurvey = [
   }
 ]
 
-export default class spwbScreen extends Component {
+export default class awarenessScreen extends Component {
 
   constructor(props) {
     super(props);
@@ -51,8 +51,8 @@ export default class spwbScreen extends Component {
     answersAsObj['timestamp'] = firebase.firestore.Timestamp.fromDate(new Date());
     answersAsObj['userName'] = firebase.auth().currentUser.displayName;
     console.log('answersAsObj', answersAsObj);
-    db.collection('แบบวัดสุขภาวะทางจิตใจ').add(answersAsObj)
-    this.props.navigation.navigate('awarenessScreen', { data : awareness });
+    db.collection('แบบวัดการมีสติ').add(answersAsObj)
+    this.props.navigation.navigate('dassScreen', { data : DASS });
   }
   
   renderSpecialButton(buttonText ,onPressEvent) {

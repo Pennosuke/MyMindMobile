@@ -6,7 +6,7 @@ import { emotions } from '../constants/MockupData';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import { db } from '../constants/firebase'
-import { awareness } from '../constants/แบบประเมิน';
+import { Q8 } from '../constants/แบบประเมิน';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -25,7 +25,7 @@ const defaultSurvey = [
   }
 ]
 
-export default class spwbScreen extends Component {
+export default class q8Screen extends Component {
 
   constructor(props) {
     super(props);
@@ -44,17 +44,26 @@ export default class spwbScreen extends Component {
 
   onSurveyFinished() {
     const { answers } = this.state;
-    const answersAsObj = {};
+    const answersAsObj = {
+      '1': 0,
+      '2': 0,
+      '3': 0,
+      '4': 0,
+      '5': 0,
+      '6': 0,
+      '7': 0,
+      '8': 0,
+      '9': 0,
+    };
     for (const elem of answers) {
       answersAsObj[elem.contentId] = elem.value;
     }
     answersAsObj['timestamp'] = firebase.firestore.Timestamp.fromDate(new Date());
     answersAsObj['userName'] = firebase.auth().currentUser.displayName;
     console.log('answersAsObj', answersAsObj);
-    db.collection('แบบวัดสุขภาวะทางจิตใจ').add(answersAsObj)
-    this.props.navigation.navigate('awarenessScreen', { data : awareness });
+    db.collection('แบบประเมินการฆ่าตัวตาย').add(answersAsObj)
+    this.props.navigation.replace('CompletedSurvey', { score :this.props.route.params.score });
   }
-  
   renderSpecialButton(buttonText ,onPressEvent) {
     return (
       <View style={{ flexGrow: 1, marginTop: 10, marginBottom: 10 }}>
@@ -104,7 +113,7 @@ export default class spwbScreen extends Component {
           <TouchableOpacity onPress={FinishedEvent} disabled={!enabledCondition}>
             <View style={enabledCondition ? [styles.navButton,{backgroundColor: SELECTED}] : styles.disableNavButton}>
               <Text style={enabledCondition ? {textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16} : {textAlign: 'center', color: '#a3a3a3', fontFamily: 'Kanit-Regular', fontSize: 16}}>
-                เสร็จสิ้น
+                ถัดไป
               </Text>
             </View>
           </TouchableOpacity>
@@ -266,18 +275,16 @@ export default class spwbScreen extends Component {
         </View>
         <View style={styles.navButtonContainerStyle}>
           {
-            this.renderPrevButton(
-              () => {
-                this.setState({ currentStep: currentStep - 1});
-              },
-              !!(currentStep !== 0)
-            )
-          }
-          {
             this.renderNextOrFinishButton(
               survey,
               () => {
-                this.setState({ currentStep: currentStep + 1});
+                if(currentContentId === '2' && state.answers[currentAnswerIndex].value.value === 0 && state.answers[currentAnswerIndex - 1].value.value === 0) {
+                  this.onSurveyFinished();
+                } else if(currentContentId === '3' && state.answers[currentAnswerIndex].value.value !== 6) {
+                  this.setState({ currentStep: currentStep + 2});
+                } else {
+                  this.setState({ currentStep: currentStep + 1});
+                }
               },
               () => {
                 this.onSurveyFinished();

@@ -12,6 +12,7 @@ export default class SignupScreen extends Component {
   constructor() {
     super();
     this.state = { 
+
       userName: '',
       realName: '',
       phoneNumber: '',
@@ -20,7 +21,21 @@ export default class SignupScreen extends Component {
       birthDay: '',
       birthMonth: '',
       birthYear: '',
-      school: '',
+      /*school: '',
+      sex: '',
+      age: '',
+      education: '',
+      GPA: '',
+      religion: '',
+      address: '',
+      revenueSource: '',
+      revenueValue: '',
+      revenueFreq: '',
+      isRevenueEnough: '',
+      revenueSatisfaction: '',
+      parentsMaritalStatus: '',
+      dadEducation: '',
+      momEducation: '',*/
       isLoading: false,
     }
   }
@@ -131,66 +146,6 @@ export default class SignupScreen extends Component {
       Alert.alert(error.message);
     });
     this.setState({isLoading: false})
-    /*db.collection("userData").doc(this.state.userName).get().then(function(doc) {
-      temp = doc.exists
-    }).catch(function(error) {
-      console.log("Error getting document:", error);
-    });
-    console.log('temp', temp)
-    if(temp) {
-      console.log('username validate success')
-      console.log('this.state', state)
-      console.log('this.state.email', this.state.email)
-      console.log('this.state.password', this.state.password)
-      if(this.state.email === '' && this.state.password === '') {
-        console.log('Enter details to signup!')
-        Alert.alert('Enter details to signup!')
-      }
-      else {
-        console.log('email password validate success')
-        this.setState({isLoading: true})
-        firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
-        .then((res) => {
-          console.log(res)
-          res.user.updateProfile({
-            displayName: this.state.userName,
-          })
-          db.collection('userData').doc(this.state.userName).set({
-            userName: this.state.userName,
-            realName: this.state.realName,
-            phoneNumber: this.state.phoneNumber,
-            email: this.state.email,
-            birthDay: this.state.birthDay,
-            birthMonth: this.state.birthMonth,
-            birthYear: this.state.birthYear,
-            school: this.state.school
-          })
-          
-          console.log('User registered successfully!')
-          this.setState({
-            isLoading: false,
-            userName: '',
-            realName: '',
-            phoneNumber: '',
-            email: '', 
-            password: '',
-            birthDay: '',
-            birthMonth: '',
-            birthYear: '',
-            school: '',
-          })
-          this.props.navigation.navigate('Login')
-        })
-        .catch(
-          (error) => {
-            console.log('error', error)
-            console.log('error.message', error.message)
-            this.setState({ errorMessage: error.message, isLoading: false })
-            Alert.alert(error.message)
-          }
-        )      
-      }
-    }*/
   }
 
   render() {
@@ -205,6 +160,14 @@ export default class SignupScreen extends Component {
       <View  style={{flex:1}}>
         <ScrollView style={{flex:1}}>
         <View style={{width:'100%', height:windowHeight }}>
+          <Text>วันเกิด</Text>
+            <Picker
+              selectedValue={this.state.birthDay}
+              style={{height: 40, width: '90%'}}
+              onValueChange={(val, index) => this.updateInputVal(val, 'sex')}
+            >
+              <Picker.Item label={yearString} value={yearString} key={yearIndex} />
+          </Picker>
           <View style={styles.container}>  
             <TextInput
               style={styles.inputStyle}

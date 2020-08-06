@@ -35,7 +35,8 @@ export default class tabC extends Component {
         justifyContent: 'space-between',
         alignItems: 'center',
         backgroundColor: 'white',
-        padding: 20}}
+        paddingVertical: 20,
+        paddingHorizontal: 10}}
       >
         <Text style={styles.title}>โปรไฟล์</Text>
         <View>
@@ -95,13 +96,14 @@ const styles = StyleSheet.create({
   roundedButton: {
     justifyContent:"center",
     alignItems:"center",
-    width: 292,
+    width: '100%',
     height: 62,
     borderRadius:30,
     backgroundColor:"#22459E",
     display: "flex",
     padding: 10,
-    margin: 10
+    margin: 10,
+    alignSelf: "center"
   },
   hiddenButton: {
     justifyContent:"center",
