@@ -11,7 +11,8 @@ export const Program1 = [
     contentId: '2',
     contentType: 'Video',
     contentText: 'ประโยชน์ที่น่าทึ่งของการหายใจอย่างถูกวิธี',
-    videoUri: {uri: 'https://firebasestorage.googleapis.com/v0/b/mymindmobile-d9d9b.appspot.com/o/videos%2FVDO_%E0%B8%AB%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%A5%E0%B8%82_1._%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B9%82%E0%B8%A2%E0%B8%8A%E0%B8%99%E0%B9%8C%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%99%E0%B9%88%E0%B8%B2%E0%B8%97%E0%B8%B6%E0%B9%88%E0%B8%87%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%AB%E0%B8%B2%E0%B8%A2%E0%B9%83%E0%B8%88.mp4?alt=media&token=a0c0725e-8506-4773-8c40-db7839da76a1'}
+    videoUri: {uri: 'https://firebasestorage.googleapis.com/v0/b/mymindmobile-d9d9b.appspot.com/o/videos%2FVDO_%E0%B8%AB%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%A5%E0%B8%82_1._%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B9%82%E0%B8%A2%E0%B8%8A%E0%B8%99%E0%B9%8C%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%99%E0%B9%88%E0%B8%B2%E0%B8%97%E0%B8%B6%E0%B9%88%E0%B8%87%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%AB%E0%B8%B2%E0%B8%A2%E0%B9%83%E0%B8%88.mp4?alt=media&token=a0c0725e-8506-4773-8c40-db7839da76a1'},
+    minTime: 3
   },
   {
     contentId: '3',
@@ -207,7 +208,8 @@ export const Program1 = [
     contentId: '15',
     contentType: 'Video',
     contentText: 'หายใจสลายเครียด',
-    videoUri: {uri: 'https://firebasestorage.googleapis.com/v0/b/mymindmobile-d9d9b.appspot.com/o/videos%2FVDO_%E0%B8%AB%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%A5%E0%B8%82_2._%E0%B8%AB%E0%B8%B2%E0%B8%A2%E0%B9%83%E0%B8%88%E0%B8%AA%E0%B8%A5%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%84%E0%B8%A3%E0%B8%B5%E0%B8%A2%E0%B8%94.mp4?alt=media&token=71dac491-5c9d-4f1e-8cc6-8a17e5e0f374'}
+    videoUri: {uri: 'https://firebasestorage.googleapis.com/v0/b/mymindmobile-d9d9b.appspot.com/o/videos%2FVDO_%E0%B8%AB%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%A5%E0%B8%82_2._%E0%B8%AB%E0%B8%B2%E0%B8%A2%E0%B9%83%E0%B8%88%E0%B8%AA%E0%B8%A5%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%84%E0%B8%A3%E0%B8%B5%E0%B8%A2%E0%B8%94.mp4?alt=media&token=71dac491-5c9d-4f1e-8cc6-8a17e5e0f374'},
+    minTime: 3
   },
   {
     contentId: '16',
@@ -257,7 +259,8 @@ export const Program1 = [
     contentId: '19',
     contentType: 'Video',
     contentText: 'เอาล่ะค่ะ พร้อมฝึกกันแล้วนะคะ\nต่อไปนี้ ขอให้น้องชมวิดีโอ “การหายใจอย่างถูกวิธี” และฝึกไปพร้อมๆ กันค่ะ',
-    videoUri: {uri: 'https://firebasestorage.googleapis.com/v0/b/mymindmobile-d9d9b.appspot.com/o/videos%2FVDO_%E0%B8%AB%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%A5%E0%B8%82_3._%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%AB%E0%B8%B2%E0%B8%A2%E0%B9%83%E0%B8%88%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B8%96%E0%B8%B9%E0%B8%81%E0%B8%A7%E0%B8%B4%E0%B8%98%E0%B8%B5.mp4?alt=media&token=68db6c42-cd97-4c88-9341-522d59101bda'}
+    videoUri: {uri: 'https://firebasestorage.googleapis.com/v0/b/mymindmobile-d9d9b.appspot.com/o/videos%2FVDO_%E0%B8%AB%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%A5%E0%B8%82_3._%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%AB%E0%B8%B2%E0%B8%A2%E0%B9%83%E0%B8%88%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B8%96%E0%B8%B9%E0%B8%81%E0%B8%A7%E0%B8%B4%E0%B8%98%E0%B8%B5.mp4?alt=media&token=68db6c42-cd97-4c88-9341-522d59101bda'},
+    minTime: 3
   },
   {
     contentId: '20',
@@ -334,6 +337,112 @@ export const Program1 = [
   },
 ]
 
+export const Homework1 = [
+  {
+    contentId: '1',
+    contentType: 'TextInput',
+    contentText: 'ขอให้น้องๆ วัดความดันโลหิต การเต้นของหัวใจ และบันทึกข้อมูลความดันโลหิตและการเต้นของหัวใจก่อนนะคะ',
+    questions: [
+      {
+        questionText: 'ความดันโลหิตตัวบน',
+        placeholderText: 'Insert Here1',
+        textBoxSize: 'small',
+        needAnswer: true
+      },
+      {
+        questionText: 'ความดันโลหิตตัวล่าง',
+        placeholderText: 'Insert Here2',
+        textBoxSize: 'small',
+        needAnswer: true
+      },
+      {
+        questionText: 'จำนวนครั้งของการเต้นหัวใจ ใน 1 นาที',
+        placeholderText: 'Insert Here3',
+        textBoxSize: 'small',
+        needAnswer: true
+      },
+      {
+        questionText: 'ระดับอุณหภูมิร่างกาย',
+        placeholderText: 'Insert Here4',
+        textBoxSize: 'small',
+        needAnswer: true
+      }
+    ]
+  },
+  {
+    contentId: '2',
+    contentType: 'EmotionButtons',
+    contentText: 'ช่วยเลือกรูปภาพที่ตรงกับความรู้สึกของน้องมากที่สุดนะคะ (เลือกได้ไม่เกิน 3 ภาพค่ะ)',
+    minEmotions: 1,
+    maxEmotions: 3
+  },
+  {
+    contentId: '3',
+    contentType: 'EmotionRating',
+    contentText: 'ช่วยบอกระดับความรู้สึกที่น้องๆเลือกมาด้วยนะคะ',
+    answerIdRef: '2'
+  },
+  {
+    contentId: '4',
+    contentType: 'Video',
+    contentText: 'เอาล่ะค่ะ พร้อมฝึกกันแล้วนะคะ\nต่อไปนี้ ขอให้น้องชมวิดีโอ “การหายใจอย่างถูกวิธี” และฝึกไปพร้อมๆ กันค่ะ',
+    videoUri: {uri: 'https://firebasestorage.googleapis.com/v0/b/mymindmobile-d9d9b.appspot.com/o/videos%2FVDO_%E0%B8%AB%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%A5%E0%B8%82_3._%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%AB%E0%B8%B2%E0%B8%A2%E0%B9%83%E0%B8%88%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B8%96%E0%B8%B9%E0%B8%81%E0%B8%A7%E0%B8%B4%E0%B8%98%E0%B8%B5.mp4?alt=media&token=68db6c42-cd97-4c88-9341-522d59101bda'},
+    minTime: 3
+  },
+  {
+    contentId: '5',
+    contentType: 'Info',
+    contentText: 'เมื่อน้องๆ ได้ฝึกฝนกันแล้ว น้องๆช่วยวัดความดันโลหิต การเต้นของหัวใจ และเลือกภาพที่ตรงกับความรู้สึกของน้องมากที่สุด 3 ภาพ เหมือนเช่นเคยนะคะ มาดูซิว่าสิ่งต่างๆเหล่านี้เปลี่ยนแปลงไปจากเดิมหรือเปล่า',
+    options: {
+      imageUri: require(`../assets/charecters/Character-04.png`)
+    }
+  },
+  {
+    contentId: '6',
+    contentType: 'TextInput',
+    contentText: 'ขอให้น้องวัดความดันโลหิต การเต้นของหัวใจนะคะ',
+    questions: [
+      {
+        questionText: 'ความดันโลหิตตัวบน',
+        placeholderText: 'Insert Here1',
+        textBoxSize: 'small',
+        needAnswer: true
+      },
+      {
+        questionText: 'ความดันโลหิตตัวล่าง',
+        placeholderText: 'Insert Here2',
+        textBoxSize: 'small',
+        needAnswer: true
+      },
+      {
+        questionText: 'จำนวนครั้งของการเต้นหัวใจ ใน 1 นาที',
+        placeholderText: 'Insert Here3',
+        textBoxSize: 'small',
+        needAnswer: true
+      },
+      {
+        questionText: 'ระดับอุณหภูมิร่างกาย',
+        placeholderText: 'Insert Here4',
+        textBoxSize: 'small',
+        needAnswer: true
+      }
+    ]
+  },
+  {
+    contentId: '7',
+    contentType: 'EmotionButtons',
+    contentText: 'ช่วยเลือกรูปภาพที่ตรงกับความรู้สึกของน้องมากที่สุดนะคะ (เลือกได้ไม่เกิน 3 ภาพค่ะ)',
+    minEmotions: 1,
+    maxEmotions: 3
+  },
+  {
+    contentId: '8',
+    contentType: 'EmotionRating',
+    contentText: 'ช่วยบอกระดับความรู้สึกที่น้องๆเลือกมาด้วยนะคะ',
+    answerIdRef: '7'
+  },
+]
+
 export const Program2 = [
   {
     contentId: '1',
@@ -390,8 +499,9 @@ export const Program2 = [
   {
     contentId: '5',
     contentType: 'Video',
-    contentText: 'เอาล่ะค่ะ พร้อมฝึกกันแล้วนะคะ ต่อไปนี้ ขอให้น้องๆ ชมวิดีโอและฝึกไปพร้อมๆ กันกับ VDO นี้นะคะ',
-    videoUri: {uri: 'https://firebasestorage.googleapis.com/v0/b/mymindmobile-d9d9b.appspot.com/o/videos%2FVDO_%E0%B8%AB%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%A5%E0%B8%82_4.mp4?alt=media&token=80e376df-fd97-417a-87ca-b091d9415e91'}
+    contentText: 'เอาล่ะค่ะ พร้อมฝึกกันแล้วนะคะ\n ต่อไปนี้ ขอให้น้องๆ ชมวิดีโอและฝึกไปพร้อมๆ กันกับ VDO นี้นะคะ',
+    videoUri: {uri: 'https://firebasestorage.googleapis.com/v0/b/mymindmobile-d9d9b.appspot.com/o/videos%2FVDO_%E0%B8%AB%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%A5%E0%B8%82_4.mp4?alt=media&token=80e376df-fd97-417a-87ca-b091d9415e91'},
+    minTime: 3
   },
   {
     contentId: '6',
@@ -465,5 +575,111 @@ export const Program2 = [
     options: {
       imageUri: require(`../assets/charecters/Character-04.png`)
     }
+  },
+]
+
+export const Homework2 = [
+  {
+    contentId: '1',
+    contentType: 'TextInput',
+    contentText: 'ขอให้น้องๆ วัดความดันโลหิต การเต้นของหัวใจ และบันทึกข้อมูลความดันโลหิตและการเต้นของหัวใจก่อนนะคะ',
+    questions: [
+      {
+        questionText: 'ความดันโลหิตตัวบน',
+        placeholderText: 'Insert Here1',
+        textBoxSize: 'small',
+        needAnswer: true
+      },
+      {
+        questionText: 'ความดันโลหิตตัวล่าง',
+        placeholderText: 'Insert Here2',
+        textBoxSize: 'small',
+        needAnswer: true
+      },
+      {
+        questionText: 'จำนวนครั้งของการเต้นหัวใจ ใน 1 นาที',
+        placeholderText: 'Insert Here3',
+        textBoxSize: 'small',
+        needAnswer: true
+      },
+      {
+        questionText: 'ระดับอุณหภูมิร่างกาย',
+        placeholderText: 'Insert Here4',
+        textBoxSize: 'small',
+        needAnswer: true
+      }
+    ]
+  },
+  {
+    contentId: '2',
+    contentType: 'EmotionButtons',
+    contentText: 'ช่วยเลือกรูปภาพที่ตรงกับความรู้สึกของน้องมากที่สุดนะคะ (เลือกได้ไม่เกิน 3 ภาพค่ะ)',
+    minEmotions: 1,
+    maxEmotions: 3
+  },
+  {
+    contentId: '3',
+    contentType: 'EmotionRating',
+    contentText: 'ช่วยบอกระดับความรู้สึกที่น้องๆเลือกมาด้วยนะคะ',
+    answerIdRef: '2'
+  },
+  {
+    contentId: '4',
+    contentType: 'Video',
+    contentText: 'เอาล่ะค่ะ พร้อมฝึกกันแล้วนะคะ\n ต่อไปนี้ ขอให้น้องๆ ชมวิดีโอและฝึกไปพร้อมๆ กันกับ VDO นี้นะคะ',
+    videoUri: {uri: 'https://firebasestorage.googleapis.com/v0/b/mymindmobile-d9d9b.appspot.com/o/videos%2FVDO_%E0%B8%AB%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%A5%E0%B8%82_4.mp4?alt=media&token=80e376df-fd97-417a-87ca-b091d9415e91'},
+    minTime: 3
+  },
+  {
+    contentId: '5',
+    contentType: 'Info',
+    contentText: 'เมื่อน้องๆ ได้ฝึกฝนกันแล้ว น้องๆช่วยวัดความดันโลหิต การเต้นของหัวใจ และเลือกภาพที่ตรงกับความรู้สึกของน้องมากที่สุด 3 ภาพ เหมือนเช่นเคยนะคะ มาดูซิว่าสิ่งต่างๆเหล่านี้เปลี่ยนแปลงไปจากเดิมหรือเปล่า',
+    options: {
+      imageUri: require(`../assets/charecters/Character-04.png`)
+    }
+  },
+  {
+    contentId: '6',
+    contentType: 'TextInput',
+    contentText: 'ขอให้น้องวัดความดันโลหิต การเต้นของหัวใจนะคะ',
+    questions: [
+      {
+        questionText: 'ความดันโลหิตตัวบน',
+        placeholderText: 'Insert Here1',
+        textBoxSize: 'small',
+        needAnswer: true
+      },
+      {
+        questionText: 'ความดันโลหิตตัวล่าง',
+        placeholderText: 'Insert Here2',
+        textBoxSize: 'small',
+        needAnswer: true
+      },
+      {
+        questionText: 'จำนวนครั้งของการเต้นหัวใจ ใน 1 นาที',
+        placeholderText: 'Insert Here3',
+        textBoxSize: 'small',
+        needAnswer: true
+      },
+      {
+        questionText: 'ระดับอุณหภูมิร่างกาย',
+        placeholderText: 'Insert Here4',
+        textBoxSize: 'small',
+        needAnswer: true
+      }
+    ]
+  },
+  {
+    contentId: '7',
+    contentType: 'EmotionButtons',
+    contentText: 'ช่วยเลือกรูปภาพที่ตรงกับความรู้สึกของน้องมากที่สุดนะคะ (เลือกได้ไม่เกิน 3 ภาพค่ะ)',
+    minEmotions: 1,
+    maxEmotions: 3
+  },
+  {
+    contentId: '8',
+    contentType: 'EmotionRating',
+    contentText: 'ช่วยบอกระดับความรู้สึกที่น้องๆเลือกมาด้วยนะคะ',
+    answerIdRef: '7'
   },
 ]

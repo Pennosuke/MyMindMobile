@@ -42,6 +42,37 @@ export default class dassScreen extends Component {
     };
   }
 
+  async saveArchivementData(currentTime) {
+    const archivesnapshot = await db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).get()
+    const getUserArchivement = await archivesnapshot.data()
+    if(getUserArchivement === undefined || getUserArchivement['แบบประเมิน'] === undefined) {
+      db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).set({
+        ['แบบประเมิน'] : {
+          latestTimestamp: currentTime,
+          firstTimestamp: currentTime,
+          value: 1
+        }
+      }, { merge: true })
+    } else {
+      db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).set({
+        ['แบบประเมิน'] : {
+          latestTimestamp: currentTime,
+          value: getUserArchivement['แบบประเมิน'].value + 1
+        }
+      }, { merge: true })
+    }
+    const currentTimeAfter = firebase.firestore.Timestamp.fromDate(new Date());
+    global.checkpointTime = currentTimeAfter.toDate().toLocaleDateString() + ' ' + currentTimeAfter.toDate().toLocaleTimeString();
+    const archivesnapshotAfter = await db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).get()
+    const getUserArchivementAfter = await archivesnapshotAfter.data()
+    global.userArchivement = getUserArchivementAfter;
+    Object.keys(global.userArchivement).forEach((key) => {
+      global.userArchivement[key].firstTimestamp = global.userArchivement[key].firstTimestamp.toDate().toLocaleDateString() + ' ' + global.userArchivement[key].firstTimestamp.toDate().toLocaleTimeString();
+      global.userArchivement[key].latestTimestamp = global.userArchivement[key].latestTimestamp.toDate().toLocaleDateString() + ' ' + global.userArchivement[key].latestTimestamp.toDate().toLocaleTimeString();
+    })
+    console.log('DASS global.userArchivement', global.userArchivement);
+  }
+
   onSurveyFinished() {
     const { answers } = this.state;
     const answersAsObj = {};
@@ -53,7 +84,8 @@ export default class dassScreen extends Component {
         depressionScore += elem.value.value;
       }
     }
-    answersAsObj['timestamp'] = firebase.firestore.Timestamp.fromDate(new Date());
+    const currentTime = firebase.firestore.Timestamp.fromDate(new Date());
+    answersAsObj['timestamp'] = currentTime;
     answersAsObj['userName'] = firebase.auth().currentUser.displayName;
     console.log('answersAsObj', answersAsObj);
     db.collection('แบบสอบถามวัดภาวะสุขภาพจิต').add(answersAsObj)
@@ -61,6 +93,7 @@ export default class dassScreen extends Component {
       this.props.navigation.navigate('q8Screen', { data : Q8, score : depressionScore });
     }
     else {
+      this.saveArchivementData(currentTime);
       this.props.navigation.replace('CompletedSurvey', { score : depressionScore });
     }
   }

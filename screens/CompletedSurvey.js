@@ -29,6 +29,15 @@ export default class CompletedSurvey extends Component {
           <Text style={styles.questionText}>ผลการประเมินสุขภาวะทางจิตใจ</Text>
           <Text style={styles.questionText}>น้องเป็นผู้ที่มีสุขภาพจิตดีนะคะ</Text>
           <Text style={styles.questionText}>อย่างไรก็ตาม ในอนาคตอาจจะมีเหตุการณ์เข้ามาในชีวิตที่ทำให้น้องเครียดได้ดังนั้น เพื่อป้องกันปัญหาที่อาจจะเกิดขึ้นได้ในอนาคต ขอให้น้องๆมาเรียนรู้วิธีการและฝึกฝนเพื่อ พัฒนาความเข้มแข็งทางจิตใจจากโปรแกรมการส่งเสริมสุขภาวะทางจิตใจใน App นี้นะคะ</Text>
+          <View style={{alignItems: 'center', justifyContent: 'center'}}>
+            <TouchableOpacity 
+              onPress={() => this.props.navigation.replace('TreatmentScreen', { data : Program1, collection : 'โปรแกรมที่_1_หายใจคลายเครียด', name: 'โปรแกรมที่ 1 หายใจคลายเครียด' })}
+            >
+              <View style={styles.roundedButton}>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14}}>เริ่มทำโปรแกรมการส่งเสริมสุขภาวะทางจิตใจ</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
         </ScrollView>
       )
     } else if (score <= 6) {
@@ -37,6 +46,15 @@ export default class CompletedSurvey extends Component {
           <Text style={styles.questionText}>ผลการประเมินสุขภาวะทางจิตใจ</Text>
           <Text style={styles.questionText}>น้องเป็นผู้ที่เริ่มมีอารมณ์ซึมเศร้าเล็กน้อย</Text>
           <Text style={styles.questionText}>ซึ่งคนทั่วไปก็สามารถมีอารมณ์เช่นนี้ได้ อย่างไรก็ตามหากต้องการหายจากอารมณ์เศร้านี้ ให้น้องเรียนรู้วิธีการจากโปรแกรมการส่งเสริมสุขภาวะทางจิตใจกันนะคะ</Text>
+          <View style={{alignItems: 'center', justifyContent: 'center'}}>
+            <TouchableOpacity 
+              onPress={() => this.props.navigation.replace('TreatmentScreen', { data : Program1, collection : 'โปรแกรมที่_1_หายใจคลายเครียด', name: 'โปรแกรมที่ 1 หายใจคลายเครียด' })}
+            >
+              <View style={styles.roundedButton}>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14}}>เริ่มทำโปรแกรมการส่งเสริมสุขภาวะทางจิตใจ</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
         </ScrollView>
       )
     } else if (score <= 10) {
@@ -45,6 +63,15 @@ export default class CompletedSurvey extends Component {
           <Text style={styles.questionText}>ผลการประเมินสุขภาวะทางจิตใจ</Text>
           <Text style={styles.questionText}>น้องเป็นผู้มีที่มีสภาวะอารมณ์ซึมเศร้าปานกลาง</Text>
           <Text style={styles.questionText}>ไม่ต้องตกใจไปนะคะ เราสามารถช่วยให้สภาวะอารมณ์ของน้องกลับคืนสู่ภาวะปกติได้ เชิญน้องมาเรียนรู้จากโปรแกรมการส่งเสริมสุขภาวะทางจิตใจ เพื่อการมีสุขภาพจิตที่ดีกันนะคะ</Text>
+          <View style={{alignItems: 'center', justifyContent: 'center'}}>
+            <TouchableOpacity 
+              onPress={() => this.props.navigation.replace('TreatmentScreen', { data : Program1, collection : 'โปรแกรมที่_1_หายใจคลายเครียด', name: 'โปรแกรมที่ 1 หายใจคลายเครียด' })}
+            >
+              <View style={styles.roundedButton}>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14}}>เริ่มทำโปรแกรมการส่งเสริมสุขภาวะทางจิตใจ</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
         </ScrollView>
       )
     } else if (score <= 13) {
@@ -54,7 +81,21 @@ export default class CompletedSurvey extends Component {
           <Text style={styles.questionText}>น้องมีสภาวะอารมณ์ซึมเศร้าค่อนข้างมาก</Text>
           <Text style={styles.questionText}>ชึ่งสามารถเกิดขึ้นได้และสามารถกลับสู่สภาวะอารมณ์ปกติได้ อย่าเพิ่งต้องตกใจไปค่ะ น้องสามารถกลับคืนสู่การมีสุขภาพจิตที่ดีขึ้นได้โดยเร็วจากการทำ 2 อย่างดังนี้นะคะ</Text>
           <Text style={styles.questionText}>1) เข้าไปเรียนรู้จากโปรแกรมการส่งเสริมสุขภาวะทางจิตใจ</Text>
-          <Text style={styles.questionText}>2) ปรึกษาผู้เชี่ยวชาญในการให้การช่วยเหลือ ซึ่งพี่จะมีชื่อและเบอร์โทรให้แก่น้องในลำดับถัดไปค่ะหรือ ถ้าน้องต้องการให้ผู้เชี่ยวชาญของเราโทรหาน้อง เพื่อพูดคุยให้การช่วยเหลือให้น้องมีสุขภาพจิตที่ดีขึ้นโดยเร็ว พี่จะรีบติดต่อน้องโดยเร็วนะคะ</Text>
+          <Text style={styles.questionText}>2) ปรึกษาผู้เชี่ยวชาญในการให้การช่วยเหลือ ซึ่งพี่จะมีชื่อและเบอร์โทรให้ในปุ่ม"ดูข้อมูลติดต่อผู้เชี่ยวชาญ" เพื่อให้น้องสามารถนำไปติดต่อพูดคุยรับการช่วยเหลือให้น้องมีสุขภาพจิตที่ดีขึ้นโดยเร็วค่ะ</Text>
+          <View style={{alignItems: 'center', justifyContent: 'center'}}>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('ContactScreen')}>
+              <View style={styles.roundedButton}>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14}}>ดูข้อมูลติดต่อผู้เชี่ยวชาญ</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity 
+              onPress={() => this.props.navigation.replace('TreatmentScreen', { data : Program1, collection : 'โปรแกรมที่_1_หายใจคลายเครียด', name: 'โปรแกรมที่ 1 หายใจคลายเครียด' })}
+            >
+              <View style={styles.roundedButton}>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14}}>เริ่มทำโปรแกรมการส่งเสริมสุขภาวะทางจิตใจ</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
         </ScrollView>
       )
     } else {
@@ -62,8 +103,22 @@ export default class CompletedSurvey extends Component {
         <ScrollView>
           <Text style={styles.questionText}>ผลการประเมินสุขภาวะทางจิตใจ</Text>
           <Text style={styles.questionText}>น้องมีสภาวะอารมณ์ซึมเศร้าในระดับสูงมาก</Text>
-          <Text style={styles.questionText}>น้องกำลังต้องการการช่วยเหลือใช่ไหมคะ พี่สามารถช่วยเหลือน้องได้ค่ะ พี่มีผู้เชี่ยวชาญในการให้การช่วยเหลือพูดคุยให้การปรึกษากับน้องๆ มีข้อมูลแหล่งช่วยเหลือต่างๆ</Text>
-          <Text style={styles.questionText}>ขอให้น้องติดต่อขอความช่วยเหลือได้เลยนะคะ หรือถ้าน้องต้องการให้ผู้เชี่ยวชาญของเราโทรหาน้อง เพื่อพูดคุยให้การปรึกษาให้น้องมีสุขภาพจิตดีขึ้นโดยเร็ว พี่ก็จะยินดีมากค่ะ และภายหลังจากที่น้องได้รับการช่วยเหลือแล้ว ขอเชิญชวนให้น้องเข้าไปเรียนรู้จากโปรแกรมการส่งเสริมสุขภาวะทางจิตใจ เพื่อให้น้องกลับคืนสู่การมีสุขภาพจิตที่ดีโดยเร็วนะคะ</Text>
+          <Text style={styles.questionText}>น้องกำลังต้องการการช่วยเหลือใช่ไหมคะ พี่สามารถช่วยเหลือน้องได้ค่ะ พี่มีมีข้อมูลแหล่งช่วยเหลือต่างๆ</Text>
+          <Text style={styles.questionText}>ขอให้น้องติดต่อขอความช่วยเหลือได้เลยนะคะ และภายหลังจากที่น้องได้รับการช่วยเหลือแล้ว ขอเชิญชวนให้น้องเข้าไปเรียนรู้จากโปรแกรมการส่งเสริมสุขภาวะทางจิตใจ เพื่อให้น้องกลับคืนสู่การมีสุขภาพจิตที่ดีโดยเร็วนะคะ</Text>
+          <View style={{alignItems: 'center', justifyContent: 'center'}}>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('ContactScreen')}>
+              <View style={styles.roundedButton}>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14}}>ดูข้อมูลติดต่อผู้เชี่ยวชาญ</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity 
+              onPress={() => this.props.navigation.replace('TreatmentScreen', { data : Program1, collection : 'โปรแกรมที่_1_หายใจคลายเครียด', name: 'โปรแกรมที่ 1 หายใจคลายเครียด' })}
+            >
+              <View style={styles.roundedButton}>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14}}>เริ่มทำโปรแกรมการส่งเสริมสุขภาวะทางจิตใจ</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
         </ScrollView>
       )
     }
@@ -75,11 +130,6 @@ export default class CompletedSurvey extends Component {
       <View style={styles.background}>
         <View style={styles.container}>
           {this.mentalResult(depression)}
-          <TouchableOpacity onPress={() => this.props.navigation.replace('TreatmentScreen', { data : Program1, collection : 'โปรแกรมที่_1_หายใจคลายเครียด' })}>
-            <View style={styles.roundedButton}>
-              <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14}}>เริ่มทำโปรแกรมการส่งเสริมสุขภาวะทางจิตใจ</Text>
-            </View>
-          </TouchableOpacity>
         </View>
       </View>
     );

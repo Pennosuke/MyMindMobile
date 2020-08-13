@@ -1,15 +1,14 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { StyleSheet, Text, View, Button, Alert, TouchableOpacity, TouchableHighlight } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import firebase from '../constants/firebase';
 import 'firebase/firestore';
 import { db } from '../constants/firebase'
-import { SPWB, Q8 } from '../constants/แบบประเมิน';
+import { SPWB, DASS, Q8 } from '../constants/แบบประเมิน';
 
-export function tabA() {
-  
-  const navigation = useNavigation();
-  const getFirestoreData = () => {
+export default class tabA extends Component {
+
+  getFirestoreData = () => {
     const fbData = [];
     db.collection("result").get().then((snapshot => {
       snapshot.forEach(doc=>{
@@ -17,42 +16,53 @@ export function tabA() {
         fbData.push(doc.data())
       })
     }));
-    navigation.navigate('EvaluationResult', { data : fbData })
+    this.props.navigation.navigate('EvaluationResult', { data : fbData })
   }
-  
 
-  return (
-    <View style={
-      {flex: 1,
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      backgroundColor: 'white',
-      paddingVertical: 20,
-      paddingHorizontal: 10}}>
-      <Text style={styles.title}>ผลการประเมิน</Text>
-      {/* <TouchableOpacity onPress={getFirestoreData}>
-        <View style={styles.roundedButton}>
-          <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>ดูผลการประเมิน</Text>
-        </View>
-      </TouchableOpacity> */}
-      {/* <TouchableOpacity onPress={() => navigation.navigate('Survey', { data : mentalTest, database : db })}>
-        <View style={styles.roundedButton}>
-          <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>เริ่มทำแบบประเมิน</Text>
-        </View>
-      </TouchableOpacity> */}
-      <TouchableOpacity onPress={() => navigation.navigate('spwbScreen', { data : SPWB })}>
-        <View style={styles.roundedButton}>
-          <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>เริ่มทำแบบประเมิน</Text>
-        </View>
-      </TouchableOpacity>
-      {/* <TouchableOpacity onPress={() => navigation.navigate('q8Screen', { data : Q8, score : 11 })}>
-        <View style={styles.roundedButton}>
-          <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>testQ</Text>
-        </View>
-      </TouchableOpacity> */}
-    </View>
-  );
+  render() {
+    return (
+      <View style={
+        {flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        backgroundColor: 'white',
+        paddingVertical: 20,
+        paddingHorizontal: 10}}>
+        <Text style={styles.title}>ผลการประเมิน</Text>
+        {/* <TouchableOpacity onPress={getFirestoreData}>
+          <View style={styles.roundedButton}>
+            <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>ดูผลการประเมิน</Text>
+          </View>
+        </TouchableOpacity> */}
+        {/* <TouchableOpacity onPress={() => this.props.navigation.navigate('Survey', { data : mentalTest, database : db })}>
+          <View style={styles.roundedButton}>
+            <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>เริ่มทำแบบประเมิน</Text>
+          </View>
+        </TouchableOpacity> */}
+        {/* <TouchableOpacity onPress={() => this.props.navigation.navigate('q8Screen', { data : Q8, score : 11 })}>
+          <View style={styles.roundedButton}>
+            <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>testQ</Text>
+          </View>
+        </TouchableOpacity> */}
+        {/* <TouchableOpacity onPress={sendMessege}>
+          <View style={styles.roundedButton}>
+            <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>ส่งข้อความ</Text>
+          </View>
+        </TouchableOpacity> */}
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('spwbScreen', { data : SPWB })}>
+          <View style={styles.roundedButton}>
+            <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>เริ่มทำแบบประเมิน</Text>
+          </View>
+        </TouchableOpacity>
+        {/* <TouchableOpacity onPress={() => this.props.navigation.navigate('dassScreen', { data : DASS })}>
+          <View style={styles.roundedButton}>
+            <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>DASS-warp</Text>
+          </View>
+        </TouchableOpacity> */}
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({

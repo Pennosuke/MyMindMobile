@@ -3,15 +3,9 @@ import { View, Text, Button, StyleSheet } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { HomeScreen } from './screens/HomeScreen'
-import Survey from './screens/Survey'
-import SurveyQ1 from './screens/SurveyQ1'
-import SurveyQ2 from './screens/SurveyQ2'
-import SurveyQ3 from './screens/SurveyQ3'
-import SurveyQ4 from './screens/SurveyQ4'
 import CompletedSurvey from './screens/CompletedSurvey'
-import EvaluationResult from './screens/EvaluationResult'
 import TreatmentScreen from './screens/TreatmentScreen'
-import MockupScreen from './screens/MockupScreen'
+import ContactScreen from './screens/ContactScreen'
 
 import LoadingScreen from './screens/LoadingScreen'
 import LoginScreen from './screens/LoginScreen'
@@ -34,26 +28,72 @@ class AppStackScreen extends Component {
           name="MUMyMind"
           component={HomeScreen}
           options={{
+            headerLeft: null,
             headerStyle: {backgroundColor: '#3CFB72'},
             headerTintColor: '#fff',
             headerTitleStyle: { alignSelf: 'center', fontFamily: 'Kanit-Regular' }
           }}
         />
-        <AppStack.Screen name="spwbScreen" component={spwbScreen} />
-        <AppStack.Screen name="awarenessScreen" component={awarenessScreen} />
-        <AppStack.Screen name="dassScreen" component={dassScreen} />
-        <AppStack.Screen name="q8Screen" component={q8Screen} />
-        <AppStack.Screen name="CompletedSurvey" component={CompletedSurvey} />
-        <AppStack.Screen name="TreatmentScreen" component={TreatmentScreen} />
-        
-
-        {/* <AppStack.Screen name="Survey" component={Survey} />
-        <AppStack.Screen name="SurveyQ1" component={SurveyQ1} />
-        <AppStack.Screen name="SurveyQ2" component={SurveyQ2} />
-        <AppStack.Screen name="SurveyQ3" component={SurveyQ3} />
-        <AppStack.Screen name="SurveyQ4" component={SurveyQ4} />
-        <AppStack.Screen name="EvaluationResult" component={EvaluationResult} />
-        <AppStack.Screen name="MockupScreen" component={MockupScreen} /> */}
+        <AppStack.Screen 
+          name="spwbScreen"
+          component={spwbScreen}
+          options={{
+            title: 'แบบวัดสุขภาวะทางจิตใจ',
+            headerTitleStyle: { fontFamily: 'Kanit-Regular' }
+          }}
+        />
+        <AppStack.Screen
+          name="awarenessScreen"
+          component={awarenessScreen}
+          options={{
+            title: 'แบบวัดการมีสติ',
+            headerTitleStyle: { fontFamily: 'Kanit-Regular' }
+          }}
+        />
+        <AppStack.Screen
+          name="dassScreen"
+          component={dassScreen}
+          options={{
+            title: 'แบบสอบถามวัดภาวะสุขภาพจิต',
+            headerTitleStyle: { fontFamily: 'Kanit-Regular' }
+          }}
+        />
+        <AppStack.Screen
+          name="q8Screen"
+          component={q8Screen}
+          options={{
+            title: ''
+          }}
+        />
+        <AppStack.Screen
+          name="CompletedSurvey"
+          component={CompletedSurvey}
+          options={
+            {
+              title: 'ผลการประเมิน',
+              headerLeft: null,
+              headerTitleStyle: { alignSelf: 'center', fontFamily: 'Kanit-Regular' }
+            }
+          }
+        />
+        <AppStack.Screen
+          name="ContactScreen"
+          component={ContactScreen}
+          options={
+            {
+              title: 'ข้อมูลติดต่อผู้เชี่ยวชาญ',
+              headerTitleStyle: { alignSelf: 'center', fontFamily: 'Kanit-Regular' }
+            }
+          }
+        />
+        <AppStack.Screen
+          name="TreatmentScreen"
+          component={TreatmentScreen}
+          options={({ route }) => ({
+            title: route.params.name,
+            headerTitleStyle: { fontFamily: 'Kanit-Regular' }
+          })}
+        />
       </AppStack.Navigator>
     )
   }

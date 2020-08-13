@@ -17,17 +17,20 @@ export default class tabC extends Component {
     .catch(error => this.setState({ errorMessage: error.message }))
   }
 
+  showData() {
+    console.log('global.userData', global.userData);
+    console.log('global.userArchivement', global.userArchivement);
+    /*Object.keys(global.userArchivement).forEach((key,index) => {
+      console.log(key, global.userArchivement[key]);
+    })*/
+    /*console.log('global.userArchivement', [global.userArchivement].map(feild => ({
+      value,
+      timestamp : timestamp.toDate().toLocaleDateString() + ' ' + timestamp.toDate().toLocaleTimeString(),
+    })));*/
+  }
+
   render() {
-    this.state = { 
-      displayName: firebase.auth().currentUser.displayName,
-      email: firebase.auth().currentUser.email,
-      /*birthDay: firebase.auth().currentUser.birthDay,
-      birthMonth: firebase.auth().currentUser.birthMonth,
-      birthYear: firebase.auth().currentUser.birthYear,
-      school: firebase.auth().currentUser.school,
-      userName: firebase.auth().currentUser.userName,*/
-      uid: firebase.auth().currentUser.uid
-    }
+    
     return (
       <View style={
         {flex: 1,
@@ -39,15 +42,18 @@ export default class tabC extends Component {
         paddingHorizontal: 10}}
       >
         <Text style={styles.title}>โปรไฟล์</Text>
-        <View>
-          <Text style={styles.content}>ชื่อ : {this.state.displayName}</Text>
-          <Text style={styles.content}>email : {this.state.email}</Text>
-          {/* 
-          <Text style={styles.title}>วัน/เดือน/ปีเกิด : {this.state.birthDay} {this.state.birthMonth} พ.ศ.{this.state.birthYear}</Text>
-          <Text style={styles.title}>โรงเรียน : {this.state.school}</Text>
-          */}
-          <Text style={styles.content}>uid : {this.state.uid}</Text>
+        <View style={{flex: 1}}>
+          <Text style={styles.content}>username : {global.userData.userName}</Text>
+          <Text style={styles.content}>email : {global.userData.email}</Text>
+          <Text style={styles.content}>ชื่อจริง : {global.userData.realName}</Text>
+          <Text style={styles.content}>เพศ : {global.userData.sex}</Text>
         </View>
+
+        {/* <TouchableOpacity onPress={() => this.showData()}>
+          <View style={styles.roundedButton}>
+            <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>showData</Text>
+          </View>
+        </TouchableOpacity> */}
 
         <TouchableOpacity onPress={() => this.signOut()}>
           <View style={[styles.roundedButton,{backgroundColor: 'red'}]}>

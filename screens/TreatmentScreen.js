@@ -41,17 +41,40 @@ export default class TreatmentScreen extends Component {
     };
   }
 
+  async saveArchivementData(currentTime,document) {
+    const archivesnapshot = await db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).get()
+    const getUserArchivement = await archivesnapshot.data()
+    if(getUserArchivement[document] === undefined) {
+      db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).set({
+        [document] : {
+          latestTimestamp: currentTime,
+          firstTimestamp: currentTime,
+          value: 1
+        }
+      }, { merge: true })
+    } else {
+      db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).set({
+        [document] : {
+          latestTimestamp: currentTime,
+          value: getUserArchivement[document].value + 1
+        }
+      }, { merge: true })
+    }
+  }
+
   onSurveyFinished() {
     const { answers } = this.state;
     const answersAsObj = {};
     for (const elem of answers) {
       answersAsObj[elem.contentId] = elem.value;
     }
-    answersAsObj['timestamp'] = firebase.firestore.Timestamp.fromDate(new Date());
+    const currentTime = firebase.firestore.Timestamp.fromDate(new Date());
+    answersAsObj['timestamp'] = currentTime;
     answersAsObj['userName'] = firebase.auth().currentUser.displayName;
     console.log('answersAsObj', answersAsObj);
     db.collection(this.props.route.params.collection).add(answersAsObj)
-    this.props.navigation.navigate('MUMyMind');
+    this.saveArchivementData(currentTime,this.props.route.params.collection);
+    this.props.navigation.navigate('Init');
   }
   
   renderSpecialButton(buttonText ,onPressEvent) {
@@ -292,7 +315,7 @@ export default class TreatmentScreen extends Component {
   renderVideo(survey,stepIndex) {
     const state = this.state;
     const { currentStep } = this.state;
-    const { contentId, contentText, videoUri } = survey[stepIndex];
+    const { contentId, contentText, videoUri, minTime } = survey[stepIndex];
     const currentContentId = contentId;
     if (state.videoHandlers.find(ans => ans.contentId === currentContentId) === undefined) {
       const defaultValue = {
@@ -343,7 +366,7 @@ export default class TreatmentScreen extends Component {
               () => {
                 this.onSurveyFinished();
               },
-              !!(this.state.videoHandlers[currentAnswerIndex].value.totalPlayTime + this.state.videoHandlers[currentAnswerIndex].value.playTime >= 3000)
+              !!(this.state.videoHandlers[currentAnswerIndex].value.totalPlayTime + this.state.videoHandlers[currentAnswerIndex].value.playTime >= minTime * 1000)
             )
           }
         </View>

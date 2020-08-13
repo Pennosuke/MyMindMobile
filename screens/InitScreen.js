@@ -15,9 +15,48 @@ export default class InitScreen extends Component {
 
   componentDidMount() {
     setTimeout(() => {
-      firebase.auth().onAuthStateChanged(user => {
+      firebase.auth().onAuthStateChanged(async user => {
         if (user) {
-          console.log('user', user);
+          const datasnapshot = await db.collection('userData').where('userName', '==', firebase.auth().currentUser.displayName).get()
+          /*console.log('snapshot', snapshot);*/
+          const getUserData = await datasnapshot.docs.map(doc => ({
+            userName: doc.data().userName,
+            realName: doc.data().realName,
+            sex: doc.data().sex,
+            age: doc.data().age,
+            education: doc.data().education,
+            GPA: doc.data().GPA,
+            religion: doc.data().religion,
+            address: doc.data().address,
+            phoneNumber: doc.data().phoneNumber,
+            email: doc.data().email,
+            revenueSource: doc.data().revenueSource,
+            revenueValue: doc.data().revenueValue,
+            revenueFreq: doc.data().revenueFreq,
+            isRevenueEnough: doc.data().isRevenueEnough,
+            revenueSatisfaction: doc.data().revenueSatisfaction,
+            parentsMaritalStatus: doc.data().parentsMaritalStatus,
+            dadEducation: doc.data().dadEducation,
+            momEducation: doc.data().momEducation
+          }))
+          const archivesnapshot = await db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).get()
+          const getUserArchivement = await archivesnapshot.data()
+          global.userData = getUserData[0];
+          global.userArchivement = getUserArchivement;
+          console.log('before global.userArchivement', global.userArchivement);
+          if(global.userArchivement !== undefined) {
+            Object.keys(global.userArchivement).forEach((key) => {
+              global.userArchivement[key].firstTimestamp = global.userArchivement[key].firstTimestamp.toDate().toLocaleDateString() + ' ' + global.userArchivement[key].firstTimestamp.toDate().toLocaleTimeString();
+              global.userArchivement[key].latestTimestamp = global.userArchivement[key].latestTimestamp.toDate().toLocaleDateString() + ' ' + global.userArchivement[key].latestTimestamp.toDate().toLocaleTimeString();
+            })
+          } else {
+            global.userArchivement = {};
+          }
+          const currentTime = firebase.firestore.Timestamp.fromDate(new Date());
+          global.checkpointTime = currentTime.toDate().toLocaleDateString() + ' ' + currentTime.toDate().toLocaleTimeString();
+          console.log('init global.userData', global.userData);
+          console.log('init global.userArchivement', global.userArchivement);
+          console.log('init global.checkpointTime', global.checkpointTime);
           this.props.navigation.replace('AppStackScreen', { screen: 'MUMyMind'});
         }
         else {
