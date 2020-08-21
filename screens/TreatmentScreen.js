@@ -35,7 +35,7 @@ export default class TreatmentScreen extends Component {
       totalPlayTime: 0,
       playTime: 0,
       checkpointVideo: 0,
-      selectionHandlers: [],
+      selectionHandlers: {},
       textInputHandlers: [],
       videoHandlers: []
     };
@@ -71,7 +71,7 @@ export default class TreatmentScreen extends Component {
     const currentTime = firebase.firestore.Timestamp.fromDate(new Date());
     answersAsObj['timestamp'] = currentTime;
     answersAsObj['userName'] = firebase.auth().currentUser.displayName;
-    console.log('answersAsObj', answersAsObj);
+    // console.log('answersAsObj', answersAsObj);
     db.collection(this.props.route.params.collection).add(answersAsObj)
     this.saveArchivementData(currentTime,this.props.route.params.collection);
     this.props.navigation.navigate('Init');
@@ -136,22 +136,22 @@ export default class TreatmentScreen extends Component {
   }
 
   updateInputVal(val, targetId, currentAnswerIndex, needAnswer) {
-    console.log('val', val);
-    console.log('targetId', targetId);
-    console.log('currentAnswerIndex', currentAnswerIndex);
+    // console.log('val', val);
+    // console.log('targetId', targetId);
+    // console.log('currentAnswerIndex', currentAnswerIndex);
     const state = this.state;
     const { currentStep } = this.state;
     state.answers[currentAnswerIndex].value[targetId].value = val;
     const reallyNeedAnswer = needAnswer === undefined ? false : needAnswer;
-    console.log('reallyNeedAnswer', reallyNeedAnswer);
+    // console.log('reallyNeedAnswer', reallyNeedAnswer);
     if(reallyNeedAnswer) {
-      console.log('before', state.textInputHandlers[currentStep][targetId]);
-      console.log('!!(val.length)', !!(val.length));
+      // console.log('before', state.textInputHandlers[currentStep][targetId]);
+      // console.log('!!(val.length)', !!(val.length));
       state.textInputHandlers[currentStep][targetId] = !!(val.length);
-      console.log('after', state.textInputHandlers[currentStep][targetId]);
+      // console.log('after', state.textInputHandlers[currentStep][targetId]);
     }
     this.setState(state);
-    console.log(state);
+    // console.log(state);
   }
 
   handleSelection(emotionName, currentAnswerIndex, maxEmotions) {
@@ -168,7 +168,7 @@ export default class TreatmentScreen extends Component {
       });
       this.setState(state);
     }
-    console.log('state', state);
+    // console.log('state', state);
   }
 
   isThisEmotionSelected(emotionName, currentAnswerIndex) {
@@ -216,7 +216,7 @@ export default class TreatmentScreen extends Component {
       state.videoHandlers[currentAnswerIndex].value.playTime = 0;
       this.setState(state);
     }
-    console.log('state',state);
+    // console.log('state',state);
   };
 
   renderSelectionButton(data, index, isSelected, onPress) {
@@ -247,8 +247,8 @@ export default class TreatmentScreen extends Component {
     const { currentStep } = this.state;
     const { contentText, contentId, choices } = survey[stepIndex];
     const currentContentId = contentId;
-    if (!state.selectionHandlers[currentStep]) {
-      state.selectionHandlers[currentStep] = new SelectionHandler({ maxMultiSelect: 1, allowDeselect: true });
+    if (!state.selectionHandlers[currentContentId]) {
+      state.selectionHandlers[currentContentId] = new SelectionHandler({ maxMultiSelect: 1, allowDeselect: true });
       this.setState(state);
     }
     if (state.answers.find(ans => ans.contentId === currentContentId) === undefined) {
@@ -257,19 +257,19 @@ export default class TreatmentScreen extends Component {
         contentId : currentContentId,
         value: defaultValue
       });
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
-    console.log('this.state', this.state);
+    // console.log('this.state', this.state);
     return (
       <View style={styles.surveyContainer}>
         <View style={{ marginLeft: 10, marginRight: 10 }}>
           <Text style={styles.infoText}>{contentText}</Text>
           <SelectionGroup
-            onPress={state.selectionHandlers[currentStep].selectionHandler}
+            onPress={state.selectionHandlers[currentContentId].selectionHandler}
             items={choices}
-            isSelected={state.selectionHandlers[currentStep].isSelected}
+            isSelected={state.selectionHandlers[currentContentId].isSelected}
             renderContent={this.renderSelectionButton}
             containerStyle={styles.selectionGroupContainer}
             onItemSelected={(item) => { 
@@ -304,7 +304,7 @@ export default class TreatmentScreen extends Component {
               () => {
                 this.onSurveyFinished();
               },
-              state.selectionHandlers[currentStep].selectedOption !== null
+              state.selectionHandlers[currentContentId].selectedOption !== null
             )
           }
         </View>
@@ -327,7 +327,7 @@ export default class TreatmentScreen extends Component {
         contentId : currentContentId,
         value: defaultValue
       });
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.videoHandlers.findIndex(ans => ans.contentId === currentContentId);
@@ -391,7 +391,7 @@ export default class TreatmentScreen extends Component {
         contentId : currentContentId,
         value: defaultValue
       });
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
@@ -453,7 +453,7 @@ export default class TreatmentScreen extends Component {
         contentId : currentContentId,
         value: defaultValue
       });
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === answerIdRef);
@@ -531,7 +531,7 @@ export default class TreatmentScreen extends Component {
         contentId : currentContentId,
         value: defaultValue
       });
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
@@ -584,15 +584,6 @@ export default class TreatmentScreen extends Component {
     const { currentStep } = this.state;
     const { contentText, questions } = survey[stepIndex]
     const currentContentId = survey[stepIndex].contentId;
-    /*
-    if (!state.textInputHandlers[currentStep]) {
-      state.textInputHandlers[currentStep] = {
-        questionText: question.questionText,
-        value: ''
-      };
-      this.setState(state);
-    }
-    */
     if (state.answers.find(ans => ans.contentId === currentContentId) === undefined) {
       const defaultValue = [];
       const defaultHandlers = [];
@@ -610,10 +601,10 @@ export default class TreatmentScreen extends Component {
         value: defaultValue
       });
       state.textInputHandlers[currentStep] = defaultHandlers;
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
-    console.log('this.state', this.state);
+    // console.log('this.state', this.state);
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
     return (
       <View style={styles.surveyContainer}>
@@ -668,6 +659,23 @@ export default class TreatmentScreen extends Component {
     )
   }
 
+  specialCaseBackward(answerIdRef,specialValue) {
+    const state = this.state;
+    const { currentStep, answers } = this.state;
+    for (const elem of answerIdRef) {
+      state.selectionHandlers[elem] = new SelectionHandler({ maxMultiSelect: 1, allowDeselect: true });
+      this.setState(state);
+    }
+    this.setState({ currentStep: currentStep - specialValue});
+    for (const elem of answerIdRef) {
+      let currentAnswerIndex = answers.findIndex(ans => ans.contentId === elem);
+      this.updateAnswer({
+        contentId: elem,
+        value: null
+      },currentAnswerIndex);
+    }
+  }
+
   renderQuestionValidate(survey,stepIndex) {
     const { currentStep, answers } = this.state;
     const { contentTextPass, contentTextFail, minScore, answerIdRef, backToVideo, backToFirstQuestion } = survey[stepIndex];
@@ -716,13 +724,19 @@ export default class TreatmentScreen extends Component {
               {
                 this.renderSpecialButton(
                   'กลับไปชม VDO',
-                  () => {this.setState({ currentStep: currentStep - backToVideo});}
+                  () => {
+                    this.specialCaseBackward(answerIdRef,backToVideo)
+                    // this.setState({ currentStep: currentStep - backToVideo});
+                  }
                 )
               }
               {
                 this.renderSpecialButton(
                   'ตอบแบบสอบถามใหม่อีกครั้ง',
-                  () => {this.setState({ currentStep: currentStep - backToFirstQuestion});},
+                  () => {
+                    this.specialCaseBackward(answerIdRef,backToFirstQuestion)
+                    // this.setState({ currentStep: currentStep - backToFirstQuestion});
+                  }
                 )
               }
             </View>

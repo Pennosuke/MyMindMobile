@@ -18,12 +18,12 @@ export default class tabC extends Component {
   }
 
   showData() {
-    console.log('global.userData', global.userData);
-    console.log('global.userArchivement', global.userArchivement);
+    // console.log('global.userData', global.userData);
+    // console.log('global.userArchivement', global.userArchivement);
     /*Object.keys(global.userArchivement).forEach((key,index) => {
-      console.log(key, global.userArchivement[key]);
+      // console.log(key, global.userArchivement[key]);
     })*/
-    /*console.log('global.userArchivement', [global.userArchivement].map(feild => ({
+    /*// console.log('global.userArchivement', [global.userArchivement].map(feild => ({
       value,
       timestamp : timestamp.toDate().toLocaleDateString() + ' ' + timestamp.toDate().toLocaleTimeString(),
     })));*/
@@ -45,8 +45,8 @@ export default class tabC extends Component {
         <View style={{flex: 1}}>
           <Text style={styles.content}>username : {global.userData.userName}</Text>
           <Text style={styles.content}>email : {global.userData.email}</Text>
-          <Text style={styles.content}>ชื่อจริง : {global.userData.realName}</Text>
-          <Text style={styles.content}>เพศ : {global.userData.sex}</Text>
+          <Text style={styles.content}>ชื่อจริง-นามสกุล : {global.userData.realName}</Text>
+          <Text style={styles.content}>ระดับการศึกษา : {global.userData.education}</Text>
         </View>
 
         {/* <TouchableOpacity onPress={() => this.showData()}>

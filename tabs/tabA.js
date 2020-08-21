@@ -1,6 +1,5 @@
 import React, { Component, useState } from 'react';
 import { StyleSheet, Text, View, Button, Alert, TouchableOpacity, TouchableHighlight } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import firebase from '../constants/firebase';
 import 'firebase/firestore';
 import { db } from '../constants/firebase'
@@ -8,15 +7,9 @@ import { prologue ,SPWB, DASS, Q8 } from '../constants/แบบประเม�
 
 export default class tabA extends Component {
 
-  getFirestoreData = () => {
-    const fbData = [];
-    db.collection("result").get().then((snapshot => {
-      snapshot.forEach(doc=>{
-        console.log()
-        fbData.push(doc.data())
-      })
-    }));
-    this.props.navigation.navigate('EvaluationResult', { data : fbData })
+  doQuestionare = () => {
+    const initTimestamp = firebase.firestore.Timestamp.fromDate(new Date());
+    this.props.navigation.navigate('prologueScreen', { data : prologue, initTimestamp: initTimestamp })
   }
 
   render() {
@@ -30,7 +23,7 @@ export default class tabA extends Component {
         paddingVertical: 20,
         paddingHorizontal: 10}}>
         <Text style={styles.title}>แบบประเมินภาวะสุขภาพจิต</Text>
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('prologueScreen', { data : prologue })}>
+        <TouchableOpacity onPress={this.doQuestionare}>
           <View style={styles.roundedButton}>
             <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>เริ่มทำแบบประเมิน</Text>
           </View>

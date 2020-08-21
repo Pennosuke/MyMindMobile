@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Button, Alert, TouchableWithoutFeedback, TouchableHighlight, TouchableOpacity, Dimensions } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { MockupData } from '../constants/MockupData';
-import { Program1, Homework1, Program2, Homework2 } from '../constants/โปรแกรมฝึกปฏิบัติ';
+import { StyleSheet, Text, View, ScrollView, Button, Alert, TouchableWithoutFeedback, TouchableHighlight, TouchableOpacity, Dimensions } from 'react-native';
+import { Program1, Homework1, Program2, Homework2 } from '../constants/โปรแกรมฝึกปฏิบัติ_ทดสอบ';
+import { SPWB, awareness, DASS, Q8 } from '../constants/แบบประเมิน';
 
-export default class tabB extends Component {
+export default class tabTest extends Component {
 
   constructor() {
     super();
@@ -255,33 +254,100 @@ export default class tabB extends Component {
     }
   }
 
+  doQuestionare = (data) => {
+    const initTimestamp = firebase.firestore.Timestamp.fromDate(new Date());
+    this.props.navigation.navigate('prologueScreen', { data : data, initTimestamp: initTimestamp })
+  }
+
   render() {
     return (
-      <View 
-        style={{
-          flex: 1,
-          flexDirection: 'column',
-          justifyContent: 'flex-start',
-          alignItems: 'center',
-          backgroundColor: 'white',
-          paddingVertical: 20,
-          paddingHorizontal: 10
-        }}
-      >
-        <Text style={styles.title}>โปรแกรมการส่งเสริมสุขภาวะทางจิตใจ</Text>
-        <View style={
-          {flex: 1,
-          flexDirection: 'column',
-          justifyContent: 'flex-start',
-          alignItems: 'center',
-          paddingVertical: 20}}
+      <ScrollView>
+        <View 
+          style={{
+            flex: 1,
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            backgroundColor: 'white',
+            paddingVertical: 20,
+            paddingHorizontal: 10
+          }}
         >
-          {this.renderProgram1Button()}
-          {this.renderHomework1Button()}
-          {this.renderProgram2Button()}
-          {this.renderHomework2Button()}
+          <Text style={styles.title}>หน้านี้สำหรับทดสอบระบบเท่านั้น{'\n'}ในแอพเวอร์ชั่นจริง ผู้ใช้จะไม่เห็นหน้านี้</Text>
+          <Text style={styles.subtitle}>ทดสอบระบบแบบประเมินภาวะสุขภาพจิต</Text>
+          <View style={
+            {flex: 1,
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            paddingVertical: 20}}
+          >
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('spwbScreen', { data : SPWB})}>
+              <View style={styles.roundedButton}>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>ทดสอบแบบวัดสุขภาวะทางจิตใจ</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('awarenessScreen', { data : awareness})}>
+              <View style={styles.roundedButton}>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>ทดสอบแบบวัดการมีสติ</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('dassScreen', { data : DASS})}>
+              <View style={styles.roundedButton}>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>ทดสอบแบบสอบถามวัดภาวะสุขภาพจิต</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('q8Screen', { data : Q8, score : 11})}>
+              <View style={styles.roundedButton}>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>ทดสอบแบบประเมินQ8(ซึมเศร้าค่อนข้างมาก)</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('q8Screen', { data : Q8, score : 14})}>
+              <View style={styles.roundedButton}>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>ทดสอบแบบประเมินQ8(ซึมเศร้าสูงมาก)</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('CompletedSurvey', { score : 0 })}>
+              <View style={styles.roundedButton}>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>ทดสอบหน้าประกาศผลประเมิน(สุขภาพจิตดี)</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('CompletedSurvey', { score : 5 })}>
+              <View style={styles.roundedButton}>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>ทดสอบหน้าประกาศผลประเมิน(ซึมเศร้าเล็กน้อย)</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('CompletedSurvey', { score : 7 })}>
+              <View style={styles.roundedButton}>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>ทดสอบหน้าประกาศผลประเมิน(ซึมเศร้าปานกลาง)</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('CompletedSurvey', { score : 11 })}>
+              <View style={styles.roundedButton}>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>ทดสอบหน้าประกาศผลประเมิน(ซึมเศร้าค่อนข้างมาก)</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('CompletedSurvey', { score : 14 })}>
+              <View style={styles.roundedButton}>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>ทดสอบหน้าประกาศผลประเมิน(ซึมเศร้าสูงมาก)</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <Text style={styles.subtitle}>ทดสอบระบบแบบประเมินภาวะสุขภาพจิต{'\n'}(ระยะเวลาขั้นต่ำในการดูวิดีโอเหลือ 3 วินาที){'\n'}(ระยะเวลาในการรอโปรแกรมถัดไปเหลือ 20 วิ)</Text>
+          <View style={
+            {flex: 1,
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            paddingVertical: 20}}
+          >
+            {this.renderProgram1Button()}
+            {this.renderHomework1Button()}
+            {this.renderProgram2Button()}
+            {this.renderHomework2Button()}
+          </View>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -294,6 +360,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
+    textAlign: 'center',
+    marginVertical: 8,
+    paddingLeft: 10,
+    paddingRight: 10,
+    fontFamily: 'Kanit-Medium',
+    fontSize: Dimensions.get('window').width >= 375 ? 18 : 15
+  },
+  subtitle: {
     textAlign: 'center',
     marginVertical: 8,
     paddingLeft: 10,

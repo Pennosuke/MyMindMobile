@@ -70,12 +70,14 @@ export default class dassScreen extends Component {
         global.userArchivement[key].latestTimestamp = global.userArchivement[key].latestTimestamp.toDate().toLocaleDateString() + ' ' + global.userArchivement[key].latestTimestamp.toDate().toLocaleTimeString();
       })
     }
-    console.log('DASS global.userArchivement', global.userArchivement);
+    // console.log('DASS global.userArchivement', global.userArchivement);
   }
 
   onSurveyFinished() {
     const { answers } = this.state;
     const answersAsObj = {};
+    const currentTime = firebase.firestore.Timestamp.fromDate(new Date());
+    const initTimestamp = !!this.props.route.params['initTimestamp'] ? this.props.route.params.initTimestamp : currentTime;
     const depressionID = [3,5,10,13,16,17,21];
     let depressionScore = 0;
     for (const elem of answers) {
@@ -84,13 +86,13 @@ export default class dassScreen extends Component {
         depressionScore += elem.value.value;
       }
     }
-    const currentTime = firebase.firestore.Timestamp.fromDate(new Date());
     answersAsObj['timestamp'] = currentTime;
     answersAsObj['userName'] = firebase.auth().currentUser.displayName;
-    console.log('answersAsObj', answersAsObj);
+    answersAsObj['initTimestamp'] = initTimestamp;
+    // console.log('answersAsObj', answersAsObj);
     db.collection('แบบสอบถามวัดภาวะสุขภาพจิต').add(answersAsObj)
     if(depressionScore >= 11) {
-      this.props.navigation.navigate('q8Screen', { data : Q8, score : depressionScore });
+      this.props.navigation.navigate('q8Screen', { data : Q8, score : depressionScore, initTimestamp: initTimestamp });
     }
     else {
       this.saveArchivementData(currentTime);
@@ -156,22 +158,22 @@ export default class dassScreen extends Component {
   }
 
   updateInputVal(val, targetId, currentAnswerIndex, needAnswer) {
-    console.log('val', val);
-    console.log('targetId', targetId);
-    console.log('currentAnswerIndex', currentAnswerIndex);
+    // console.log('val', val);
+    // console.log('targetId', targetId);
+    // console.log('currentAnswerIndex', currentAnswerIndex);
     const state = this.state;
     const { currentStep } = this.state;
     state.answers[currentAnswerIndex].value[targetId].value = val;
     const reallyNeedAnswer = needAnswer === undefined ? false : needAnswer;
-    console.log('reallyNeedAnswer', reallyNeedAnswer);
+    // console.log('reallyNeedAnswer', reallyNeedAnswer);
     if(reallyNeedAnswer) {
-      console.log('before', state.textInputHandlers[currentStep][targetId]);
-      console.log('!!(val.length)', !!(val.length));
+      // console.log('before', state.textInputHandlers[currentStep][targetId]);
+      // console.log('!!(val.length)', !!(val.length));
       state.textInputHandlers[currentStep][targetId] = !!(val.length);
-      console.log('after', state.textInputHandlers[currentStep][targetId]);
+      // console.log('after', state.textInputHandlers[currentStep][targetId]);
     }
     this.setState(state);
-    console.log(state);
+    // console.log(state);
   }
 
   handleSelection(emotionName, currentAnswerIndex, maxEmotions) {
@@ -188,7 +190,7 @@ export default class dassScreen extends Component {
       });
       this.setState(state);
     }
-    console.log('state', state);
+    // console.log('state', state);
   }
 
   isThisEmotionSelected(emotionName, currentAnswerIndex) {
@@ -236,7 +238,7 @@ export default class dassScreen extends Component {
       state.videoHandlers[currentAnswerIndex].value.playTime = 0;
       this.setState(state);
     }
-    console.log('state',state);
+    // console.log('state',state);
   };
 
   renderSelectionButton(data, index, isSelected, onPress) {
@@ -277,11 +279,11 @@ export default class dassScreen extends Component {
         contentId : currentContentId,
         value: defaultValue
       });
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
-    console.log('this.state', this.state);
+    // console.log('this.state', this.state);
     return (
       <View style={styles.surveyContainer}>
         <View style={{ marginLeft: 10, marginRight: 10 }}>
@@ -347,7 +349,7 @@ export default class dassScreen extends Component {
         contentId : currentContentId,
         value: defaultValue
       });
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.videoHandlers.findIndex(ans => ans.contentId === currentContentId);
@@ -411,7 +413,7 @@ export default class dassScreen extends Component {
         contentId : currentContentId,
         value: defaultValue
       });
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
@@ -473,7 +475,7 @@ export default class dassScreen extends Component {
         contentId : currentContentId,
         value: defaultValue
       });
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === answerIdRef);
@@ -551,7 +553,7 @@ export default class dassScreen extends Component {
         contentId : currentContentId,
         value: defaultValue
       });
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
@@ -630,10 +632,10 @@ export default class dassScreen extends Component {
         value: defaultValue
       });
       state.textInputHandlers[currentStep] = defaultHandlers;
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
-    console.log('this.state', this.state);
+    // console.log('this.state', this.state);
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
     return (
       <View style={styles.surveyContainer}>

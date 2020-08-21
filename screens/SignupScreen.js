@@ -96,28 +96,28 @@ export default class SignupScreen extends Component {
     const usersRef = db.collection('userData');
     const { realName, age, GPA, revenueValue, phoneNumber, email, userName, password } = this.state;
     if(realName === '') {
-      console.log('โปรดกรอกชื่อจริง นามสกุล');
+      // console.log('โปรดกรอกชื่อจริง นามสกุล');
       Alert.alert('โปรดกรอกชื่อจริง นามสกุล');
     } else if (age === '') {
-      console.log('โปรดกรอกอายุ');
+      // console.log('โปรดกรอกอายุ');
       Alert.alert('โปรดกรอกอายุ');
     } else if (GPA === '') {
-      console.log('โปรดกรอกผลการเรียน');
+      // console.log('โปรดกรอกผลการเรียน');
       Alert.alert('โปรดกรอกผลการเรียน');
     } else if (revenueValue === '') {
-      console.log('โปรดกรอกจำนานรายรับ');
+      // console.log('โปรดกรอกจำนานรายรับ');
       Alert.alert('โปรดกรอกจำนานรายรับ');
     } else if (phoneNumber === '') {
-      console.log('โปรดกรอกหมายเลขโทรศัพท์มือถือ');
+      // console.log('โปรดกรอกหมายเลขโทรศัพท์มือถือ');
       Alert.alert('โปรดกรอกหมายเลขโทรศัพท์มือถือ');
     } else if (email === '') {
-      console.log('โปรดกรอกอีเมล');
+      // console.log('โปรดกรอกอีเมล');
       Alert.alert('โปรดกรอกอีเมล');
     } else if (userName === '') {
-      console.log('โปรดกรอกชื่อผู้ใช้');
+      // console.log('โปรดกรอกชื่อผู้ใช้');
       Alert.alert('โปรดกรอกชื่อผู้ใช้');
     } else if (password === '') {
-      console.log('โปรดกรอกรหัสผ่าน');
+      // console.log('โปรดกรอกรหัสผ่าน');
       Alert.alert('โปรดกรอกรหัสผ่าน');
     } else {
       setTimeout(() =>{
@@ -125,13 +125,13 @@ export default class SignupScreen extends Component {
           if (snapshot.empty) {
             return firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password);
           } else {
-            console.log('username already taken!');
+            // console.log('username already taken!');
             Alert.alert('ชื่อผู้ใช้ซ้ำกับผู้ใช้อื่นที่มีอยู่ในระบบแล้ว! กรุณาตั้งชื่อผู้ใช้ใหม่');
             throw new Error('username already taken');
           } 
         })
         .then(createdUser => {
-          console.log(createdUser);
+          // console.log(createdUser);
           createdUser.user.updateProfile({
             displayName: this.state.userName,
           })
@@ -166,7 +166,7 @@ export default class SignupScreen extends Component {
               value: 0
             }
           })*/
-          console.log('User registered successfully!');
+          // console.log('User registered successfully!');
           this.setState({
             realName: '',
             sex: '',
@@ -191,7 +191,7 @@ export default class SignupScreen extends Component {
           this.props.navigation.replace('Init');
         })
         .catch(error => {
-          console.log(error.message);
+          // console.log(error.message);
           Alert.alert(error.message);
         });
       }, 1000);

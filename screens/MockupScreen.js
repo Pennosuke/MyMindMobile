@@ -48,7 +48,7 @@ export default class MockupScreen extends Component {
     }
     answersAsObj['timestamp'] = firebase.firestore.Timestamp.fromDate(new Date());
     answersAsObj['userName'] = firebase.auth().currentUser.displayName;
-    console.log('answersAsObj', answersAsObj);
+    // console.log('answersAsObj', answersAsObj);
     db.collection("treatmentProgram1").add(answersAsObj)
     this.props.navigation.navigate('MUMyMind');
   }
@@ -125,21 +125,21 @@ export default class MockupScreen extends Component {
   }
 
   updateInputVal(val, targetId, currentAnswerIndex, needAnswer) {
-    console.log('val', val);
-    console.log('targetId', targetId);
-    console.log('currentAnswerIndex', currentAnswerIndex);
-    console.log('needAnswer', needAnswer);
+    // console.log('val', val);
+    // console.log('targetId', targetId);
+    // console.log('currentAnswerIndex', currentAnswerIndex);
+    // console.log('needAnswer', needAnswer);
     const state = this.state;
     const { currentStep } = this.state;
     state.answers[currentAnswerIndex].value[targetId].value = val;
     if(needAnswer) {
-      console.log('before', state.textInputHandlers[currentStep][targetId]);
-      console.log('!!(val.length)', !!(val.length));
+      // console.log('before', state.textInputHandlers[currentStep][targetId]);
+      // console.log('!!(val.length)', !!(val.length));
       state.textInputHandlers[currentStep][targetId] = !!(val.length);
-      console.log('after', state.textInputHandlers[currentStep][targetId]);
+      // console.log('after', state.textInputHandlers[currentStep][targetId]);
     }
     this.setState(state);
-    console.log(state);
+    // console.log(state);
   }
 
   handleSelection(emotionName, currentAnswerIndex, maxEmotions) {
@@ -156,7 +156,7 @@ export default class MockupScreen extends Component {
       });
       this.setState(state);
     }
-    console.log('state', state);
+    // console.log('state', state);
   }
 
   isThisEmotionSelected(emotionName, currentAnswerIndex) {
@@ -204,7 +204,7 @@ export default class MockupScreen extends Component {
       state.answers[currentAnswerIndex].value.playTime = 0;
       this.setState(state);
     }
-    console.log('state',state);
+    // console.log('state',state);
   };
 
   renderSelectionButton(data, index, isSelected, onPress) {
@@ -245,11 +245,11 @@ export default class MockupScreen extends Component {
         contentId : currentContentId,
         value: defaultValue
       });
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
-    console.log('this.state', this.state);
+    // console.log('this.state', this.state);
     return (
       <View style={styles.surveyContainer}>
         <View style={{ marginLeft: 10, marginRight: 10 }}>
@@ -315,7 +315,7 @@ export default class MockupScreen extends Component {
         contentId : currentContentId,
         value: defaultValue
       });
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
@@ -379,7 +379,7 @@ export default class MockupScreen extends Component {
         contentId : currentContentId,
         value: defaultValue
       });
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
@@ -441,7 +441,7 @@ export default class MockupScreen extends Component {
         contentId : currentContentId,
         value: defaultValue
       });
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === answerIdRef);
@@ -519,7 +519,7 @@ export default class MockupScreen extends Component {
         contentId : currentContentId,
         value: defaultValue
       });
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
@@ -598,10 +598,10 @@ export default class MockupScreen extends Component {
         value: defaultValue
       });
       state.textInputHandlers[currentStep] = defaultHandlers;
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
-    console.log('this.state', this.state);
+    // console.log('this.state', this.state);
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
     return (
       <View style={styles.surveyContainer}>

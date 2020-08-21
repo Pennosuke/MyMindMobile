@@ -12,7 +12,7 @@ export const Program1 = [
     contentType: 'Video',
     contentText: 'ประโยชน์ที่น่าทึ่งของการหายใจอย่างถูกวิธี',
     videoUri: {uri: 'https://firebasestorage.googleapis.com/v0/b/mymindmobile-d9d9b.appspot.com/o/videos%2FVDO_%E0%B8%AB%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%A5%E0%B8%82_1._%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B9%82%E0%B8%A2%E0%B8%8A%E0%B8%99%E0%B9%8C%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%99%E0%B9%88%E0%B8%B2%E0%B8%97%E0%B8%B6%E0%B9%88%E0%B8%87%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%AB%E0%B8%B2%E0%B8%A2%E0%B9%83%E0%B8%88.mp4?alt=media&token=a0c0725e-8506-4773-8c40-db7839da76a1'},
-    minTime: 3
+    minTime: 60
   },
   {
     contentId: '3',
@@ -209,7 +209,7 @@ export const Program1 = [
     contentType: 'Video',
     contentText: 'หายใจสลายเครียด',
     videoUri: {uri: 'https://firebasestorage.googleapis.com/v0/b/mymindmobile-d9d9b.appspot.com/o/videos%2FVDO_%E0%B8%AB%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%A5%E0%B8%82_2._%E0%B8%AB%E0%B8%B2%E0%B8%A2%E0%B9%83%E0%B8%88%E0%B8%AA%E0%B8%A5%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%84%E0%B8%A3%E0%B8%B5%E0%B8%A2%E0%B8%94.mp4?alt=media&token=71dac491-5c9d-4f1e-8cc6-8a17e5e0f374'},
-    minTime: 3
+    minTime: 60
   },
   {
     contentId: '16',
@@ -260,7 +260,7 @@ export const Program1 = [
     contentType: 'Video',
     contentText: 'เอาล่ะค่ะ พร้อมฝึกกันแล้วนะคะ\nต่อไปนี้ ขอให้น้องชมวิดีโอ “การหายใจอย่างถูกวิธี” และฝึกไปพร้อมๆ กันค่ะ',
     videoUri: {uri: 'https://firebasestorage.googleapis.com/v0/b/mymindmobile-d9d9b.appspot.com/o/videos%2FVDO_%E0%B8%AB%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%A5%E0%B8%82_3._%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%AB%E0%B8%B2%E0%B8%A2%E0%B9%83%E0%B8%88%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B8%96%E0%B8%B9%E0%B8%81%E0%B8%A7%E0%B8%B4%E0%B8%98%E0%B8%B5.mp4?alt=media&token=68db6c42-cd97-4c88-9341-522d59101bda'},
-    minTime: 3
+    minTime: 60
   },
   {
     contentId: '20',
@@ -387,7 +387,7 @@ export const Homework1 = [
     contentType: 'Video',
     contentText: 'เอาล่ะค่ะ พร้อมฝึกกันแล้วนะคะ\nต่อไปนี้ ขอให้น้องชมวิดีโอ “การหายใจอย่างถูกวิธี” และฝึกไปพร้อมๆ กันค่ะ',
     videoUri: {uri: 'https://firebasestorage.googleapis.com/v0/b/mymindmobile-d9d9b.appspot.com/o/videos%2FVDO_%E0%B8%AB%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%A5%E0%B8%82_3._%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%AB%E0%B8%B2%E0%B8%A2%E0%B9%83%E0%B8%88%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B8%96%E0%B8%B9%E0%B8%81%E0%B8%A7%E0%B8%B4%E0%B8%98%E0%B8%B5.mp4?alt=media&token=68db6c42-cd97-4c88-9341-522d59101bda'},
-    minTime: 3
+    minTime: 60
   },
   {
     contentId: '5',
@@ -501,7 +501,7 @@ export const Program2 = [
     contentType: 'Video',
     contentText: 'เอาล่ะค่ะ พร้อมฝึกกันแล้วนะคะ\n ต่อไปนี้ ขอให้น้องๆ ชมวิดีโอและฝึกไปพร้อมๆ กันกับ VDO นี้นะคะ',
     videoUri: {uri: 'https://firebasestorage.googleapis.com/v0/b/mymindmobile-d9d9b.appspot.com/o/videos%2FVDO_%E0%B8%AB%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%A5%E0%B8%82_4.mp4?alt=media&token=80e376df-fd97-417a-87ca-b091d9415e91'},
-    minTime: 3
+    minTime: 60
   },
   {
     contentId: '6',
@@ -628,7 +628,7 @@ export const Homework2 = [
     contentType: 'Video',
     contentText: 'เอาล่ะค่ะ พร้อมฝึกกันแล้วนะคะ\n ต่อไปนี้ ขอให้น้องๆ ชมวิดีโอและฝึกไปพร้อมๆ กันกับ VDO นี้นะคะ',
     videoUri: {uri: 'https://firebasestorage.googleapis.com/v0/b/mymindmobile-d9d9b.appspot.com/o/videos%2FVDO_%E0%B8%AB%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%A5%E0%B8%82_4.mp4?alt=media&token=80e376df-fd97-417a-87ca-b091d9415e91'},
-    minTime: 3
+    minTime: 60
   },
   {
     contentId: '5',

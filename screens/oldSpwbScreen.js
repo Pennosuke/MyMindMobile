@@ -231,7 +231,7 @@ export default class Survey extends Component {
   async showData() {
     const db = this.props.route.params.database;
     const snapshot = await db.collection('แบบวัดสุขภาวะทางจิตใจ').doc('mockupINWZA007').collection("ALSOmockupINWZA007").orderBy("timestamp", "desc").get()
-    console.log(snapshot.docs.map(doc => ({
+    // console.log(snapshot.docs.map(doc => ({
       timestamp : doc.data().timestamp.toDate().toLocaleDateString() + ' ' + doc.data().timestamp.toDate().toLocaleTimeString(),
       totalScore : doc.data().totalScore,
       value : doc.data().value

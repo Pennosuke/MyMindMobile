@@ -45,14 +45,17 @@ export default class prologueScreen extends Component {
   onSurveyFinished() {
     const { answers } = this.state;
     const answersAsObj = {};
+    const currentTime = firebase.firestore.Timestamp.fromDate(new Date());
+    const initTimestamp = !!this.props.route.params['initTimestamp'] ? this.props.route.params.initTimestamp : currentTime;
     for (const elem of answers) {
       answersAsObj[elem.contentId] = elem.value;
     }
-    answersAsObj['timestamp'] = firebase.firestore.Timestamp.fromDate(new Date());
+    answersAsObj['timestamp'] = currentTime;
     answersAsObj['userName'] = firebase.auth().currentUser.displayName;
-    console.log('answersAsObj', answersAsObj);
+    answersAsObj['initTimestamp'] = initTimestamp;
+    // console.log('answersAsObj', answersAsObj);
     db.collection('บทนำแบบประเมิน').add(answersAsObj)
-    this.props.navigation.navigate('spwbScreen', { data : SPWB });
+    this.props.navigation.navigate('spwbScreen', { data : SPWB, initTimestamp: initTimestamp });
   }
   
   renderSpecialButton(buttonText ,onPressEvent) {
@@ -114,22 +117,22 @@ export default class prologueScreen extends Component {
   }
 
   updateInputVal(val, targetId, currentAnswerIndex, needAnswer) {
-    console.log('val', val);
-    console.log('targetId', targetId);
-    console.log('currentAnswerIndex', currentAnswerIndex);
+    // console.log('val', val);
+    // console.log('targetId', targetId);
+    // console.log('currentAnswerIndex', currentAnswerIndex);
     const state = this.state;
     const { currentStep } = this.state;
     state.answers[currentAnswerIndex].value[targetId].value = val;
     const reallyNeedAnswer = needAnswer === undefined ? false : needAnswer;
-    console.log('reallyNeedAnswer', reallyNeedAnswer);
+    // console.log('reallyNeedAnswer', reallyNeedAnswer);
     if(reallyNeedAnswer) {
-      console.log('before', state.textInputHandlers[currentStep][targetId]);
-      console.log('!!(val.length)', !!(val.length));
+      // console.log('before', state.textInputHandlers[currentStep][targetId]);
+      // console.log('!!(val.length)', !!(val.length));
       state.textInputHandlers[currentStep][targetId] = !!(val.length);
-      console.log('after', state.textInputHandlers[currentStep][targetId]);
+      // console.log('after', state.textInputHandlers[currentStep][targetId]);
     }
     this.setState(state);
-    console.log(state);
+    // console.log(state);
   }
 
   handleSelection(emotionName, currentAnswerIndex, maxEmotions) {
@@ -146,7 +149,7 @@ export default class prologueScreen extends Component {
       });
       this.setState(state);
     }
-    console.log('state', state);
+    // console.log('state', state);
   }
 
   isThisEmotionSelected(emotionName, currentAnswerIndex) {
@@ -194,7 +197,7 @@ export default class prologueScreen extends Component {
       state.videoHandlers[currentAnswerIndex].value.playTime = 0;
       this.setState(state);
     }
-    console.log('state',state);
+    // console.log('state',state);
   };
 
   renderSelectionButton(data, index, isSelected, onPress) {
@@ -235,11 +238,11 @@ export default class prologueScreen extends Component {
         contentId : currentContentId,
         value: defaultValue
       });
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
-    console.log('this.state', this.state);
+    // console.log('this.state', this.state);
     return (
       <View style={styles.surveyContainer}>
         <View style={{ marginLeft: 10, marginRight: 10 }}>
@@ -305,7 +308,7 @@ export default class prologueScreen extends Component {
         contentId : currentContentId,
         value: defaultValue
       });
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.videoHandlers.findIndex(ans => ans.contentId === currentContentId);
@@ -369,7 +372,7 @@ export default class prologueScreen extends Component {
         contentId : currentContentId,
         value: defaultValue
       });
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
@@ -431,7 +434,7 @@ export default class prologueScreen extends Component {
         contentId : currentContentId,
         value: defaultValue
       });
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === answerIdRef);
@@ -509,7 +512,7 @@ export default class prologueScreen extends Component {
         contentId : currentContentId,
         value: defaultValue
       });
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
@@ -588,10 +591,10 @@ export default class prologueScreen extends Component {
         value: defaultValue
       });
       state.textInputHandlers[currentStep] = defaultHandlers;
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
-    console.log('this.state', this.state);
+    // console.log('this.state', this.state);
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
     return (
       <View style={styles.surveyContainer}>

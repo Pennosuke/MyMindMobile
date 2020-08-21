@@ -56,9 +56,9 @@ export default class InitScreen extends Component {
           const currentTime = firebase.firestore.Timestamp.fromDate(new Date());
           global.checkpointTime = currentTime.toDate().toLocaleDateString() + ' ' + currentTime.toDate().toLocaleTimeString();
           
-          console.log('init global.userData', global.userData);
-          console.log('init global.userArchivement', global.userArchivement);
-          console.log('init global.checkpointTime', global.checkpointTime);
+          // console.log('init global.userData', global.userData);
+          // console.log('init global.userArchivement', global.userArchivement);
+          // console.log('init global.checkpointTime', global.checkpointTime);
           this.props.navigation.replace('AppStackScreen', { screen: 'MUMyMind'});
         }
         else {
@@ -82,7 +82,7 @@ export default class InitScreen extends Component {
           db.collection('userData').where('userName', '==', firebase.auth().currentUser.displayName).get()
           .then((datasnapshot) => {
             getUserData = datasnapshot.docs;
-            console.log('1');
+            // console.log('1');
           }).then(() => {
             getUserData.map(doc => ({
               userName: doc.data().userName,
@@ -104,36 +104,36 @@ export default class InitScreen extends Component {
               dadEducation: doc.data().dadEducation,
               momEducation: doc.data().momEducation
             }))
-            console.log('2');
+            // console.log('2');
           }).then(() => {
             global.userData = getUserData[0];
-            console.log('3');
+            // console.log('3');
           }).then(() => {
             archivesnapshot = db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).get();
-            console.log('4');
-            console.log('archivesnapshot', archivesnapshot);
+            // console.log('4');
+            // console.log('archivesnapshot', archivesnapshot);
           }).then(() => {
             global.userArchivement = archivesnapshot.data();
-            console.log('5');
+            // console.log('5');
           }).then(() => {
             Object.keys(global.userArchivement).forEach((key) => {
               global.userArchivement[key].firstTimestamp = global.userArchivement[key].firstTimestamp.toDate().toLocaleDateString() + ' ' + global.userArchivement[key].firstTimestamp.toDate().toLocaleTimeString();
               global.userArchivement[key].latestTimestamp = global.userArchivement[key].latestTimestamp.toDate().toLocaleDateString() + ' ' + global.userArchivement[key].latestTimestamp.toDate().toLocaleTimeString();
             });
-            console.log('6');
+            // console.log('6');
           }).then(() => {
             currentTime = firebase.firestore.Timestamp.fromDate(new Date());
-            console.log('7');
+            // console.log('7');
           }).then(() => {
             global.checkpointTime = currentTime.toDate().toLocaleDateString() + ' ' + currentTime.toDate().toLocaleTimeString();
-            console.log('8');
+            // console.log('8');
           }).then(() => {
-            console.log('global.userData', global.userData);
-            console.log('global.userArchivement', global.userArchivement);
-            console.log('global.checkpointTime', global.checkpointTime);
+            // console.log('global.userData', global.userData);
+            // console.log('global.userArchivement', global.userArchivement);
+            // console.log('global.checkpointTime', global.checkpointTime);
             this.props.navigation.replace('AppStackScreen', { screen: 'MUMyMind'});
           }).catch(error => {
-            console.log('catch error', error);
+            // console.log('catch error', error);
             Alert.alert(error.message);
           })
         }
