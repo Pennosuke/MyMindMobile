@@ -100,7 +100,7 @@ export const Program1 = [
     contentText: 'ข้อที่3 ข้อใด ไม่ถูกต้อง เกี่ยวกับการหายใจคลายเครียด (1 คะแนน)',
     choices: [
       {
-        choiceText: 'ก. ปล่อยสารคอร์ติซอลมากขึ้น ท้าให้ร่างกายสงบ',
+        choiceText: 'ก. ปล่อยสารคอร์ติซอลมากขึ้น ทำให้ร่างกายสงบ',
         value: 1
       },
       {
@@ -108,7 +108,7 @@ export const Program1 = [
         value: 0
       },
       {
-        choiceText: 'ค. ระบบประสาทที่เกี่ยวกับการผ่อนคลายของร่างกายท้างานดีขึ้น',
+        choiceText: 'ค. ระบบประสาทที่เกี่ยวกับการผ่อนคลายของร่างกายทำงานดีขึ้น',
         value: 0
       },
       {
@@ -168,7 +168,7 @@ export const Program1 = [
     contentType: 'QuestionValidate',
     contentTextPass: 'เก่งมากค่ะ ตอบถูกทุกข้อเลยค่ะ',
     contentTextFail: 'เสียดายจังยังมีข้อที่ตอบไม่ถูก มาเรียนรู้เพื่อที่จะได้ตอบถูกทุกข้อกันนะคะ พี่มีทางเลือกให้ค่ะ',
-    minScore: 3,
+    minScore: 5,
     backToVideo: 10,
     backToFirstQuestion: 5,
     answerIdRef: [

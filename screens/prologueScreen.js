@@ -6,7 +6,7 @@ import { emotions } from '../constants/MockupData';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import { db } from '../constants/firebase'
-import { Q8 } from '../constants/แบบประเมิน';
+import { SPWB } from '../constants/แบบประเมิน';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -25,7 +25,7 @@ const defaultSurvey = [
   }
 ]
 
-export default class q8Screen extends Component {
+export default class prologueScreen extends Component {
 
   constructor(props) {
     super(props);
@@ -42,88 +42,19 @@ export default class q8Screen extends Component {
     };
   }
 
-  async sendLineNotifyMessege(allowContact) {
-    var data = "message=ทดสอบการแจ้งเตือนจาก app";
-    var userDataMessege = `message=ผู้ใช้ ${global.userData.userName} (${global.userData.realName})`;
-    var mentalResultMessege = this.props.route.params.score >= 14 ? `มีภาวะซึมเศร้าสูงมาก (${this.props.route.params.score} คะแนน)` : `มีภาวะซึมเศร้าค่อนข้างสูง (${this.props.route.params.score} คะแนน)`;
-    var contactMessege = allowContact ? `ยินดีที่จะให้โทรไปที่เบอร์ ${global.userData.phoneNumber}` : "ยังไม่ยินดีที่จะให้โทรไป";
-    var data = `${userDataMessege} ${mentalResultMessege} ${contactMessege}`;
-    console.log('data',data)
-
-    var xhr = new XMLHttpRequest();
-
-    xhr.addEventListener("readystatechange", function() {
-      if(this.readyState === 4) {
-        console.log(this.responseText);
-      }
-    });
-
-    xhr.open("POST", "https://cors-anywhere.herokuapp.com/https://notify-api.line.me/api/notify");
-    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    xhr.setRequestHeader("Authorization", "Bearer g9eH2nCW6mJt6yA5CXKCWJXhIXGZwyih9RW3m2fgamN");
-    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-
-    xhr.send(data);
-  }
-
-  async saveArchivementData(currentTime) {
-    const archivesnapshot = await db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).get()
-    if(!!archivesnapshot.data() && !!archivesnapshot.data()['แบบประเมิน']) {
-      db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).set({
-        ['แบบประเมิน'] : {
-          latestTimestamp: currentTime,
-          value: archivesnapshot.data()['แบบประเมิน'].value + 1
-        }
-      }, { merge: true })
-    } else {
-      db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).set({
-        ['แบบประเมิน'] : {
-          latestTimestamp: currentTime,
-          firstTimestamp: currentTime,
-          value: 1
-        }
-      }, { merge: true })
-    }
-    const currentTimeAfter = firebase.firestore.Timestamp.fromDate(new Date());
-    global.checkpointTime = currentTimeAfter.toDate().toLocaleDateString() + ' ' + currentTimeAfter.toDate().toLocaleTimeString();
-    const archivesnapshotAfter = await db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).get()
-    if(!!archivesnapshotAfter.data()) {
-      global.userArchivement = archivesnapshotAfter.data();
-      Object.keys(global.userArchivement).forEach((key) => {
-        global.userArchivement[key].firstTimestamp = global.userArchivement[key].firstTimestamp.toDate().toLocaleDateString() + ' ' + global.userArchivement[key].firstTimestamp.toDate().toLocaleTimeString();
-        global.userArchivement[key].latestTimestamp = global.userArchivement[key].latestTimestamp.toDate().toLocaleDateString() + ' ' + global.userArchivement[key].latestTimestamp.toDate().toLocaleTimeString();
-      })
-    }
-    console.log('DASS global.userArchivement', global.userArchivement);
-  }
-
   onSurveyFinished() {
     const { answers } = this.state;
-    const answersAsObj = {
-      '1': 0,
-      '2': 0,
-      '3': 0,
-      '4': 0,
-      '5': 0,
-      '6': 0,
-      '7': 0,
-      '8': 0,
-      '9': 0,
-      'contact': {value : false}
-    };
+    const answersAsObj = {};
     for (const elem of answers) {
       answersAsObj[elem.contentId] = elem.value;
     }
-    const currentTime = firebase.firestore.Timestamp.fromDate(new Date());
-    answersAsObj['timestamp'] = currentTime;
+    answersAsObj['timestamp'] = firebase.firestore.Timestamp.fromDate(new Date());
     answersAsObj['userName'] = firebase.auth().currentUser.displayName;
     console.log('answersAsObj', answersAsObj);
-    db.collection('แบบประเมินการฆ่าตัวตาย').add(answersAsObj)
-    this.saveArchivementData(currentTime);
-    this.sendLineNotifyMessege(answersAsObj['contact'].value);
-    this.props.navigation.replace('CompletedSurvey', { score :this.props.route.params.score });
+    db.collection('บทนำแบบประเมิน').add(answersAsObj)
+    this.props.navigation.navigate('spwbScreen', { data : SPWB });
   }
-
+  
   renderSpecialButton(buttonText ,onPressEvent) {
     return (
       <View style={{ flexGrow: 1, marginTop: 10, marginBottom: 10 }}>
@@ -335,16 +266,18 @@ export default class q8Screen extends Component {
         </View>
         <View style={styles.navButtonContainerStyle}>
           {
+            this.renderPrevButton(
+              () => {
+                this.setState({ currentStep: currentStep - 1});
+              },
+              !!(currentStep !== 0)
+            )
+          }
+          {
             this.renderNextOrFinishButton(
               survey,
               () => {
-                if(currentContentId === '2' && state.answers[currentAnswerIndex].value.value === 0 && state.answers[currentAnswerIndex - 1].value.value === 0) {
-                  this.setState({ currentStep: currentStep + 8});
-                } else if(currentContentId === '3' && state.answers[currentAnswerIndex].value.value !== 6) {
-                  this.setState({ currentStep: currentStep + 2});
-                } else {
-                  this.setState({ currentStep: currentStep + 1});
-                }
+                this.setState({ currentStep: currentStep + 1});
               },
               () => {
                 this.onSurveyFinished();

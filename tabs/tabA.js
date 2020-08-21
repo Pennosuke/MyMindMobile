@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import firebase from '../constants/firebase';
 import 'firebase/firestore';
 import { db } from '../constants/firebase'
-import { SPWB, DASS, Q8 } from '../constants/แบบประเมิน';
+import { prologue ,SPWB, DASS, Q8 } from '../constants/แบบประเมิน';
 
 export default class tabA extends Component {
 
@@ -29,28 +29,8 @@ export default class tabA extends Component {
         backgroundColor: 'white',
         paddingVertical: 20,
         paddingHorizontal: 10}}>
-        <Text style={styles.title}>ผลการประเมิน</Text>
-        {/* <TouchableOpacity onPress={getFirestoreData}>
-          <View style={styles.roundedButton}>
-            <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>ดูผลการประเมิน</Text>
-          </View>
-        </TouchableOpacity> */}
-        {/* <TouchableOpacity onPress={() => this.props.navigation.navigate('Survey', { data : mentalTest, database : db })}>
-          <View style={styles.roundedButton}>
-            <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>เริ่มทำแบบประเมิน</Text>
-          </View>
-        </TouchableOpacity> */}
-        {/* <TouchableOpacity onPress={() => this.props.navigation.navigate('q8Screen', { data : Q8, score : 11 })}>
-          <View style={styles.roundedButton}>
-            <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>testQ</Text>
-          </View>
-        </TouchableOpacity> */}
-        {/* <TouchableOpacity onPress={sendMessege}>
-          <View style={styles.roundedButton}>
-            <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>ส่งข้อความ</Text>
-          </View>
-        </TouchableOpacity> */}
-        <TouchableOpacity onPress={() => this.props.navigation.navigate('spwbScreen', { data : SPWB })}>
+        <Text style={styles.title}>แบบประเมินภาวะสุขภาพจิต</Text>
+        <TouchableOpacity onPress={() => this.props.navigation.navigate('prologueScreen', { data : prologue })}>
           <View style={styles.roundedButton}>
             <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>เริ่มทำแบบประเมิน</Text>
           </View>

@@ -12,6 +12,7 @@ import LoginScreen from './screens/LoginScreen'
 import SignupScreen from './screens/SignupScreen'
 import InitScreen from './screens/InitScreen'
 
+import prologueScreen from './screens/prologueScreen'
 import spwbScreen from './screens/spwbScreen'
 import awarenessScreen from './screens/awarenessScreen'
 import dassScreen from './screens/dassScreen'
@@ -32,6 +33,14 @@ class AppStackScreen extends Component {
             headerStyle: {backgroundColor: '#3CFB72'},
             headerTintColor: '#fff',
             headerTitleStyle: { alignSelf: 'center', fontFamily: 'Kanit-Regular' }
+          }}
+        />
+        <AppStack.Screen 
+          name="prologueScreen"
+          component={prologueScreen}
+          options={{
+            title: 'เข้าสู่แบบประเมินสุขภาวะทางจิตใจ',
+            headerTitleStyle: { fontFamily: 'Kanit-Regular' }
           }}
         />
         <AppStack.Screen 

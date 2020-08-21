@@ -34,7 +34,7 @@ export default class LoginScreen extends Component {
           email: '', 
           password: '',
         })
-        this.props.navigation.replace('AppStackScreen', { screen: 'MUMyMind'})
+        this.props.navigation.replace('Init')
       })
       .catch(error => this.setState({ errorMessage: error.message }))
     }

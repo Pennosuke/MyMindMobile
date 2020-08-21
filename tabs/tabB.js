@@ -57,7 +57,7 @@ export default class tabB extends Component {
   }
 
   getHomeworkValue = (collection) => {
-    if(global.userArchivement[collection] === undefined) {
+    if(!global.userArchivement[collection]) {
       return 0;
     } else if(global.userArchivement[collection].value > 3) {
       return 3;
@@ -115,7 +115,7 @@ export default class tabB extends Component {
   }
 
   isAvailible(collection,timestamp,waitingTime) {
-    if(global.userArchivement[collection] === undefined) {
+    if(!global.userArchivement[collection]) {
       console.log('global.userArchivement[collection] === undefined case')
       return false;
     } else if (global.userArchivement[collection].value === 0) {
@@ -160,6 +160,101 @@ export default class tabB extends Component {
     }
   }
 
+  renderProgram1Button() {
+    if(!!global.userArchivement['แบบประเมิน']) {
+      return(
+        <TouchableOpacity 
+          onPress={() => this.props.navigation.navigate('TreatmentScreen', { data : Program1, collection : 'โปรแกรมที่_1_หายใจคลายเครียด', name: 'โปรแกรมที่ 1 หายใจคลายเครียด' })}
+          disabled={!this.isAvailible('แบบประเมิน','firstTimestamp',0)}
+        >
+          <View style={!this.isAvailible('แบบประเมิน','firstTimestamp',0) ? [styles.roundedButton, styles.disableButton] : styles.roundedButton}>
+            <Text style={!this.isAvailible('แบบประเมิน','firstTimestamp',0) ? [styles.buttonFont, styles.disablebuttonFont] : styles.buttonFont}>โปรแกรมที่ 1 “หายใจคลายเครียด”</Text>
+            {!this.isAvailible('แบบประเมิน','firstTimestamp',0) ? this.renderWaitingDate('แบบประเมิน','firstTimestamp') : <></>}
+          </View>
+        </TouchableOpacity>
+      )
+    } else {
+      return(
+        <></>
+      )
+    }
+  }
+
+  renderHomework1Button() {
+    if(!!global.userArchivement['โปรแกรมที่_1_หายใจคลายเครียด']) {
+      return(
+        <TouchableOpacity 
+          onPress={() => this.props.navigation.navigate('TreatmentScreen', { data : Homework1, collection : 'ทบทวนโปรแกรมที่_1_หายใจคลายเครียด', name: 'ทบทวนโปรแกรมที่ 1 หายใจคลายเครียด' })}
+          disabled={!this.handleAvailable('โปรแกรมที่_1_หายใจคลายเครียด','ทบทวนโปรแกรมที่_1_หายใจคลายเครียด',20)}
+        >
+          <View style={!this.handleAvailable('โปรแกรมที่_1_หายใจคลายเครียด','ทบทวนโปรแกรมที่_1_หายใจคลายเครียด',20) ? [styles.roundedButton, styles.disableButton] : styles.roundedButton}>
+            <Text style={!this.handleAvailable('โปรแกรมที่_1_หายใจคลายเครียด','ทบทวนโปรแกรมที่_1_หายใจคลายเครียด',20) ? [styles.buttonFont, styles.disablebuttonFont] : styles.buttonFont}>
+              ทบทวนโปรแกรมที่ 1 ({this.getHomeworkValue('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด')}/3)
+            </Text>
+            {
+              !this.handleAvailable('โปรแกรมที่_1_หายใจคลายเครียด','ทบทวนโปรแกรมที่_1_หายใจคลายเครียด',20) ?
+              this.handlerenderWaitingDate('โปรแกรมที่_1_หายใจคลายเครียด','ทบทวนโปรแกรมที่_1_หายใจคลายเครียด') : <></>
+            }
+          </View>
+        </TouchableOpacity>
+      )
+    } else {
+      return(
+        <></>
+      )
+    }
+  }
+
+  renderProgram2Button() {
+    if(this.getHomeworkValue('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด') >= 3) {
+      return(
+        <TouchableOpacity 
+          onPress={() => this.props.navigation.navigate('TreatmentScreen', { data : Program2, collection : 'โปรแกรมที่_2_ละเอียดลออดูกาย', name: 'โปรแกรมที่ 2 ละเอียดลออดูกาย' })}
+          disabled={!this.isAvailible('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด','latestTimestamp',20) && global.userArchivement['ทบทวนโปรแกรมที่_1_หายใจคลายเครียด'].value <= 3}
+        >
+          <View style={!this.isAvailible('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด','latestTimestamp',20) && global.userArchivement['ทบทวนโปรแกรมที่_1_หายใจคลายเครียด'].value <= 3 ? [styles.roundedButton, styles.disableButton] : styles.roundedButton}>
+            <Text style={!this.isAvailible('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด','latestTimestamp',20) && global.userArchivement['ทบทวนโปรแกรมที่_1_หายใจคลายเครียด'].value <= 3 ? [styles.buttonFont, styles.disablebuttonFont] : styles.buttonFont}>
+              โปรแกรมที่ 2 “ละเอียดลออดูกาย”
+            </Text>
+            {
+              !this.isAvailible('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด','latestTimestamp',20) && global.userArchivement['ทบทวนโปรแกรมที่_1_หายใจคลายเครียด'].value <= 3 ?
+              this.renderWaitingDate('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด','latestTimestamp') : <></>
+            }
+          </View>
+        </TouchableOpacity>
+      )
+    } else {
+      return(
+        <></>
+      )
+    }
+  }
+
+  renderHomework2Button() {
+    if(!!global.userArchivement['โปรแกรมที่_2_ละเอียดลออดูกาย']) {
+      return(
+        <TouchableOpacity 
+          onPress={() => this.props.navigation.navigate('TreatmentScreen', { data : Homework1, collection : 'ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย', name: 'ทบทวนโปรแกรมที่ 2 ละเอียดลออดูกาย' })}
+          disabled={!this.handleAvailable('โปรแกรมที่_2_ละเอียดลออดูกาย','ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย',20)}
+        >
+          <View style={!this.handleAvailable('โปรแกรมที่_2_ละเอียดลออดูกาย','ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย',20) ? [styles.roundedButton, styles.disableButton] : styles.roundedButton}>
+            <Text style={!this.handleAvailable('โปรแกรมที่_2_ละเอียดลออดูกาย','ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย',20) ? [styles.buttonFont, styles.disablebuttonFont] : styles.buttonFont}>
+              ทบทวนโปรแกรมที่ 2 ({this.getHomeworkValue('ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย')}/3)
+            </Text>
+            {
+              !this.handleAvailable('โปรแกรมที่_2_ละเอียดลออดูกาย','ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย',20) ?
+              this.handlerenderWaitingDate('โปรแกรมที่_2_ละเอียดลออดูกาย','ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย') : <></>
+            }
+          </View>
+        </TouchableOpacity>
+      )
+    } else {
+      return(
+        <></>
+      )
+    }
+  }
+
   render() {
     return (
       <View 
@@ -181,81 +276,10 @@ export default class tabB extends Component {
           alignItems: 'center',
           paddingVertical: 20}}
         >
-          {
-            (global.userArchivement.แบบประเมิน && global.userArchivement.แบบประเมิน !== undefined) ? (
-              <TouchableOpacity 
-                onPress={() => this.props.navigation.navigate('TreatmentScreen', { data : Program1, collection : 'โปรแกรมที่_1_หายใจคลายเครียด', name: 'โปรแกรมที่ 1 หายใจคลายเครียด' })}
-                disabled={!this.isAvailible('แบบประเมิน','firstTimestamp',0)}
-              >
-                <View style={!this.isAvailible('แบบประเมิน','firstTimestamp',0) ? [styles.roundedButton, styles.disableButton] : styles.roundedButton}>
-                  <Text style={!this.isAvailible('แบบประเมิน','firstTimestamp',0) ? [styles.buttonFont, styles.disablebuttonFont] : styles.buttonFont}>โปรแกรมที่ 1 “หายใจคลายเครียด”</Text>
-                  {!this.isAvailible('แบบประเมิน','firstTimestamp',0) ? this.renderWaitingDate('แบบประเมิน','firstTimestamp') : <></>}
-                </View>
-              </TouchableOpacity>
-            ) : (
-              <></>
-            )
-          }
-          {
-            (global.userArchivement.โปรแกรมที่_1_หายใจคลายเครียด && global.userArchivement.โปรแกรมที่_1_หายใจคลายเครียด !== undefined) ? (
-              <TouchableOpacity 
-                onPress={() => this.props.navigation.navigate('TreatmentScreen', { data : Homework1, collection : 'ทบทวนโปรแกรมที่_1_หายใจคลายเครียด', name: 'ทบทวนโปรแกรมที่ 1 หายใจคลายเครียด' })}
-                disabled={!this.handleAvailable('โปรแกรมที่_1_หายใจคลายเครียด','ทบทวนโปรแกรมที่_1_หายใจคลายเครียด',20)}
-              >
-                <View style={!this.handleAvailable('โปรแกรมที่_1_หายใจคลายเครียด','ทบทวนโปรแกรมที่_1_หายใจคลายเครียด',20) ? [styles.roundedButton, styles.disableButton] : styles.roundedButton}>
-                  <Text style={!this.handleAvailable('โปรแกรมที่_1_หายใจคลายเครียด','ทบทวนโปรแกรมที่_1_หายใจคลายเครียด',20) ? [styles.buttonFont, styles.disablebuttonFont] : styles.buttonFont}>
-                    ทบทวนโปรแกรมที่ 1 ({this.getHomeworkValue('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด')}/3)
-                  </Text>
-                  {
-                    !this.handleAvailable('โปรแกรมที่_1_หายใจคลายเครียด','ทบทวนโปรแกรมที่_1_หายใจคลายเครียด',20) ?
-                    this.handlerenderWaitingDate('โปรแกรมที่_1_หายใจคลายเครียด','ทบทวนโปรแกรมที่_1_หายใจคลายเครียด') : <></>
-                  }
-                </View>
-              </TouchableOpacity>
-            ) : (
-              <></>
-            )
-          }
-          {
-            this.getHomeworkValue('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด') >= 3 ? (
-              <TouchableOpacity 
-                onPress={() => this.props.navigation.navigate('TreatmentScreen', { data : Program2, collection : 'โปรแกรมที่_2_ละเอียดลออดูกาย', name: 'โปรแกรมที่ 2 ละเอียดลออดูกาย' })}
-                disabled={!this.isAvailible('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด','latestTimestamp',20) && global.userArchivement['ทบทวนโปรแกรมที่_1_หายใจคลายเครียด'].value <= 3}
-              >
-                <View style={!this.isAvailible('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด','latestTimestamp',20) && global.userArchivement['ทบทวนโปรแกรมที่_1_หายใจคลายเครียด'].value <= 3 ? [styles.roundedButton, styles.disableButton] : styles.roundedButton}>
-                  <Text style={!this.isAvailible('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด','latestTimestamp',20) && global.userArchivement['ทบทวนโปรแกรมที่_1_หายใจคลายเครียด'].value <= 3 ? [styles.buttonFont, styles.disablebuttonFont] : styles.buttonFont}>
-                    โปรแกรมที่ 2 “ละเอียดลออดูกาย”
-                  </Text>
-                  {
-                    !this.isAvailible('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด','latestTimestamp',20) && global.userArchivement['ทบทวนโปรแกรมที่_1_หายใจคลายเครียด'].value <= 3 ?
-                    this.renderWaitingDate('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด','latestTimestamp') : <></>
-                  }
-                </View>
-              </TouchableOpacity>
-            ) : (
-              <></>
-            )
-          }
-          {
-            (global.userArchivement.โปรแกรมที่_2_ละเอียดลออดูกาย && global.userArchivement.โปรแกรมที่_2_ละเอียดลออดูกาย !== undefined) ? (
-              <TouchableOpacity 
-                onPress={() => this.props.navigation.navigate('TreatmentScreen', { data : Homework1, collection : 'ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย', name: 'ทบทวนโปรแกรมที่ 2 ละเอียดลออดูกาย' })}
-                disabled={!this.handleAvailable('โปรแกรมที่_2_ละเอียดลออดูกาย','ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย',20)}
-              >
-                <View style={!this.handleAvailable('โปรแกรมที่_2_ละเอียดลออดูกาย','ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย',20) ? [styles.roundedButton, styles.disableButton] : styles.roundedButton}>
-                  <Text style={!this.handleAvailable('โปรแกรมที่_2_ละเอียดลออดูกาย','ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย',20) ? [styles.buttonFont, styles.disablebuttonFont] : styles.buttonFont}>
-                    ทบทวนโปรแกรมที่ 2 ({this.getHomeworkValue('ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย')}/3)
-                  </Text>
-                  {
-                    !this.handleAvailable('โปรแกรมที่_2_ละเอียดลออดูกาย','ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย',20) ?
-                    this.handlerenderWaitingDate('โปรแกรมที่_2_ละเอียดลออดูกาย','ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย') : <></>
-                  }
-                </View>
-              </TouchableOpacity>
-            ) : (
-              <></>
-            )
-          }
+          {this.renderProgram1Button()}
+          {this.renderHomework1Button()}
+          {this.renderProgram2Button()}
+          {this.renderHomework2Button()}
         </View>
       </View>
     );

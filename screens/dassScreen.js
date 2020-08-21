@@ -44,8 +44,14 @@ export default class dassScreen extends Component {
 
   async saveArchivementData(currentTime) {
     const archivesnapshot = await db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).get()
-    const getUserArchivement = await archivesnapshot.data()
-    if(getUserArchivement === undefined || getUserArchivement['แบบประเมิน'] === undefined) {
+    if(!!archivesnapshot.data() && !!archivesnapshot.data()['แบบประเมิน']) {
+      db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).set({
+        ['แบบประเมิน'] : {
+          latestTimestamp: currentTime,
+          value: archivesnapshot.data()['แบบประเมิน'].value + 1
+        }
+      }, { merge: true })
+    } else {
       db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).set({
         ['แบบประเมิน'] : {
           latestTimestamp: currentTime,
@@ -53,23 +59,17 @@ export default class dassScreen extends Component {
           value: 1
         }
       }, { merge: true })
-    } else {
-      db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).set({
-        ['แบบประเมิน'] : {
-          latestTimestamp: currentTime,
-          value: getUserArchivement['แบบประเมิน'].value + 1
-        }
-      }, { merge: true })
     }
     const currentTimeAfter = firebase.firestore.Timestamp.fromDate(new Date());
     global.checkpointTime = currentTimeAfter.toDate().toLocaleDateString() + ' ' + currentTimeAfter.toDate().toLocaleTimeString();
     const archivesnapshotAfter = await db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).get()
-    const getUserArchivementAfter = await archivesnapshotAfter.data()
-    global.userArchivement = getUserArchivementAfter;
-    Object.keys(global.userArchivement).forEach((key) => {
-      global.userArchivement[key].firstTimestamp = global.userArchivement[key].firstTimestamp.toDate().toLocaleDateString() + ' ' + global.userArchivement[key].firstTimestamp.toDate().toLocaleTimeString();
-      global.userArchivement[key].latestTimestamp = global.userArchivement[key].latestTimestamp.toDate().toLocaleDateString() + ' ' + global.userArchivement[key].latestTimestamp.toDate().toLocaleTimeString();
-    })
+    if(!!archivesnapshotAfter.data()) {
+      global.userArchivement = archivesnapshotAfter.data();
+      Object.keys(global.userArchivement).forEach((key) => {
+        global.userArchivement[key].firstTimestamp = global.userArchivement[key].firstTimestamp.toDate().toLocaleDateString() + ' ' + global.userArchivement[key].firstTimestamp.toDate().toLocaleTimeString();
+        global.userArchivement[key].latestTimestamp = global.userArchivement[key].latestTimestamp.toDate().toLocaleDateString() + ' ' + global.userArchivement[key].latestTimestamp.toDate().toLocaleTimeString();
+      })
+    }
     console.log('DASS global.userArchivement', global.userArchivement);
   }
 
