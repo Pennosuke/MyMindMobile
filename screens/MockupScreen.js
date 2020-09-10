@@ -6,6 +6,10 @@ import { emotions } from '../constants/MockupData';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import { db } from '../constants/firebase'
+import Matter from "matter-js";
+import { GameEngine } from "react-native-game-engine";
+import { gameConstants } from '../constants/gameConstants';
+import Physics, { resetPipes } from '../components/Physics';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -24,7 +28,7 @@ const defaultSurvey = [
   }
 ]
 
-export default class MockupScreen extends Component {
+export default class TreatmentScreen extends Component {
 
   constructor(props) {
     super(props);
@@ -35,9 +39,91 @@ export default class MockupScreen extends Component {
       totalPlayTime: 0,
       playTime: 0,
       checkpointVideo: 0,
-      selectionHandlers: [],
-      textInputHandlers: [],
+      selectionHandlers: {},
+      textInputHandlers: {},
+      videoHandlers: [],
+      currentChoiceAfterGame: {},
+      expectedAnswerAfterGame: null,
+      gameRunning: true,
+      gameScore: 0
     };
+    this.gameEngine = null;
+    this.entities = this.setupWorld();
+  }
+
+  setupWorld() {
+    let engine = Matter.Engine.create({ enableSleeping: false });
+    let world = engine.world;
+    world.gravity.y = 0.0;
+    let bird = Matter.Bodies.rectangle( gameConstants.MAX_WIDTH / 2, gameConstants.MAX_HEIGHT / 2, gameConstants.BIRD_WIDTH, gameConstants.BIRD_HEIGHT);
+    let floor1 = Matter.Bodies.rectangle(
+      gameConstants.MAX_WIDTH / 2,
+      gameConstants.MAX_HEIGHT - 25,
+      gameConstants.MAX_WIDTH + 4,
+      50,
+      { isStatic: true }
+    );
+    let floor2 = Matter.Bodies.rectangle(
+      gameConstants.MAX_WIDTH + (gameConstants.MAX_WIDTH / 2),
+      gameConstants.MAX_HEIGHT - 25,
+      gameConstants.MAX_WIDTH + 4,
+      50,
+      { isStatic: true }
+    );
+    Matter.World.add(world, [bird, floor1, floor2]);
+    Matter.Events.on(engine, 'collisionStart', (event) => {
+      var pairs = event.pairs;
+      this.gameEngine.dispatch({ type: "game-over"});
+    });
+    return {
+      physics: { engine: engine, world: world },
+      floor1: { body: floor1, renderer: Floor },
+      floor2: { body: floor2, renderer: Floor },
+      bird: { body: bird, pose: 1, renderer: Bird},
+    }
+  }
+
+  onEvent(e) {
+    if (e.type === "game-over"){
+      //Alert.alert("Game Over");
+      this.setState({
+        running: false
+      });
+    } else if (e.type === "score") {
+      this.setState({
+        score: this.state.score + 1
+      })
+    }
+  }
+
+  reset() {
+    resetPipes();
+    this.gameEngine.swap(this.setupWorld());
+    this.setState({
+        running: true,
+        score: 0
+    });
+  }
+
+  async saveArchivementData(currentTime,document) {
+    const archivesnapshot = await db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).get()
+    const getUserArchivement = await archivesnapshot.data()
+    if(getUserArchivement[document] === undefined) {
+      db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).set({
+        [document] : {
+          latestTimestamp: currentTime,
+          firstTimestamp: currentTime,
+          value: 1
+        }
+      }, { merge: true })
+    } else {
+      db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).set({
+        [document] : {
+          latestTimestamp: currentTime,
+          value: getUserArchivement[document].value + 1
+        }
+      }, { merge: true })
+    }
   }
 
   onSurveyFinished() {
@@ -46,25 +132,14 @@ export default class MockupScreen extends Component {
     for (const elem of answers) {
       answersAsObj[elem.contentId] = elem.value;
     }
-    answersAsObj['timestamp'] = firebase.firestore.Timestamp.fromDate(new Date());
+    const currentTime = firebase.firestore.Timestamp.fromDate(new Date());
+    answersAsObj['timestamp'] = currentTime;
     answersAsObj['userName'] = firebase.auth().currentUser.displayName;
-    // console.log('answersAsObj', answersAsObj);
-    db.collection("treatmentProgram1").add(answersAsObj)
+    console.log('answersAsObj', answersAsObj);
+    // db.collection(this.props.route.params.collection).add(answersAsObj)
+    // this.saveArchivementData(currentTime,this.props.route.params.collection);
     this.props.navigation.navigate('MUMyMind');
   }
-
-  /*onSurveyFinished(answers) {
-    const infoQuestionsRemoved = [...answers];
-    const answersAsObj = {};
-    for (const elem of infoQuestionsRemoved) {
-      answersAsObj[elem.questionId] = elem.value;
-    }
-    this.props.navigation.navigate('CompletedSurvey', { surveyAnswers: answersAsObj});
-  }
-
-  onAnswerSubmitted(answer) {
-    this.setState({ answersSoFar: JSON.stringify(this.surveyRef.getAnswers(), 2) });
-  }*/
   
   renderSpecialButton(buttonText ,onPressEvent) {
     return (
@@ -113,7 +188,7 @@ export default class MockupScreen extends Component {
       return (
         <View style={{ flexGrow: 1, maxWidth: 100, marginTop: 10, marginBottom: 10 }}>
           <TouchableOpacity onPress={FinishedEvent} disabled={!enabledCondition}>
-            <View style={enabledCondition ? styles.navButton : styles.disableNavButton}>
+            <View style={enabledCondition ? [styles.navButton,{backgroundColor: SELECTED}] : styles.disableNavButton}>
               <Text style={enabledCondition ? {textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16} : {textAlign: 'center', color: '#a3a3a3', fontFamily: 'Kanit-Regular', fontSize: 16}}>
                 เสร็จสิ้น
               </Text>
@@ -124,25 +199,88 @@ export default class MockupScreen extends Component {
     }
   }
 
-  updateInputVal(val, targetId, currentAnswerIndex, needAnswer) {
-    // console.log('val', val);
-    // console.log('targetId', targetId);
-    // console.log('currentAnswerIndex', currentAnswerIndex);
-    // console.log('needAnswer', needAnswer);
+  updateTextInputVal(val, targetId, currentAnswerIndex, needAnswer) {
+    console.log('val', val);
+    console.log('targetId', targetId);
+    console.log('currentAnswerIndex', currentAnswerIndex);
+    console.log('needAnswer', needAnswer);
     const state = this.state;
     const { currentStep } = this.state;
     state.answers[currentAnswerIndex].value[targetId].value = val;
     if(needAnswer) {
-      // console.log('before', state.textInputHandlers[currentStep][targetId]);
-      // console.log('!!(val.length)', !!(val.length));
+      console.log('before', state.textInputHandlers[currentStep][targetId]);
+      console.log('!!(val.length)', !!(val.length));
       state.textInputHandlers[currentStep][targetId] = !!(val.length);
-      // console.log('after', state.textInputHandlers[currentStep][targetId]);
+      console.log('after', state.textInputHandlers[currentStep][targetId]);
     }
     this.setState(state);
-    // console.log(state);
+    console.log(state);
   }
 
-  handleSelection(emotionName, currentAnswerIndex, maxEmotions) {
+  updateOtherTextInputVal(val, targetId, currentAnswerIndex) {
+    console.log('val', val);
+    console.log('targetId', targetId);
+    console.log('currentAnswerIndex', currentAnswerIndex);
+    const state = this.state;
+    state.answers[currentAnswerIndex].value[targetId].otherValue = val;
+    this.setState(state);
+    console.log(state);
+  }
+
+  updateEmotionRatingVal(val, targetId, currentAnswerIndex) {
+    console.log('val', val);
+    console.log('targetId', targetId);
+    console.log('currentAnswerIndex', currentAnswerIndex);
+    const state = this.state;
+    state.answers[currentAnswerIndex].value[targetId].value = val;
+    this.setState(state);
+    console.log(state);
+  }
+
+  updatePickerInputVal(val, targetId, currentAnswerIndex) {
+    console.log('val', val);
+    console.log('targetId', targetId);
+    console.log('currentAnswerIndex', currentAnswerIndex);
+    if(val !== '0') {
+      const state = this.state;
+      state.answers[currentAnswerIndex].value[targetId].value = val;
+      this.setState(state);
+      console.log(state);
+    }
+  }
+
+  arraysEqual(a, b) {
+    if (a === b) return true;
+    if (a == null || b == null) return false;
+    if (a.length !== b.length) return false;
+    for (var i = 0; i < a.length; ++i) {
+      if (a[i] !== b[i]) return false;
+    }
+    return true;
+  }
+
+  updateSortingInputVal(val, targetId, currentAnswerIndex, expectedAnswer, score) {
+    console.log('val', val);
+    console.log('targetId', targetId);
+    console.log('currentAnswerIndex', currentAnswerIndex);
+    if(val !== '0') {
+      const state = this.state;
+      state.answers[currentAnswerIndex].value.answers[targetId] = val;
+      this.setState(state);
+      console.log('state.answers[currentAnswerIndex].value.answers', state.answers[currentAnswerIndex].value.answers);
+      console.log('expectedAnswer', expectedAnswer);
+      console.log('this.arraysEqual(state.answers[currentAnswerIndex].value.answers,expectedAnswer)', this.arraysEqual(state.answers[currentAnswerIndex].value.answers,expectedAnswer));
+      if(this.arraysEqual(state.answers[currentAnswerIndex].value.answers,expectedAnswer)) {
+        state.answers[currentAnswerIndex].value.value = score;
+        this.setState(state);
+      } else {
+        state.answers[currentAnswerIndex].value.value = 0;
+      }
+      console.log(state);
+    }
+  }
+
+  handleEmotionSelection(emotionName, currentAnswerIndex, maxEmotions) {
     const state = this.state;
     const emotionIndex = state.answers[currentAnswerIndex].value.findIndex(elem => elem.emotion === emotionName);
     if(emotionIndex !== -1) {
@@ -156,7 +294,7 @@ export default class MockupScreen extends Component {
       });
       this.setState(state);
     }
-    // console.log('state', state);
+    console.log('state', state);
   }
 
   isThisEmotionSelected(emotionName, currentAnswerIndex) {
@@ -177,9 +315,12 @@ export default class MockupScreen extends Component {
     return ratings
   }
 
-  sortingQuestionChoices(choices) {
+  pickerChoices(choices) {
     const allChoices = [];
-    let choiceIndex = 0;
+    allChoices.push(
+      <Picker.Item label='โปรดเลือกคำตอบ...' value="0" key={0}/>
+    )
+    let choiceIndex = 1;
     for(const elem of choices) {
       allChoices.push(
         <Picker.Item label={elem} value={elem} key={choiceIndex}/>
@@ -192,19 +333,19 @@ export default class MockupScreen extends Component {
   _onPlaybackStatusUpdate(playbackStatus, currentAnswerIndex){
     const state = this.state;
     if(playbackStatus.isPlaying) {
-      state.answers[currentAnswerIndex].value.playTime = (playbackStatus.positionMillis - state.answers[currentAnswerIndex].value.checkpointVideo)
+      state.videoHandlers[currentAnswerIndex].value.playTime = (playbackStatus.positionMillis - state.videoHandlers[currentAnswerIndex].value.checkpointVideo)
       this.setState(state);
     }
     else {
-      if(state.answers[currentAnswerIndex].value.totalPlayTime === NaN) {
-        state.answers[currentAnswerIndex].value.totalPlayTime = 0;
+      if(state.videoHandlers[currentAnswerIndex].value.totalPlayTime === NaN) {
+        state.videoHandlers[currentAnswerIndex].value.totalPlayTime = 0;
       }
-      state.answers[currentAnswerIndex].value.totalPlayTime += state.answers[currentAnswerIndex].value.playTime;
-      state.answers[currentAnswerIndex].value.checkpointVideo = playbackStatus.positionMillis;
-      state.answers[currentAnswerIndex].value.playTime = 0;
+      state.videoHandlers[currentAnswerIndex].value.totalPlayTime += state.videoHandlers[currentAnswerIndex].value.playTime;
+      state.videoHandlers[currentAnswerIndex].value.checkpointVideo = playbackStatus.positionMillis;
+      state.videoHandlers[currentAnswerIndex].value.playTime = 0;
       this.setState(state);
     }
-    // console.log('state',state);
+    console.log('state',state);
   };
 
   renderSelectionButton(data, index, isSelected, onPress) {
@@ -235,29 +376,35 @@ export default class MockupScreen extends Component {
     const { currentStep } = this.state;
     const { contentText, contentId, choices } = survey[stepIndex];
     const currentContentId = contentId;
-    if (!state.selectionHandlers[currentStep]) {
-      state.selectionHandlers[currentStep] = new SelectionHandler({ maxMultiSelect: 1, allowDeselect: true });
+    const defaultValue = null;
+    if (!state.selectionHandlers[currentContentId]) {
+      state.selectionHandlers[currentContentId] = new SelectionHandler({ maxMultiSelect: 1, allowDeselect: true });
       this.setState(state);
     }
     if (state.answers.find(ans => ans.contentId === currentContentId) === undefined) {
-      const defaultValue = null;
       state.answers.push({
         contentId : currentContentId,
         value: defaultValue
       });
-      // console.log('state', state);
+      console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
-    // console.log('this.state', this.state);
+    if(state.answers[currentAnswerIndex].value === undefined) {
+      this.updateAnswer({
+        contentId: currentContentId,
+        value: defaultValue
+      },currentAnswerIndex);
+    }
+    console.log('this.state', this.state);
     return (
       <View style={styles.surveyContainer}>
         <View style={{ marginLeft: 10, marginRight: 10 }}>
           <Text style={styles.infoText}>{contentText}</Text>
           <SelectionGroup
-            onPress={state.selectionHandlers[currentStep].selectionHandler}
+            onPress={state.selectionHandlers[currentContentId].selectionHandler}
             items={choices}
-            isSelected={state.selectionHandlers[currentStep].isSelected}
+            isSelected={state.selectionHandlers[currentContentId].isSelected}
             renderContent={this.renderSelectionButton}
             containerStyle={styles.selectionGroupContainer}
             onItemSelected={(item) => { 
@@ -292,7 +439,7 @@ export default class MockupScreen extends Component {
               () => {
                 this.onSurveyFinished();
               },
-              state.selectionHandlers[currentStep].selectedOption !== null
+              state.selectionHandlers[currentContentId].selectedOption !== null
             )
           }
         </View>
@@ -303,22 +450,22 @@ export default class MockupScreen extends Component {
   renderVideo(survey,stepIndex) {
     const state = this.state;
     const { currentStep } = this.state;
-    const { contentId, contentText, videoUri } = survey[stepIndex];
+    const { contentId, contentText, videoUri, minTime } = survey[stepIndex];
     const currentContentId = contentId;
-    if (state.answers.find(ans => ans.contentId === currentContentId) === undefined) {
+    if (state.videoHandlers.find(ans => ans.contentId === currentContentId) === undefined) {
       const defaultValue = {
         totalPlayTime: 0,
         playTime: 0,
         checkpoint: 0
       };
-      state.answers.push({
+      state.videoHandlers.push({
         contentId : currentContentId,
         value: defaultValue
       });
-      // console.log('state', state);
+      console.log('state', state);
       this.setState(state);
     }
-    const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
+    const currentAnswerIndex = state.videoHandlers.findIndex(ans => ans.contentId === currentContentId);
     return (
       <View style={styles.surveyContainer}>
         <View style={{ marginLeft: 10, marginRight: 10 }}>
@@ -354,7 +501,7 @@ export default class MockupScreen extends Component {
               () => {
                 this.onSurveyFinished();
               },
-              !!(this.state.answers[currentAnswerIndex].value.totalPlayTime + this.state.answers[currentAnswerIndex].value.playTime >= 3000)
+              !!(this.state.videoHandlers[currentAnswerIndex].value.totalPlayTime + this.state.videoHandlers[currentAnswerIndex].value.playTime >= minTime * 1000)
             )
           }
         </View>
@@ -365,41 +512,52 @@ export default class MockupScreen extends Component {
   renderSortingQuestion(survey,stepIndex) {
     const state = this.state;
     const { currentStep } = this.state;
-    const { contentText, choices } = survey[stepIndex];
+    const { contentText, choices, expectedAnswer, score } = survey[stepIndex];
     const currentContentId = survey[stepIndex].contentId;
-    if (state.answers.find(ans => ans.contentId === currentContentId) === undefined) {
-      const defaultValue = [];
-      for (let i = 1; i <= choices.length; i++) {
-        defaultValue.push({
-          order: String(i),
-          value: choices[0]
-        })
-      }
+    const defaultValue = [];
+    for (let i = 1; i <= choices.length; i++) {
+      defaultValue.push('0')
+    }
+    if (!state.answers.find(ans => ans.contentId === currentContentId)) {
       state.answers.push({
         contentId : currentContentId,
-        value: defaultValue
+        value: {
+          answers: defaultValue,
+          value: 0
+        }
       });
-      // console.log('state', state);
+      console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
+    if(!state.answers[currentAnswerIndex].value) {
+      this.updateAnswer({
+        contentId: currentContentId,
+        value: {
+          answers: defaultValue,
+          value: 0
+        }
+      },currentAnswerIndex);
+    }
     return (
       <View style={styles.surveyContainer}>
         <View style={{ marginLeft: 10, marginRight: 10 }}>
           <Text style={styles.infoText}>{contentText}</Text>
           {
-            this.state.answers[currentAnswerIndex].value.map(( question, index ) =>
+            this.state.answers[currentAnswerIndex].value.answers.map(( question, index ) =>
               <View key={index}>
                 <Picker
                   style={styles.dropDownStyle}
-                  selectedValue={this.state.answers[currentAnswerIndex].value[index].value}
-                  onValueChange={(val) => this.updateInputVal(
+                  selectedValue={this.state.answers[currentAnswerIndex].value.answers[index]}
+                  onValueChange={(val) => this.updateSortingInputVal(
                     val,
                     index,
-                    currentAnswerIndex
+                    currentAnswerIndex,
+                    expectedAnswer,
+                    score
                   )}
                 >
-                  {this.sortingQuestionChoices(choices)}
+                  {this.pickerChoices(choices)}
                 </Picker>
               </View>
             )
@@ -423,7 +581,83 @@ export default class MockupScreen extends Component {
               () => {
                 this.onSurveyFinished();
               },
-              true
+              !this.state.answers[currentAnswerIndex].value.answers.find(ans => ans === '0')
+            )
+          }
+        </View>
+      </View>
+    )
+  }
+
+  renderPickerInput(survey,stepIndex) {
+    const state = this.state;
+    const { currentStep } = this.state;
+    const { contentText, questions } = survey[stepIndex];
+    const currentContentId = survey[stepIndex].contentId;
+    const defaultValue = [];
+    for(const elem of questions) {
+      console.log('elem', elem);
+      console.log('elem.questionText', elem.questionText);
+      defaultValue.push({
+        questionText: elem.questionText,
+        value: '0',
+        otherValue: ''
+      })
+    }
+    if (!state.answers.find(ans => ans.contentId === currentContentId)) {
+      console.log('questions', questions);
+      state.answers.push({
+        contentId : currentContentId,
+        value: defaultValue
+      });
+      console.log('state', state);
+      this.setState(state);
+    }
+    const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
+    return (
+      <View style={styles.surveyContainer}>
+        <View style={{ marginLeft: 10, marginRight: 10 }}>
+          <Text style={styles.infoText}>{contentText}</Text>
+          {
+            this.state.answers[currentAnswerIndex].value.map(( question, index ) =>
+              <View key={index}>
+                <Text style = {[styles.infoText,{ textAlign: 'center', marginLeft: 0, marginBottom: 5, fontSize: 16 }]}>
+                  {question.questionText}
+                </Text>
+                <Picker
+                  style={styles.dropDownStyle}
+                  selectedValue={this.state.answers[currentAnswerIndex].value[index].value}
+                  onValueChange={(val) => this.updatePickerInputVal(
+                    val,
+                    index,
+                    currentAnswerIndex
+                  )}
+                >
+                  {this.pickerChoices(questions[index].choices)}
+                </Picker>
+              </View>
+            )
+          }
+        </View>
+        <View style={styles.navButtonContainerStyle}>
+          {
+            this.renderPrevButton(
+              () => {
+                this.setState({ currentStep: currentStep - 1});
+              },
+              !!(currentStep !== 0)
+            )
+          }
+          {
+            this.renderNextOrFinishButton(
+              survey,
+              () => {
+                this.setState({ currentStep: currentStep + 1});
+              },
+              () => {
+                this.onSurveyFinished();
+              },
+              !this.state.answers[currentAnswerIndex].value.find(ans => ans.value === '0')
             )
           }
         </View>
@@ -441,7 +675,7 @@ export default class MockupScreen extends Component {
         contentId : currentContentId,
         value: defaultValue
       });
-      // console.log('state', state);
+      console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === answerIdRef);
@@ -467,7 +701,7 @@ export default class MockupScreen extends Component {
                     <Picker
                       style = {{ height: 40, width: 100, paddingHorizontal: 10 }}
                       selectedValue={this.state.answers[currentAnswerIndex].value[index].value}
-                      onValueChange={(val, index) => this.updateInputVal(
+                      onValueChange={(val, index) => this.updateEmotionRatingVal(
                         val,
                         state.answers[currentAnswerIndex].value.findIndex(elem => elem.emotion === ansEmotion.emotion),
                         currentAnswerIndex
@@ -505,7 +739,6 @@ export default class MockupScreen extends Component {
         </View>
       </ScrollView>
     )
-    
   }
 
   renderEmotionButtons(survey,stepIndex) {
@@ -519,7 +752,7 @@ export default class MockupScreen extends Component {
         contentId : currentContentId,
         value: defaultValue
       });
-      // console.log('state', state);
+      console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
@@ -531,7 +764,7 @@ export default class MockupScreen extends Component {
             <View style={{flex: 10, flexDirection: 'row', flexWrap: "wrap", justifyContent: 'space-between', alignItems: 'center', alignSelf: "center"}}>
               {emotions.map(( emotion, index ) =>
                 <View key={index}>
-                  <TouchableOpacity style={{alignItems: 'center', justifyContent: 'center'}} onPress={(e) => this.handleSelection(emotion.name, currentAnswerIndex, maxEmotions)}>
+                  <TouchableOpacity style={{alignItems: 'center', justifyContent: 'center'}} onPress={(e) => this.handleEmotionSelection(emotion.name, currentAnswerIndex, maxEmotions)}>
                     <View style={this.isThisEmotionSelected(emotion.name,currentAnswerIndex) ? styles.selectedemotionButton : styles.emotionButton}>
                       <Image source={emotion.imageUri} style={styles.coverImage}/>
                     </View>
@@ -572,15 +805,6 @@ export default class MockupScreen extends Component {
     const { currentStep } = this.state;
     const { contentText, questions } = survey[stepIndex]
     const currentContentId = survey[stepIndex].contentId;
-    /*
-    if (!state.textInputHandlers[currentStep]) {
-      state.textInputHandlers[currentStep] = {
-        questionText: question.questionText,
-        value: ''
-      };
-      this.setState(state);
-    }
-    */
     if (state.answers.find(ans => ans.contentId === currentContentId) === undefined) {
       const defaultValue = [];
       const defaultHandlers = [];
@@ -598,10 +822,10 @@ export default class MockupScreen extends Component {
         value: defaultValue
       });
       state.textInputHandlers[currentStep] = defaultHandlers;
-      // console.log('state', state);
+      console.log('state', state);
       this.setState(state);
     }
-    // console.log('this.state', this.state);
+    console.log('this.state', this.state);
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
     return (
       <View style={styles.surveyContainer}>
@@ -619,7 +843,7 @@ export default class MockupScreen extends Component {
                   multiline={questions[index].textBoxSize === 'large' ? true : false}
                   numberOfLines={questions[index].textBoxSize === 'large' ? 6 : 1}
                   value={this.state.answers[currentAnswerIndex].value[index].value}
-                  onChangeText={(val) => this.updateInputVal(
+                  onChangeText={(val) => this.updateTextInputVal(
                     val,
                     state.answers[currentAnswerIndex].value.findIndex(elem => elem.questionText === question.questionText),
                     currentAnswerIndex,
@@ -654,6 +878,385 @@ export default class MockupScreen extends Component {
         </View>
       </View>
     )
+  }
+
+  pushAnswerAfterGame(choices, currentAnswerIndex, contentId) {
+    const state = this.state;
+    const { currentChoiceAfterGame } = this.state;
+    const defaultQuestions = [];
+    const currentChoiceIndex = choices.findIndex(choice => choice.choiceText === currentChoiceAfterGame[contentId]);
+    for(const question of choices[currentChoiceIndex].questions) {
+      defaultQuestions.push({
+        questionText: question.questionText,
+        value: ''
+      })
+    }
+    const newAnswer = {
+      choiceText: currentChoiceAfterGame[contentId],
+      questions: defaultQuestions
+    }
+    state.answers[currentAnswerIndex].value.choices.push(newAnswer);
+    state.expectedAnswerAfterGame = choices[currentChoiceIndex].expectedAnswer;
+    this.setState(state);
+  }
+
+  handleSelectionAfterGame(val, contentId) {
+    const state = this.state;
+    if(val === state.currentChoiceAfterGame[contentId]) {
+      state.currentChoiceAfterGame[contentId] = null;
+    } else {
+      state.currentChoiceAfterGame[contentId] = val;
+    }
+    this.setState(state);
+    console.log('state', state);
+  }
+
+  isSelectedAfterGame(val, contentId) {
+    const { currentChoiceAfterGame } = this.state;
+    return !!(val === currentChoiceAfterGame[contentId])
+  }
+
+  isDisabledAfterGame(val,member) {
+    return !!(member.find(elem => elem.choiceText === val));
+  }
+
+  renderMainAfterGame(survey,stepIndex) {
+    const state = this.state;
+    const { currentStep, currentChoiceAfterGame } = this.state;
+    const { contentId, contentText, choices } = survey[stepIndex];
+    const defaultValue = {
+      otherChoiceValue: '',
+      choices: []
+    }
+    if (!state.answers.find(ans => ans.contentId === contentId)) {
+      state.answers.push({
+        contentId : contentId,
+        value: defaultValue
+      });
+      console.log('state', state);
+      this.setState(state);
+    }
+    console.log('choices', choices);
+    const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === contentId);
+    return (
+      <View style={styles.surveyContainer}>
+        <View style={{ marginLeft: 10, marginRight: 10 }}>
+          <Text style={styles.infoText}>{contentText}</Text>
+          {choices.map(( choice, index ) =>
+            <View
+              key={index}
+              style={{ marginTop: 5, marginBottom: 5, justifyContent: 'flex-start' }}
+            >
+              <TouchableOpacity
+                onPress={(e) => this.handleSelectionAfterGame(choice.choiceText, contentId)}
+                disabled={this.isDisabledAfterGame(choice.choiceText, state.answers[currentAnswerIndex].value.choices)}
+              >
+                <View
+                  style={
+                    this.isDisabledAfterGame(choice.choiceText, state.answers[currentAnswerIndex].value.choices) ?
+                    styles.disabledSelectionButton
+                    : this.isSelectedAfterGame(choice.choiceText, contentId) ?
+                    styles.selectionButton
+                    : styles.nonSelectionButton
+                  }
+                >
+                  <Text
+                    style={
+                      this.isDisabledAfterGame(choice.choiceText, state.answers[currentAnswerIndex].value.choices) ?
+                      {textAlign: 'center', color: '#a3a3a3', fontFamily: 'Kanit-Regular', fontSize: 16}
+                      : {textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}
+                    }
+                  >
+                    {choice.choiceText}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+        <View style={styles.navButtonContainerStyle}>
+          {
+            this.renderNextOrFinishButton(
+              survey,
+              () => {
+                if(!!state.answers[currentAnswerIndex].value.choices.length && !currentChoiceAfterGame[contentId]) {
+                  this.setState({ currentStep: currentStep + 4});
+                } else {
+                  this.pushAnswerAfterGame(choices, currentAnswerIndex, contentId);
+                  this.setState({ currentStep: currentStep + 1});
+                }
+              },
+              () => {
+                this.pushAnswerAfterGame(choices, currentAnswerIndex, contentId);
+                this.onSurveyFinished();
+              },
+              !!currentChoiceAfterGame[contentId] || !!state.answers[currentAnswerIndex].value.choices.length
+            )
+          }
+        </View>
+      </View>
+    )
+  }
+
+  renderSelectionGroupAfterGame(survey,stepIndex) {
+    const state = this.state;
+    const { currentStep, currentChoiceAfterGame } = this.state;
+    const { contentId, contentText, choices, answerIdRef } = survey[stepIndex];
+    const defaultValue = {
+      otherChoiceValue: '',
+      choices: []
+    }
+    if (!state.answers.find(ans => ans.contentId === answerIdRef)) {
+      state.answers.push({
+        contentId : answerIdRef,
+        value: defaultValue
+      });
+      console.log('state', state);
+      this.setState(state);
+    }
+    console.log('choices', choices);
+    return (
+      <View style={styles.surveyContainer}>
+        <View style={{ marginLeft: 10, marginRight: 10 }}>
+    <Text style={styles.infoText}>คำพูด "{currentChoiceAfterGame[answerIdRef]}" ที่น้องเลือกนั้น{'\n'}เป็น ความคิด หรือ ความรู้สึก คะ ?</Text>
+          {choices.map(( choice, index ) =>
+            <View
+              key={index}
+              style={{ marginTop: 5, marginBottom: 5, justifyContent: 'flex-start' }}
+            >
+              <TouchableOpacity onPress={(e) => this.handleSelectionAfterGame(choice.choiceText, contentId)}>
+                <View
+                  style={
+                    this.isSelectedAfterGame(choice.choiceText, contentId) ?
+                    styles.selectionButton : styles.nonSelectionButton
+                  }
+                >
+                  <Text style={{textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>
+                    {choice.choiceText}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+        <View style={styles.navButtonContainerStyle}>
+          {
+            this.renderNextOrFinishButton(
+              survey,
+              () => {
+                this.setState({ currentStep: currentStep + 1});
+              },
+              () => {
+                this.onSurveyFinished();
+              },
+              !!currentChoiceAfterGame[contentId]
+            )
+          }
+        </View>
+      </View>
+    )
+  }
+
+  renderQuestionValidateAfterGame(survey,stepIndex) {
+    const state = this.state;
+    const { currentStep, currentChoiceAfterGame, expectedAnswerAfterGame } = this.state;
+    const { contentTextPass, contentTextFail, minScore, answerIdRef } = survey[stepIndex];
+    const options = survey[stepIndex].options === undefined ? undefined : survey[stepIndex].options
+    let totalScore = 0;
+    if(currentChoiceAfterGame[answerIdRef] === expectedAnswerAfterGame) {
+      totalScore = 1;
+    }
+    return (
+      <View style={styles.surveyContainer}>
+        <View style={{ marginLeft: 10, marginRight: 10 }}>
+          <Text style={styles.infoText}>{totalScore >= minScore ? contentTextPass : contentTextFail}</Text>
+          {options !== undefined ? (
+            <View style={{alignItems: 'center', justifyContent: 'center'}}>
+              <Image source={totalScore >= minScore ? options.imageUriPass : options.imageUriFail} style={styles.charecterSize}/>
+            </View>
+          ) : (
+            <></>
+          )}
+        </View>
+        {
+          totalScore >= minScore ? (
+            <View style={styles.navButtonContainerStyle}>
+              {
+                this.renderNextOrFinishButton(
+                  survey,
+                  () => {this.setState({ currentStep: currentStep + 1});},
+                  () => {this.onSurveyFinished();},
+                  true
+                )
+              }
+            </View>
+          ) : (
+            <View style={styles.navButtonContainerStyle}>
+              {
+                this.renderPrevButton(
+                  () => {
+                    state.currentChoiceAfterGame[answerIdRef] = null;
+                    state.currentStep = currentStep - 1;
+                    this.setState(state);
+                  },
+                  true
+                )
+              }
+            </View>
+          )
+        }
+      </View>
+    );
+  }
+
+  updateTextInputValAfterGame(val, targetId, currentAnswerIndex, currentChoiceIndex, needAnswer) {
+    console.log('val', val);
+    console.log('targetId', targetId);
+    console.log('currentAnswerIndex', currentAnswerIndex);
+    console.log('needAnswer', needAnswer);
+
+    const state = this.state;
+    const { currentStep } = this.state;
+    state.answers[currentAnswerIndex].value.choices[currentChoiceIndex].questions[targetId].value = val;
+    
+    if(needAnswer) {
+      console.log('before', state.textInputHandlers[currentStep][targetId]);
+      console.log('!!(val.length)', !!(val.length));
+
+      state.textInputHandlers[currentStep][targetId] = !!(val.length);
+
+      console.log('after', state.textInputHandlers[currentStep][targetId]);
+    }
+
+    this.setState(state);
+    console.log(state);
+  }
+
+  renderTextInputAfterGame(survey,stepIndex) {
+    const state = this.state;
+    const { currentStep, currentChoiceAfterGame } = this.state;
+    const { contentText, answerIdRef } = survey[stepIndex]
+    const refContentIndex = survey.findIndex(elem => elem.contentId === answerIdRef);
+    const refChoiceIndex = survey[refContentIndex].choices.findIndex(choice => choice.choiceText === currentChoiceAfterGame[answerIdRef]);
+    const { questions } = survey[refContentIndex].choices[refChoiceIndex];
+    const currentAnswerIndex = this.state.answers.findIndex(ans => ans.contentId === answerIdRef);
+    const currentChoiceIndex = this.state.answers[currentAnswerIndex].value.choices.findIndex(choice => choice.choiceText === currentChoiceAfterGame[answerIdRef]);
+    console.log('currentAnswerIndex', currentAnswerIndex);
+    console.log('currentChoiceIndex', currentChoiceIndex);
+    console.log('this.state.answers[currentAnswerIndex].value.choices[currentChoiceIndex]', this.state.answers[currentAnswerIndex].value.choices[currentChoiceIndex])
+    const defaultHandlers = [];
+    for (const question of questions) {
+      defaultHandlers.push(!question.needAnswer);
+    }
+    if(!state.textInputHandlers[currentStep]) {
+      state.textInputHandlers[currentStep] = defaultHandlers;
+      this.setState(state);
+    }
+    return (
+      <View style={styles.surveyContainer}>
+        
+        <View style={{ marginLeft: 10, marginRight: 10 }}>
+          <Text style={styles.infoText}>{contentText}</Text>
+          { 
+            questions.map((question,index) => 
+              <View key={index}>
+                <Text style = {[styles.infoText,{ textAlign: 'center', marginLeft: 0, marginBottom: 5, fontSize: 16 }]}>
+                  {question.questionText}
+                </Text>
+                <TextInput
+                  style={questions[index].textBoxSize === 'small' ? styles.smallInputStyle : styles.inputStyle}
+                  placeholder={questions[index].placeholderText}
+                  multiline={questions[index].textBoxSize === 'large' ? true : false}
+                  numberOfLines={questions[index].textBoxSize === 'large' ? 6 : 1}
+                  value={this.state.answers[currentAnswerIndex].value.choices[currentChoiceIndex].questions[index].value}
+                  onChangeText={(val) => this.updateTextInputValAfterGame(
+                    val,
+                    this.state.answers[currentAnswerIndex].value.choices[currentChoiceIndex].questions.findIndex(elem => elem.questionText === question.questionText),
+                    currentAnswerIndex,
+                    currentChoiceIndex,
+                    survey[refContentIndex].choices[refChoiceIndex].questions[index].needAnswer
+                  )}
+                />
+              </View>
+            )
+          }
+        </View>
+        <View style={styles.navButtonContainerStyle}>
+          {
+            this.renderNextOrFinishButton(
+              survey,
+              () => {
+                state.currentChoiceAfterGame[answerIdRef] = null;
+                state.expectedAnswerAfterGame = null;
+                state.currentStep = currentStep - 3;
+                this.setState(state);
+              },
+              () => {
+                state.currentChoiceAfterGame[answerIdRef] = null;
+                state.expectedAnswerAfterGame = null;
+                state.currentStep = currentStep - 3;
+                this.setState(state);
+              },
+              !!(state.textInputHandlers[currentStep].find(elem => elem === false) === undefined)
+            )
+          }
+        </View>
+        
+      </View>
+    )
+  }
+
+  renderGame(survey,stepIndex) {
+    const { currentStep } = this.state;
+    const { contentText } = survey[stepIndex];
+    return (
+      <View style={styles.surveyContainer}>
+        <View style={{ marginLeft: 10, marginRight: 10 }}>
+          <View style={styles.gameContainer}>
+            <Text style={styles.infoText}>{contentText}</Text>
+          </View>
+        </View>
+        <View style={styles.navButtonContainerStyle}>
+          {
+            this.renderPrevButton(
+              () => {
+                this.setState({ currentStep: currentStep - 1});
+              },
+              !!(currentStep !== 0)
+            )
+          }
+          {
+            this.renderNextOrFinishButton(
+              survey,
+              () => {
+                this.setState({ currentStep: currentStep + 1});
+              },
+              () => {
+                this.onSurveyFinished();
+              },
+              true
+            )
+          }
+        </View>
+      </View>
+    );
+  }
+
+  specialCaseBackward(answerIdRef,specialValue) {
+    const state = this.state;
+    const { currentStep, answers } = this.state;
+    for (const elem of answerIdRef) {
+      state.selectionHandlers[elem] = new SelectionHandler({ maxMultiSelect: 1, allowDeselect: true });
+      this.setState(state);
+    }
+    for (const elem of answerIdRef) {
+      let currentAnswerIndex = answers.findIndex(ans => ans.contentId === elem);
+      this.updateAnswer({
+        contentId: elem,
+        value: undefined
+      },currentAnswerIndex);
+    }
+    this.setState({ currentStep: currentStep - specialValue});
   }
 
   renderQuestionValidate(survey,stepIndex) {
@@ -704,13 +1307,19 @@ export default class MockupScreen extends Component {
               {
                 this.renderSpecialButton(
                   'กลับไปชม VDO',
-                  () => {this.setState({ currentStep: currentStep - backToVideo});}
+                  () => {
+                    this.specialCaseBackward(answerIdRef,backToVideo)
+                    // this.setState({ currentStep: currentStep - backToVideo});
+                  }
                 )
               }
               {
                 this.renderSpecialButton(
                   'ตอบแบบสอบถามใหม่อีกครั้ง',
-                  () => {this.setState({ currentStep: currentStep - backToFirstQuestion});},
+                  () => {
+                    this.specialCaseBackward(answerIdRef,backToFirstQuestion)
+                    // this.setState({ currentStep: currentStep - backToFirstQuestion});
+                  }
                 )
               }
             </View>
@@ -761,6 +1370,7 @@ export default class MockupScreen extends Component {
       </View>
     );
   }
+
   getStepContent(survey,stepIndex) {
     const contentType = survey[stepIndex].contentType;
     if (contentType === 'Info') {
@@ -779,6 +1389,18 @@ export default class MockupScreen extends Component {
       return this.renderSelectionGroup(survey,stepIndex);
     } else if (contentType === 'QuestionValidate') {
       return this.renderQuestionValidate(survey,stepIndex);
+    } else if (contentType === 'PickerInput') {
+      return this.renderPickerInput(survey,stepIndex);
+    } else if (contentType === 'MainAfterGame') {
+      return this.renderMainAfterGame(survey,stepIndex);
+    } else if (contentType === 'SelectionGroupAfterGame') {
+      return this.renderSelectionGroupAfterGame(survey,stepIndex);
+    } else if (contentType === 'QuestionValidateAfterGame') {
+      return this.renderQuestionValidateAfterGame(survey,stepIndex);
+    } else if (contentType === 'TextInputAfterGame') {
+      return this.renderTextInputAfterGame(survey,stepIndex);
+    } else if (contentType === 'Game') {
+      return this.renderGame(survey,stepIndex);
     } else {
       return <Text>Unknown stepIndex</Text>;
     }
@@ -804,6 +1426,11 @@ export default class MockupScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+  gameContainer: {
+    widht: ((windowWidth * 0.9) - 40),
+    height: (((windowWidth * 0.9) - 40) * 4 / 3),
+    backgroundColor: BLUE
+  },
   container: {
     minWidth: '70%',
     maxWidth: '90%',
@@ -914,9 +1541,9 @@ const styles = StyleSheet.create({
     fontSize: 16
   },
   dropDownStyle: {
-    width: '70%',
+    width: '90%',
     marginBottom: 15,
-    paddingBottom: 15,
+    paddingVertical: 5,
     alignSelf: "center"
   },
   emotionButton: {
@@ -953,6 +1580,15 @@ const styles = StyleSheet.create({
     alignItems:"center",
     borderRadius:5,
     backgroundColor: GREEN,
+    display: "flex",
+    padding: 8,
+    margin: 2
+  },
+  disabledSelectionButton: {
+    justifyContent:"center",
+    alignItems:"center",
+    borderRadius:5,
+    backgroundColor: '#dfdfdf',
     display: "flex",
     padding: 8,
     margin: 2

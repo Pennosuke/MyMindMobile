@@ -135,16 +135,15 @@ export default class TreatmentScreen extends Component {
     }
   }
 
-  updateInputVal(val, targetId, currentAnswerIndex, needAnswer) {
+  updateTextInputVal(val, targetId, currentAnswerIndex, needAnswer) {
     // console.log('val', val);
     // console.log('targetId', targetId);
     // console.log('currentAnswerIndex', currentAnswerIndex);
+    // console.log('needAnswer', needAnswer);
     const state = this.state;
     const { currentStep } = this.state;
     state.answers[currentAnswerIndex].value[targetId].value = val;
-    const reallyNeedAnswer = needAnswer === undefined ? false : needAnswer;
-    // console.log('reallyNeedAnswer', reallyNeedAnswer);
-    if(reallyNeedAnswer) {
+    if(needAnswer) {
       // console.log('before', state.textInputHandlers[currentStep][targetId]);
       // console.log('!!(val.length)', !!(val.length));
       state.textInputHandlers[currentStep][targetId] = !!(val.length);
@@ -152,6 +151,47 @@ export default class TreatmentScreen extends Component {
     }
     this.setState(state);
     // console.log(state);
+  }
+
+  updatePickerInputVal(val, targetId, currentAnswerIndex) {
+    // console.log('val', val);
+    // console.log('targetId', targetId);
+    // console.log('currentAnswerIndex', currentAnswerIndex);
+    const state = this.state;
+    state.answers[currentAnswerIndex].value[targetId].value = val;
+    this.setState(state);
+    // console.log(state);
+  }
+
+  arraysEqual(a, b) {
+    if (a === b) return true;
+    if (a == null || b == null) return false;
+    if (a.length !== b.length) return false;
+    for (var i = 0; i < a.length; ++i) {
+      if (a[i] !== b[i]) return false;
+    }
+    return true;
+  }
+
+  updateSortingInputVal(val, targetId, currentAnswerIndex, expectedAnswer, score) {
+    // console.log('val', val);
+    // console.log('targetId', targetId);
+    // console.log('currentAnswerIndex', currentAnswerIndex);
+    if(val !== '0') {
+      const state = this.state;
+      state.answers[currentAnswerIndex].value.answers[targetId] = val;
+      this.setState(state);
+      // console.log('state.answers[currentAnswerIndex].value.answers', state.answers[currentAnswerIndex].value.answers);
+      // console.log('expectedAnswer', expectedAnswer);
+      // console.log('this.arraysEqual(state.answers[currentAnswerIndex].value.answers,expectedAnswer)', this.arraysEqual(state.answers[currentAnswerIndex].value.answers,expectedAnswer));
+      if(this.arraysEqual(state.answers[currentAnswerIndex].value.answers,expectedAnswer)) {
+        state.answers[currentAnswerIndex].value.value = score;
+        this.setState(state);
+      } else {
+        state.answers[currentAnswerIndex].value.value = 0;
+      }
+      // console.log(state);
+    }
   }
 
   handleSelection(emotionName, currentAnswerIndex, maxEmotions) {
@@ -191,10 +231,13 @@ export default class TreatmentScreen extends Component {
 
   sortingQuestionChoices(choices) {
     const allChoices = [];
-    let choiceIndex = 0;
+    allChoices.push(
+      <Picker.Item label='โปรดเลือกคำตอบ...' value="0" key={0}/>
+    )
+    let choiceIndex = 1;
     for(const elem of choices) {
       allChoices.push(
-        <Picker.Item label={elem} value={elem} key={choiceIndex}/>
+        <Picker.Item label={elem.choiceText} value={elem.value} key={choiceIndex}/>
       )
       choiceIndex++;
     }
@@ -377,19 +420,19 @@ export default class TreatmentScreen extends Component {
   renderSortingQuestion(survey,stepIndex) {
     const state = this.state;
     const { currentStep } = this.state;
-    const { contentText, choices } = survey[stepIndex];
+    const { contentText, choices, expectedAnswer, score } = survey[stepIndex];
     const currentContentId = survey[stepIndex].contentId;
     if (state.answers.find(ans => ans.contentId === currentContentId) === undefined) {
       const defaultValue = [];
       for (let i = 1; i <= choices.length; i++) {
-        defaultValue.push({
-          order: String(i),
-          value: choices[0]
-        })
+        defaultValue.push('0')
       }
       state.answers.push({
         contentId : currentContentId,
-        value: defaultValue
+        value: {
+          answers: defaultValue,
+          value: 0
+        }
       });
       // console.log('state', state);
       this.setState(state);
@@ -400,15 +443,17 @@ export default class TreatmentScreen extends Component {
         <View style={{ marginLeft: 10, marginRight: 10 }}>
           <Text style={styles.infoText}>{contentText}</Text>
           {
-            this.state.answers[currentAnswerIndex].value.map(( question, index ) =>
+            this.state.answers[currentAnswerIndex].value.answers.map(( question, index ) =>
               <View key={index}>
                 <Picker
                   style={styles.dropDownStyle}
-                  selectedValue={this.state.answers[currentAnswerIndex].value[index].value}
-                  onValueChange={(val) => this.updateInputVal(
+                  selectedValue={this.state.answers[currentAnswerIndex].value.answers[index]}
+                  onValueChange={(val) => this.updateSortingInputVal(
                     val,
                     index,
-                    currentAnswerIndex
+                    currentAnswerIndex,
+                    expectedAnswer,
+                    score
                   )}
                 >
                   {this.sortingQuestionChoices(choices)}
@@ -435,7 +480,7 @@ export default class TreatmentScreen extends Component {
               () => {
                 this.onSurveyFinished();
               },
-              true
+              !this.state.answers[currentAnswerIndex].value.answers.find(ans => ans === '0')
             )
           }
         </View>
@@ -479,7 +524,7 @@ export default class TreatmentScreen extends Component {
                     <Picker
                       style = {{ height: 40, width: 100, paddingHorizontal: 10 }}
                       selectedValue={this.state.answers[currentAnswerIndex].value[index].value}
-                      onValueChange={(val, index) => this.updateInputVal(
+                      onValueChange={(val, index) => this.updatePickerInputVal(
                         val,
                         state.answers[currentAnswerIndex].value.findIndex(elem => elem.emotion === ansEmotion.emotion),
                         currentAnswerIndex
@@ -622,7 +667,7 @@ export default class TreatmentScreen extends Component {
                   multiline={questions[index].textBoxSize === 'large' ? true : false}
                   numberOfLines={questions[index].textBoxSize === 'large' ? 6 : 1}
                   value={this.state.answers[currentAnswerIndex].value[index].value}
-                  onChangeText={(val) => this.updateInputVal(
+                  onChangeText={(val) => this.updateTextInputVal(
                     val,
                     state.answers[currentAnswerIndex].value.findIndex(elem => elem.questionText === question.questionText),
                     currentAnswerIndex,

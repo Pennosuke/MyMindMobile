@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, ScrollView, Button, Alert, TouchableWithoutFeedback, TouchableHighlight, TouchableOpacity, Dimensions } from 'react-native';
-import { Program1, Homework1, Program2, Homework2 } from '../constants/โปรแกรมฝึกปฏิบัติ_ทดสอบ';
+import { Program1, Homework1, Program2, Homework2, MockupData } from '../constants/โปรแกรมฝึกปฏิบัติ_ทดสอบ';
 import { SPWB, awareness, DASS, Q8 } from '../constants/แบบประเมิน';
 
 export default class tabTest extends Component {
@@ -282,6 +282,11 @@ export default class tabTest extends Component {
             alignItems: 'center',
             paddingVertical: 20}}
           >
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('MockUpScreen', { data : MockupData})}>
+              <View style={styles.roundedButton}>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>MockUpScreen</Text>
+              </View>
+            </TouchableOpacity>
             <TouchableOpacity onPress={() => this.props.navigation.navigate('spwbScreen', { data : SPWB})}>
               <View style={styles.roundedButton}>
                 <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>ทดสอบแบบวัดสุขภาวะทางจิตใจ</Text>

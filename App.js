@@ -3,10 +3,6 @@ import { View, Text, Button, StyleSheet } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { HomeScreen } from './screens/HomeScreen'
-import CompletedSurvey from './screens/CompletedSurvey'
-import TreatmentScreen from './screens/TreatmentScreen'
-import ContactScreen from './screens/ContactScreen'
-
 import LoadingScreen from './screens/LoadingScreen'
 import LoginScreen from './screens/LoginScreen'
 import SignupScreen from './screens/SignupScreen'
@@ -17,6 +13,11 @@ import spwbScreen from './screens/spwbScreen'
 import awarenessScreen from './screens/awarenessScreen'
 import dassScreen from './screens/dassScreen'
 import q8Screen from './screens/q8Screen'
+import CompletedSurvey from './screens/CompletedSurvey'
+import ContactScreen from './screens/ContactScreen'
+
+import TreatmentScreen from './screens/TreatmentScreen'
+import MockUpScreen from './screens/MockupScreen'
 
 import * as Font from 'expo-font';
 
@@ -102,6 +103,16 @@ class AppStackScreen extends Component {
             title: route.params.name,
             headerTitleStyle: { fontFamily: 'Kanit-Regular' }
           })}
+        />
+        <AppStack.Screen
+          name="MockUpScreen"
+          component={MockUpScreen}
+          options={
+            {
+              title: 'MockUpScreen',
+              headerTitleStyle: { alignSelf: 'center', fontFamily: 'Kanit-Regular' }
+            }
+          }
         />
       </AppStack.Navigator>
     )

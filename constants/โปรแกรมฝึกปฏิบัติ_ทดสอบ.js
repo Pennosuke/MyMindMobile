@@ -1,5 +1,5 @@
 export const Program1 = [
-    {
+  {
       contentId: '1',
       contentType: 'Info',
       contentText: '    หลังจากรู้ขั้นตอนของโปรแกรมกันแล้ว เรามาเรียนรู้และฝึกฝนกันเลยนะคะ\n\n    ขอต้อนรับน้องๆ ทุกคนเข้าสู่โปรแกรมที่ 1 “หายใจคลายเครียด” อยากรู้แล้วใช่ไหมคะว่าลมหายใจของเรานั้น ช่วยให้เรามีสภาวะทางจิตใจที่ดีขึ้นได้อย่างไร ก่อนอื่น มาชมวิดีโอ “ประโยชน์ที่น่าทึ่งของการหายใจอย่างถูกวิธี” กันก่อนค่ะ อ้อ! อยากให้ตั้งใจดูด้วยนะคะ เพราะเราจะมีคำถามถามน้องๆ ด้วยค่ะ',
@@ -330,7 +330,7 @@ export const Program1 = [
     {
       contentId: '25',
       contentType: 'Info',
-      contentText: 'หลังจากนี้ พี่จะให้เวลาน้องๆ 3 วัน ในการเรียนรู้และฝึกฝนตามวิดีโอนะคะ ขอให้น้องๆ ฝึกตาม VDO “การหายใจอย่างถูกวิธี” ทุกวันนะคะ วันละประมาณ 10-15 นาทีนะคะ จะท าให้น้องๆ ได้รับประโยชน์จากการหายใจอย่างถูกวิธีที่ส าคัญ อย่าลืมบันทึกความดันโลหิต การเต้นของหัวใจ และ เลือกภาพความรู้สึกที่ตรงกับความรู้สึกของน้องๆ มากที่สุด ก่อนและหลังการฝึกด้วยนะคะ',
+      contentText: 'หลังจากนี้ พี่จะให้เวลาน้องๆ 3 วัน ในการเรียนรู้และฝึกฝนตามวิดีโอนะคะ ขอให้น้องๆ ฝึกตาม VDO “การหายใจอย่างถูกวิธี” ทุกวันนะคะ วันละประมาณ 10-15 นาทีนะคะ จะทำให้น้องๆ ได้รับประโยชน์จากการหายใจอย่างถูกวิธีที่สำคัญ อย่าลืมบันทึกความดันโลหิต การเต้นของหัวใจ และ เลือกภาพความรู้สึกที่ตรงกับความรู้สึกของน้องๆ มากที่สุด ก่อนและหลังการฝึกด้วยนะคะ',
       options: {
         imageUri: require(`../assets/charecters/Character-02.png`)
       }
@@ -447,7 +447,7 @@ export const Program1 = [
     {
       contentId: '1',
       contentType: 'Info',
-      contentText: 'สวัสดีค่ะ น้องๆ ได้ฝึกการหายใจอย่างถูกวิธีกันมา 3 วันแล้วนะคะ ได้เรียนรู้ว่าการหายใจอย่างถูกวิธีท าให้เกิดการเปลี่ยนแปลงทางร่างกาย และ ความรู้สึกของเราเองก็เปลี่ยนแปลงไปเช่นกัน ต่อไปเรามาเรียนรู้เกี่ยวกับการรับรู้ความรู้สึกของร่างกายของเรากัน หากเราสามารถรับรู้ได้จะเกิดผลดีกับเราอย่างไร มาเรียนรู้กันนะคะน้องๆ',
+      contentText: 'สวัสดีค่ะ น้องๆ ได้ฝึกการหายใจอย่างถูกวิธีกันมา 3 วันแล้วนะคะ ได้เรียนรู้ว่าการหายใจอย่างถูกวิธีทำให้เกิดการเปลี่ยนแปลงทางร่างกาย และ ความรู้สึกของเราเองก็เปลี่ยนแปลงไปเช่นกัน ต่อไปเรามาเรียนรู้เกี่ยวกับการรับรู้ความรู้สึกของร่างกายของเรากัน หากเราสามารถรับรู้ได้จะเกิดผลดีกับเราอย่างไร มาเรียนรู้กันนะคะน้องๆ',
       options: {
         imageUri: require(`../assets/charecters/Character-04.png`)
       }
@@ -571,7 +571,7 @@ export const Program1 = [
     {
       contentId: '11',
       contentType: 'Info',
-      contentText: 'พี่จะให้เวลาน้อง 3 วัน ในการฝึกรับรู้ความรู้สึกของร่างกายตามวิดีโอนะคะ ขอให้น้องตั้งใจฝึกตาม VDO ทุกวัน น้องจะได้รับประโยชน์จากการฝึกอย่างสม่ าเสมอ ที่ส าคัญอย่าลืมบันทึกความดันโลหิต การเต้นของหัวใจ และ เลือกภาพความรู้สึกที่ตรงกับความรู้สึกของน้องมากที่สุด ทั้งก่อนและหลังการฝึกด้วยนะคะ',
+      contentText: 'พี่จะให้เวลาน้อง 3 วัน ในการฝึกรับรู้ความรู้สึกของร่างกายตามวิดีโอนะคะ ขอให้น้องตั้งใจฝึกตาม VDO ทุกวัน น้องจะได้รับประโยชน์จากการฝึกอย่างสม่ำเสมอ ที่สำคัญอย่าลืมบันทึกความดันโลหิต การเต้นของหัวใจ และ เลือกภาพความรู้สึกที่ตรงกับความรู้สึกของน้องมากที่สุด ทั้งก่อนและหลังการฝึกด้วยนะคะ',
       options: {
         imageUri: require(`../assets/charecters/Character-04.png`)
       }
@@ -683,3 +683,327 @@ export const Program1 = [
       answerIdRef: '7'
     },
   ]
+
+export const MockupData = [
+  {
+    contentId: '1',
+    contentType: 'Info',
+    contentText: 'คำอธิบายก่อนการฝึก\n\n    สวัสดีค่ะน้องๆ หลังจากที่เราได้รู้แล้วว่าขณะนี้สภาวะทางจิตใจของเราเป็น อย่างไร ต่อไปเราจะมาเรียนรู้วิธีการต่าง ๆ ที่จะส่งเสริมให้น้องๆ สามารถทีจะมีสภาวะทางจิตใจที่ดีไม่ว่าจะมีเหตุการณ์อะไรเข้ามาในชีวิตก็ตาม อยากรู้แล้วใช่ไหมละ เรามาดูรายละเอียดกันก่อนนะ\n    1. น้องๆ จะต้องฝึกตามโปรแกรมไปตามลำดับนะคะ ตลอดโปรแกรมใช้เวลาประมาณ 2-3 สัปดาห์\n    2. น้องๆ จะได้รับแต้มสะสมคะแนนจากการฝึกตามขั้นตอนที่กำหนดให้และ\n    3. น้องๆ จะได้รับอุปกรณ์วัดความดันโลหิตและวัดการเต้นของหัวใจขอให้น้องๆ บันทึกผลลงในโปรแกรมตามที่กำหนดด้วยนะคะ'
+  },
+  {
+    contentId: '999',
+    contentType: 'Game',
+    contentText: 'This is Game Area'
+  },
+  {
+    contentId: '25',
+    contentType: 'MainAfterGame',
+    contentText: 'หลังจากน้องๆ ได้เล่นเกมส์ น้องๆ สังเกตไหมคะว่า มีคำพูดอะไรเกิดขึ้นในใจบ้าง หรือน้องๆ รู้สึกอย่างไรบ้าง',
+    choices: [
+      {
+        choiceText: 'เย้! สำเร็จแล้ว',
+        expectedAnswer: 'ความคิด',
+        questions: [
+          {
+            questionText: 'กำลังรู้สึกอะไรอยู่หรือคะ',
+            placeholderText: '',
+            textBoxSize: 'large',
+            needAnswer: true
+          },
+        ]
+      },
+      {
+        choiceText: 'เบื่อโว้ย',
+        expectedAnswer: 'ความรู้สึก',
+        questions: [
+          {
+            questionText: 'ที่เบื่อ คิดอะไรอยู่หรือคะ',
+            placeholderText: '',
+            textBoxSize: 'large',
+            needAnswer: true
+          },
+          {
+            questionText: 'ถ้าไม่อยากรู้สึกเบื่อต้องคิดอย่างไรดีคะ',
+            placeholderText: '',
+            textBoxSize: 'large',
+            needAnswer: true
+          },
+        ]
+      },
+      {
+        choiceText: 'เซ็ง! ชะมัด',
+        expectedAnswer: 'ความรู้สึก',
+        questions: [
+          {
+            questionText: 'ที่เซ็ง! เนี่ยคิดอะไรอยู่หรือคะ',
+            placeholderText: '',
+            textBoxSize: 'large',
+            needAnswer: true
+          },
+          {
+            questionText: 'ถ้าไม่อยากรู้สึกเซ็งต้องคิดอย่างไรดีคะ',
+            placeholderText: '',
+            textBoxSize: 'large',
+            needAnswer: true
+          },
+        ]
+      },
+      {
+        choiceText: 'ยากจัง ทำไม่ได้หรอก',
+        expectedAnswer: 'ความคิด',
+        questions: [
+          {
+            questionText: 'รู้สึกอย่างไรคะที่ทำไม่ได้',
+            placeholderText: '',
+            textBoxSize: 'large',
+            needAnswer: true
+          },
+          {
+            questionText: 'ถ้าไม่อยากรู้สึกแบบนี้ น่าจะคิดอย่างไรดีคะ',
+            placeholderText: '',
+            textBoxSize: 'large',
+            needAnswer: true
+          },
+        ]
+      },
+      {
+        choiceText: 'เฮ้อ! ยากจริง แต่เราต้องทำได้',
+        expectedAnswer: 'ความคิด',
+        questions: [
+          {
+            questionText: 'คิดอย่างนี้แล้วน้องรู้สึกอย่างไรคะ',
+            placeholderText: '',
+            textBoxSize: 'large',
+            needAnswer: true
+          },
+        ]
+      },
+      {
+        choiceText: 'ต้องสำเร็จ กี่ครั้งกี่ครั้งก็ต้องทำได้',
+        expectedAnswer: 'ความคิด',
+        questions: [
+          {
+            questionText: 'คิดอย่างนี้แล้วน้องรู้สึกอย่างไรคะ',
+            placeholderText: '',
+            textBoxSize: 'large',
+            needAnswer: true
+          },
+        ]
+      },
+      {
+        choiceText: 'เราต้องชนะ',
+        expectedAnswer: 'ความคิด',
+        questions: [
+          {
+            questionText: 'คิดอย่างนี้แล้วน้องรู้สึกอย่างไรคะ',
+            placeholderText: '',
+            textBoxSize: 'large',
+            needAnswer: true
+          },
+        ]
+      },
+      {
+        choiceText: 'อึดอัดมาก',
+        expectedAnswer: 'ความรู้สึก',
+        questions: [
+          {
+            questionText: 'ที่รู้สึกอึดอัดแบบนี้ เพราะคิดอะไรอยู่หรือคะ',
+            placeholderText: '',
+            textBoxSize: 'large',
+            needAnswer: true
+          },
+          {
+            questionText: 'ถ้าไม่อยากรู้สึกอึดอัดแบบนี้ ต้องคิดอย่างไรดีคะ',
+            placeholderText: '',
+            textBoxSize: 'large',
+            needAnswer: true
+          },
+        ]
+      },
+      {
+        choiceText: 'ช่างมัน!',
+        expectedAnswer: 'ความคิด',
+        questions: [
+          {
+            questionText: 'คิดอย่างนี้แล้วน้องรู้สึกอย่างไรคะ',
+            placeholderText: '',
+            textBoxSize: 'large',
+            needAnswer: true
+          },
+        ]
+      },
+      {
+        choiceText: 'ปล่อยมันไป',
+        expectedAnswer: 'ความคิด',
+        questions: [
+          {
+            questionText: 'คิดอย่างนี้แล้วน้องรู้สึกอย่างไรคะ',
+            placeholderText: '',
+            textBoxSize: 'large',
+            needAnswer: true
+          },
+        ]
+      }
+    ]
+  },
+  
+  {
+    contentId: '26',
+    contentType: 'SelectionGroupAfterGame',
+    contentText: 'คำพูดที่น้องเลือกนั้นเป็น ความคิด หรือ ความรู้สึก คะ',
+    choices: [
+      {
+        choiceText: 'ความคิด',
+      },
+      {
+        choiceText: 'ความรู้สึก',
+      }
+    ],
+    answerIdRef: '25'
+  },
+  {
+    contentId: '27',
+    contentType: 'QuestionValidateAfterGame',
+    contentTextPass: 'ถูกต้องค่ะ',
+    contentTextFail: 'ยังผิดอยู่ค่ะ ลองตอบใหม่นะคะ',
+    minScore: 1,
+    answerIdRef: '26',
+    options: {
+      imageUriPass: require(`../assets/charecters/Character-03.png`),
+      imageUriFail: require(`../assets/charecters/Character-02.png`)
+    }
+  },
+  {
+    contentId: '28',
+    contentType: 'TextInputAfterGame',
+    contentText: '',
+    answerIdRef: '25'
+  },
+  {
+    contentId: '18',
+    contentType: 'PickerInput',
+    contentText: 'จากความรู้สึกของเหตุการณ์ที่ “ชอบ” ที่น้องเขียนมา...',
+    questions: [
+      {
+        questionText: 'ให้ระดับคะแนนต่อความรู้สึกนี้',
+        choices: [
+          '1',
+          '2',
+          '3',
+          '4',
+          '5',
+          '6',
+          '7',
+          '8',
+          '9',
+          '10'
+        ]
+      },
+    ]
+  },
+  {
+    contentId: '2',
+    contentType: 'SortingQuestion',
+    contentText: 'ข้อที่4 ขอให้เรียงล้าดับขั้นตอนของการฝึกการตระหนักรู้ในอารมณ์',
+    choices: [
+      'C',
+      'A',
+      'B'
+    ],
+    expectedAnswer: [
+      'A',
+      'B',
+      'C',
+    ],
+    score: 1
+  },
+  {
+    contentId: '3',
+    contentType: 'SelectionGroup',
+    contentText: 'ข้อแรก',
+    choices: [
+      {
+        choiceText: 'ผิด',
+        value: 0
+      },
+      {
+        choiceText: 'ถูก',
+        value: 1
+      },
+      {
+        choiceText: 'ผิด',
+        value: 0
+      },
+    ]
+  },
+  {
+    contentId: '4',
+    contentType: 'SelectionGroup',
+    contentText: 'ข้อสอง',
+    choices: [
+      {
+        choiceText: 'ถูก',
+        value: 1
+      },
+      {
+        choiceText: 'ผิด',
+        value: 0
+      },
+      {
+        choiceText: 'ผิด',
+        value: 0
+      },
+    ]
+  },
+  {
+    contentId: '5',
+    contentType: 'SelectionGroup',
+    contentText: 'ข้อสาม',
+    choices: [
+      {
+        choiceText: 'ผิด',
+        value: 0
+      },
+      {
+        choiceText: 'ผิด',
+        value: 0
+      },
+      {
+        choiceText: 'ถูก',
+        value: 1
+      },
+    ]
+  },
+  {
+    contentId: '6',
+    contentType: 'QuestionValidate',
+    contentTextPass: 'เฮอะ! เห่! เหล!',
+    contentTextFail: 'สู่ขิตไป!!!',
+    minScore: 4,
+    backToVideo: 4,
+    backToFirstQuestion: 4,
+    answerIdRef: [
+      '2',
+      '3',
+      '4',
+      '5',
+    ],
+    options: {
+      imageUriPass: require(`../assets/charecters/Character-03.png`),
+      imageUriFail: require(`../assets/charecters/Character-02.png`)
+    }
+  },
+  {
+    contentId: '7',
+    contentType: 'EmotionButtons',
+    contentText: 'น้อง ๆ รู้สึกอย่างไรกันบ้างคะ ช่วยเลือกรูปภาพที่ตรงกับความรู้สึกของน้องมากที่สุดนะคะ',
+    minEmotions: 1,
+    maxEmotions: 3
+  },
+  {
+    contentId: '8',
+    contentType: 'EmotionRating',
+    contentText: 'ช่วยบอกระดับความรู้สึกที่น้องๆเลือกมาด้วยนะคะ',
+    answerIdRef: '7'
+  },
+]
