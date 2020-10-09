@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Button, Alert, TouchableWithoutFeedback, TouchableHighlight } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, View, Button, Alert, TouchableWithoutFeedback, TouchableHighlight } from 'react-native';
 import tabA from '../tabs/tabA'
 import tabB from '../tabs/tabB'
 import tabC from '../tabs/tabC'
@@ -11,6 +11,7 @@ export function HomeScreen() {
   const Tab = createMaterialTopTabNavigator();
 
   return (
+    <SafeAreaView style={{flex: 1}}>
     <Tab.Navigator>
       <Tab.Screen
         name="แบบประเมิน"
@@ -22,16 +23,17 @@ export function HomeScreen() {
         component={tabB}
         tabBarOptions={{labelStyle: { fontFamily: 'Kanit-Regular' }}}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="ทดสอบระบบ"
         component={tabTest}
         tabBarOptions={{labelStyle: { fontFamily: 'Kanit-Regular' }}}
-      />
+      /> */}
       <Tab.Screen
         name="โปรไฟล์"
         component={tabC}
         tabBarOptions={{labelStyle: { fontFamily: 'Kanit-Regular' }}}
       />
     </Tab.Navigator>
+    </SafeAreaView>
   );
 }

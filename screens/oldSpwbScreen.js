@@ -21,7 +21,7 @@ export default class Survey extends Component {
   static navigationOptions = () => {
     return {
       headerStyle: {
-        backgroundColor: '#3CFB72',
+        backgroundColor: '#31d140',
       },
       headerTintColor: '#fff',
       headerTitle: 'Sample Survey',

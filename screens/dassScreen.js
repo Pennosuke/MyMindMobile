@@ -42,21 +42,49 @@ export default class dassScreen extends Component {
     };
   }
 
+  getDay(date) {
+    const splitDate = date.split('/')
+    return parseInt(splitDate[1], 10)
+  }
+  
+  getMonth(date) {
+    const splitDate = date.split('/')
+    return parseInt(splitDate[0], 10)
+  }
+  
+  getYear(date) {
+    const splitDate = date.split('/')
+    const moreSplitDate = splitDate[2].split(' ')
+    return parseInt(moreSplitDate[0], 10)
+  }
+
   async saveArchivementData(currentTime) {
     const archivesnapshot = await db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).get()
     if(!!archivesnapshot.data() && !!archivesnapshot.data()['แบบประเมิน']) {
-      db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).set({
-        ['แบบประเมิน'] : {
-          latestTimestamp: currentTime,
-          value: archivesnapshot.data()['แบบประเมิน'].value + 1
-        }
-      }, { merge: true })
+      const currentDate = currentTime.toDate().toLocaleDateString();
+      if(this.getYear(currentDate) > this.getYear(global.userArchivement['แบบประเมิน']['latestTimestamp']) || this.getMonth(currentDate) > this.getMonth(global.userArchivement['แบบประเมิน']['latestTimestamp']) || this.getDay(currentDate) > this.getDay(global.userArchivement['แบบประเมิน']['latestTimestamp'])) {
+        db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).set({
+          ['แบบประเมิน'] : {
+            latestTimestamp: currentTime,
+            value: archivesnapshot.data()['แบบประเมิน'].value + 1,
+            totalDays: archivesnapshot.data()['แบบประเมิน'].totalDays + 1
+          }
+        }, { merge: true })
+      } else {
+        db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).set({
+          ['แบบประเมิน'] : {
+            latestTimestamp: currentTime,
+            value: archivesnapshot.data()['แบบประเมิน'].value + 1,
+          }
+        }, { merge: true })
+      }
     } else {
       db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).set({
         ['แบบประเมิน'] : {
           latestTimestamp: currentTime,
           firstTimestamp: currentTime,
-          value: 1
+          value: 1,
+          totalDays: 1
         }
       }, { merge: true })
     }
@@ -66,8 +94,10 @@ export default class dassScreen extends Component {
     if(!!archivesnapshotAfter.data()) {
       global.userArchivement = archivesnapshotAfter.data();
       Object.keys(global.userArchivement).forEach((key) => {
-        global.userArchivement[key].firstTimestamp = global.userArchivement[key].firstTimestamp.toDate().toLocaleDateString() + ' ' + global.userArchivement[key].firstTimestamp.toDate().toLocaleTimeString();
-        global.userArchivement[key].latestTimestamp = global.userArchivement[key].latestTimestamp.toDate().toLocaleDateString() + ' ' + global.userArchivement[key].latestTimestamp.toDate().toLocaleTimeString();
+        if(key !== 'userName') {
+          global.userArchivement[key].firstTimestamp = global.userArchivement[key].firstTimestamp.toDate().toLocaleDateString() + ' ' + global.userArchivement[key].firstTimestamp.toDate().toLocaleTimeString();
+          global.userArchivement[key].latestTimestamp = global.userArchivement[key].latestTimestamp.toDate().toLocaleDateString() + ' ' + global.userArchivement[key].latestTimestamp.toDate().toLocaleTimeString();
+        }
       })
     }
     // console.log('DASS global.userArchivement', global.userArchivement);
@@ -75,26 +105,70 @@ export default class dassScreen extends Component {
 
   onSurveyFinished() {
     const { answers } = this.state;
-    const answersAsObj = {};
+    const prologueObj = this.props.route.params.prologueObj;
+    const spwbObj = this.props.route.params.spwbObj;
+    const awarenessObj = this.props.route.params.awarenessObj;
+    var dassObj = {};
     const currentTime = firebase.firestore.Timestamp.fromDate(new Date());
     const initTimestamp = !!this.props.route.params['initTimestamp'] ? this.props.route.params.initTimestamp : currentTime;
-    const depressionID = [3,5,10,13,16,17,21];
     let depressionScore = 0;
+    // console.log('answers',answers)
+    dassObj['depression'] = 0;
+    dassObj['anxiety'] = 0;
+    dassObj['stress'] = 0;
     for (const elem of answers) {
-      answersAsObj[elem.contentId] = elem.value;
-      if(depressionID.find(id => id === elem.contentId) !== undefined) {
+      // console.log('elem',elem)
+      dassObj[elem.contentId] = elem.value;
+      if(elem.contentId === '3' || elem.contentId === '5' || elem.contentId === '10' || elem.contentId === '13' || elem.contentId === '16' || elem.contentId === '17' || elem.contentId === '21') {
+        dassObj['depression'] += elem.value.value;
         depressionScore += elem.value.value;
+      } else if(elem.contentId === '2' || elem.contentId === '4' || elem.contentId === '7' || elem.contentId === '9' || elem.contentId === '15' || elem.contentId === '19' || elem.contentId === '20') {
+        dassObj['anxiety'] += elem.value.value;
+      } else if(elem.contentId === '1' || elem.contentId === '6' || elem.contentId === '8' || elem.contentId === '11' || elem.contentId === '12' || elem.contentId === '14' || elem.contentId === '18') {
+        dassObj['stress'] += elem.value.value;
       }
     }
-    answersAsObj['timestamp'] = currentTime;
-    answersAsObj['userName'] = firebase.auth().currentUser.displayName;
-    answersAsObj['initTimestamp'] = initTimestamp;
-    // console.log('answersAsObj', answersAsObj);
-    db.collection('แบบสอบถามวัดภาวะสุขภาพจิต').add(answersAsObj)
+    // console.log('depressionScore', depressionScore)
+    //dassObj['timestamp'] = currentTime;
+    dassObj['userName'] = firebase.auth().currentUser.displayName;
+    dassObj['initTimestamp'] = initTimestamp;
+    // console.log('dassObj', dassObj);
     if(depressionScore >= 11) {
-      this.props.navigation.navigate('q8Screen', { data : Q8, score : depressionScore, initTimestamp: initTimestamp });
+      /*-------------------------------*/
+      // console.log('prologueObj', prologueObj)
+      // console.log('spwbObj', spwbObj)
+      // console.log('awarenessObj', awarenessObj)
+      // console.log('dassObj', dassObj)
+      /*-------------------------------*/
+      this.props.navigation.navigate('q8Screen', {
+        data : Q8,
+        score : depressionScore,
+        initTimestamp: initTimestamp,
+        prologueObj: prologueObj,
+        spwbObj: spwbObj,
+        awarenessObj: awarenessObj,
+        dassObj: dassObj
+      });
     }
     else {
+      prologueObj['timestamp'] = currentTime;
+      spwbObj['timestamp'] = currentTime;
+      awarenessObj['timestamp'] = currentTime;
+      dassObj['timestamp'] = currentTime;
+      const DocTime = currentTime.toDate().toLocaleTimeString();
+      const DocDate = currentTime.toDate().toLocaleDateString().split('/');
+      const newDocName = global.userData.userName + ' ' + DocDate[1] + '-' + DocDate[0] + '-' + DocDate[2] + ' ' + DocTime;
+      /*-------------------------------*/
+      // console.log('prologueObj', prologueObj)
+      // console.log('spwbObj', spwbObj)
+      // console.log('awarenessObj', awarenessObj)
+      // console.log('dassObj', dassObj)
+      // console.log('newDocName', newDocName)
+      /*-------------------------------*/
+      db.collection('บทนำแบบประเมิน').doc(newDocName).set(prologueObj);
+      db.collection('แบบวัดสุขภาวะทางจิตใจ').doc(newDocName).set(spwbObj);
+      db.collection('แบบวัดการมีสติ').doc(newDocName).set(awarenessObj);
+      db.collection('แบบสอบถามวัดภาวะสุขภาพจิต').doc(newDocName).set(dassObj);
       this.saveArchivementData(currentTime);
       this.props.navigation.replace('CompletedSurvey', { score : depressionScore });
     }
@@ -889,7 +963,7 @@ const styles = StyleSheet.create({
   },
   questionText: {
     marginBottom: 20,
-    fontSize: 20
+    fontSize: 18
   },
   textBox: {
     borderWidth: 1,
@@ -914,7 +988,7 @@ const styles = StyleSheet.create({
   },
   infoText: {
     marginBottom: 20,
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: 'Kanit-Regular'
   },
   charecterSize: {
@@ -934,7 +1008,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     textAlign: "center",
     fontFamily: "Kanit-Regular",
-    fontSize: 16
+    fontSize: 14
   },
   smallInputStyle: {
     width: '60%',
@@ -945,7 +1019,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     textAlign: "center",
     fontFamily: "Kanit-Regular",
-    fontSize: 16
+    fontSize: 14
   },
   dropDownStyle: {
     width: '70%',

@@ -21,7 +21,7 @@ export default class Survey extends Component {
   static navigationOptions = () => {
     return {
       headerStyle: {
-        backgroundColor: '#3CFB72',
+        backgroundColor: '#31d140',
       },
       headerTintColor: '#fff',
       headerTitle: 'Sample Survey',
@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
   },
   questionText: {
     marginBottom: 20,
-    fontSize: 20
+    fontSize: 18
   },
   textBox: {
     borderWidth: 1,
@@ -317,7 +317,7 @@ const styles = StyleSheet.create({
   },
   infoText: {
     marginBottom: 20,
-    fontSize: 20,
+    fontSize: 18,
     marginLeft: 10
   },
 });

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, Alert, ActivityIndicator } from 'react-native';
 import firebase from '../constants/firebase';
+import 'firebase/firestore';
+import { db } from '../constants/firebase'
 
 export default class LoginScreen extends Component {
   constructor() {
@@ -9,6 +11,8 @@ export default class LoginScreen extends Component {
       email: '', 
       password: '',
       isLoading: false,
+      docName: '',
+      errorMessage: '',
     }
   }
 
@@ -19,8 +23,11 @@ export default class LoginScreen extends Component {
   }
 
   userLogin() {
-    if(this.state.email === '' && this.state.password === '') {
-      Alert.alert('Enter details to signin!')
+    if(this.state.email === '' || this.state.password === '') {
+      this.setState({
+        errorMessage: 'โปรดกรอกอีเมลหรือรหัสผ่านให้ครบถ้วน',
+        isLoading: false
+      })
     } else {
       this.setState({
         isLoading: true,
@@ -36,7 +43,21 @@ export default class LoginScreen extends Component {
         })
         this.props.navigation.replace('Init')
       })
-      .catch(error => this.setState({ errorMessage: error.message }))
+      .catch((error) => {
+        // console.log('error', error.message)
+        var newErrorMessage = '';
+        if(error.message === 'The password is invalid or the user does not have a password.') {
+          newErrorMessage = 'รหัสผ่านไม่ถูกต้อง โปรดกรอกใหม่อีกครั้ง';
+        } else if(error.message === 'The email address is badly formatted.') {
+          newErrorMessage = 'รูปแบบอีเมลไม่ถูกต้อง';
+        } else {
+          newErrorMessage = error.message;
+        }
+        this.setState({
+          errorMessage: newErrorMessage,
+          isLoading: false
+        })
+      })
     }
   }
 
@@ -49,7 +70,7 @@ export default class LoginScreen extends Component {
       )
     }    
     return (
-      <View style={styles.container}>  
+      <View style={styles.container}>
         <TextInput
           style={styles.inputStyle}
           placeholder="อีเมล"
@@ -63,18 +84,25 @@ export default class LoginScreen extends Component {
           onChangeText={(val) => this.updateInputVal(val, 'password')}
           maxLength={15}
           secureTextEntry={true}
-        />   
+        />
+        <Text style={styles.errorStatus}>
+          {this.state.errorMessage}
+        </Text>
         <Button
           color="#3740FE"
           title="เข้าสู่ระบบ"
           onPress={() => this.userLogin()}
-        />   
-
-        <Text 
+        />
+        <Text
           style={styles.loginText}
-          onPress={() => this.props.navigation.navigate('Signup')}>
-          ยังไม่ได้เป็นสมาชิก? กดที่นี่เพื่อสมัครสมาชิกใหม่
-        </Text>                          
+          onPress={() => this.props.navigation.navigate('ResetPassword')}>
+          คุณลืมรหัสผ่านใช่หรือไม่?
+        </Text>
+        <Button
+          color="#31d140"
+          title="สมัครสมาชิกใหม่"
+          onPress={() => this.props.navigation.navigate('Signup')}
+        />
       </View>
     );
   }
@@ -99,7 +127,8 @@ const styles = StyleSheet.create({
   },
   loginText: {
     color: '#3740FE',
-    marginTop: 25,
+    marginTop: 30,
+    marginBottom: 60,
     textAlign: 'center'
   },
   preloader: {
@@ -111,5 +140,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#fff'
+  },
+  errorStatus: {
+    textAlign: 'left',
+    marginBottom: 15,
+    fontFamily: 'Kanit-Regular',
+    fontSize: 14,
+    color: '#d7263f'
   }
 });

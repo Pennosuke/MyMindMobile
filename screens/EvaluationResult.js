@@ -68,6 +68,6 @@ const styles = StyleSheet.create({
   },
   questionText: {
     marginBottom: 20,
-    fontSize: 20
+    fontSize: 18
   },
 });

@@ -44,18 +44,21 @@ export default class prologueScreen extends Component {
 
   onSurveyFinished() {
     const { answers } = this.state;
-    const answersAsObj = {};
+    const prologueObj = {};
     const currentTime = firebase.firestore.Timestamp.fromDate(new Date());
     const initTimestamp = !!this.props.route.params['initTimestamp'] ? this.props.route.params.initTimestamp : currentTime;
     for (const elem of answers) {
-      answersAsObj[elem.contentId] = elem.value;
+      prologueObj[elem.contentId] = elem.value;
     }
-    answersAsObj['timestamp'] = currentTime;
-    answersAsObj['userName'] = firebase.auth().currentUser.displayName;
-    answersAsObj['initTimestamp'] = initTimestamp;
-    // console.log('answersAsObj', answersAsObj);
-    db.collection('บทนำแบบประเมิน').add(answersAsObj)
-    this.props.navigation.navigate('spwbScreen', { data : SPWB, initTimestamp: initTimestamp });
+    // prologueObj['timestamp'] = currentTime;
+    prologueObj['userName'] = firebase.auth().currentUser.displayName;
+    prologueObj['initTimestamp'] = initTimestamp;
+    // console.log('prologueObj', prologueObj);
+    this.props.navigation.navigate('spwbScreen', {
+      data : SPWB,
+      initTimestamp: initTimestamp,
+      prologueObj: prologueObj
+    });
   }
   
   renderSpecialButton(buttonText ,onPressEvent) {
@@ -63,7 +66,7 @@ export default class prologueScreen extends Component {
       <View style={{ flexGrow: 1, marginTop: 10, marginBottom: 10 }}>
         <TouchableOpacity onPress={onPressEvent}>
           <View style={styles.nonSelectionButton}>
-            <Text style={{textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>
+            <Text style={{textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14}}>
               {buttonText}
             </Text>
           </View>
@@ -77,7 +80,7 @@ export default class prologueScreen extends Component {
       <View style={{ flexGrow: 1, maxWidth: 100, marginTop: 10, marginBottom: 10 }}>
         <TouchableOpacity onPress={onPressEvent} disabled={!enabledCondition}>
           <View style={enabledCondition ? styles.navButton : styles.disableNavButton}>
-            <Text style={enabledCondition ? {textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16} : {textAlign: 'center', color: '#a3a3a3', fontFamily: 'Kanit-Regular', fontSize: 16}}>
+            <Text style={enabledCondition ? {textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14} : {textAlign: 'center', color: '#a3a3a3', fontFamily: 'Kanit-Regular', fontSize: 14}}>
               ย้อนกลับ
             </Text>
           </View>
@@ -93,7 +96,7 @@ export default class prologueScreen extends Component {
         <View style={{ flexGrow: 1, maxWidth: 100, marginTop: 10, marginBottom: 10 }}>
           <TouchableOpacity onPress={NextEvent} disabled={!enabledCondition}>
             <View style={enabledCondition ? styles.navButton : styles.disableNavButton}>
-              <Text style={enabledCondition ? {textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16} : {textAlign: 'center', color: '#a3a3a3', fontFamily: 'Kanit-Regular', fontSize: 16}}>
+              <Text style={enabledCondition ? {textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14} : {textAlign: 'center', color: '#a3a3a3', fontFamily: 'Kanit-Regular', fontSize: 14}}>
                 ถัดไป
               </Text>
             </View>
@@ -106,7 +109,7 @@ export default class prologueScreen extends Component {
         <View style={{ flexGrow: 1, maxWidth: 100, marginTop: 10, marginBottom: 10 }}>
           <TouchableOpacity onPress={FinishedEvent} disabled={!enabledCondition}>
             <View style={enabledCondition ? [styles.navButton,{backgroundColor: SELECTED}] : styles.disableNavButton}>
-              <Text style={enabledCondition ? {textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16} : {textAlign: 'center', color: '#a3a3a3', fontFamily: 'Kanit-Regular', fontSize: 16}}>
+              <Text style={enabledCondition ? {textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14} : {textAlign: 'center', color: '#a3a3a3', fontFamily: 'Kanit-Regular', fontSize: 14}}>
                 ถัดไป
               </Text>
             </View>
@@ -208,7 +211,7 @@ export default class prologueScreen extends Component {
       >
         <TouchableOpacity onPress={onPress} key={`button_${index}`}>
           <View style={isSelected ? styles.selectionButton : styles.nonSelectionButton}>
-            <Text style={{textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>
+            <Text style={{textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14}}>
               {data.choiceText}
             </Text>
           </View>
@@ -603,7 +606,7 @@ export default class prologueScreen extends Component {
           { 
             this.state.answers[currentAnswerIndex].value.map((question,index) => 
               <View key={index}>
-                <Text style = {[styles.infoText,{ textAlign: 'center', marginLeft: 0, marginBottom: 5, fontSize: 16 }]}>
+                <Text style = {[styles.infoText,{ textAlign: 'center', marginLeft: 0, marginBottom: 5, fontSize: 14 }]}>
                   {question.questionText}
                 </Text>
                 <TextInput
@@ -783,7 +786,7 @@ export default class prologueScreen extends Component {
       <View style={styles.background}>
         <ScrollView style={{flex:1 ,width:'100%'}}>
           <View style={{width:'100%', height: '100%' }}>
-            <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>
+            <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>
                 {this.state.currentStep + 1} / {survey.length}
             </Text>
             <View style={styles.mainSurveyContainer}>
@@ -848,7 +851,7 @@ const styles = StyleSheet.create({
   },
   questionText: {
     marginBottom: 20,
-    fontSize: 20
+    fontSize: 18
   },
   textBox: {
     borderWidth: 1,
@@ -873,7 +876,7 @@ const styles = StyleSheet.create({
   },
   infoText: {
     marginBottom: 20,
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: 'Kanit-Regular'
   },
   charecterSize: {
@@ -893,7 +896,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     textAlign: "center",
     fontFamily: "Kanit-Regular",
-    fontSize: 16
+    fontSize: 14
   },
   smallInputStyle: {
     width: '60%',
@@ -904,7 +907,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     textAlign: "center",
     fontFamily: "Kanit-Regular",
-    fontSize: 16
+    fontSize: 14
   },
   dropDownStyle: {
     width: '70%',

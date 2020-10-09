@@ -44,18 +44,43 @@ export default class spwbScreen extends Component {
 
   onSurveyFinished() {
     const { answers } = this.state;
-    const answersAsObj = {};
+    const prologueObj = this.props.route.params.prologueObj;
+    var spwbObj = {};
     const currentTime = firebase.firestore.Timestamp.fromDate(new Date());
     const initTimestamp = !!this.props.route.params['initTimestamp'] ? this.props.route.params.initTimestamp : currentTime;
+    spwbObj['autonomy'] = 0;
+    spwbObj['enviMaster'] = 0;
+    spwbObj['perGrowth'] = 0;
+    spwbObj['posiRelaWithOthers'] = 0;
+    spwbObj['purInLife'] = 0;
+    spwbObj['selfAccept'] = 0;
     for (const elem of answers) {
-      answersAsObj[elem.contentId] = elem.value;
+      spwbObj[elem.contentId] = elem.value;
+      if(elem.contentId === '1' || elem.contentId === '7' || elem.contentId === '13') {
+        spwbObj['autonomy'] += elem.value.value;
+      } else if(elem.contentId === '2' || elem.contentId === '8' || elem.contentId === '14') {
+        spwbObj['enviMaster'] += elem.value.value;
+      } else if(elem.contentId === '3' || elem.contentId === '9' || elem.contentId === '15') {
+        spwbObj['perGrowth'] += elem.value.value;
+      } else if(elem.contentId === '4' || elem.contentId === '10' || elem.contentId === '16') {
+        spwbObj['posiRelaWithOthers'] += elem.value.value;
+      } else if(elem.contentId === '5' || elem.contentId === '11' || elem.contentId === '17') {
+        spwbObj['purInLife'] += elem.value.value;
+      } else if(elem.contentId === '6' || elem.contentId === '12' || elem.contentId === '18') {
+        spwbObj['selfAccept'] += elem.value.value;
+      } 
     }
-    answersAsObj['timestamp'] = currentTime;
-    answersAsObj['userName'] = firebase.auth().currentUser.displayName;
-    answersAsObj['initTimestamp'] = initTimestamp;
-    // console.log('answersAsObj', answersAsObj);
-    db.collection('แบบวัดสุขภาวะทางจิตใจ').add(answersAsObj)
-    this.props.navigation.navigate('awarenessScreen', { data : awareness, initTimestamp: initTimestamp });
+    spwbObj['userName'] = firebase.auth().currentUser.displayName;
+    spwbObj['initTimestamp'] = initTimestamp;
+    /*-------------------------------*/
+    // console.log('spwbObj', spwbObj)
+    /*-------------------------------*/
+    this.props.navigation.navigate('awarenessScreen', {
+      data : awareness,
+      initTimestamp: initTimestamp,
+      prologueObj: prologueObj,
+      spwbObj : spwbObj
+    });
   }
   
   renderSpecialButton(buttonText ,onPressEvent) {
@@ -848,7 +873,7 @@ const styles = StyleSheet.create({
   },
   questionText: {
     marginBottom: 20,
-    fontSize: 20
+    fontSize: 18
   },
   textBox: {
     borderWidth: 1,
@@ -873,7 +898,7 @@ const styles = StyleSheet.create({
   },
   infoText: {
     marginBottom: 20,
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: 'Kanit-Regular'
   },
   charecterSize: {
@@ -893,7 +918,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     textAlign: "center",
     fontFamily: "Kanit-Regular",
-    fontSize: 16
+    fontSize: 14
   },
   smallInputStyle: {
     width: '60%',
@@ -904,7 +929,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     textAlign: "center",
     fontFamily: "Kanit-Regular",
-    fontSize: 16
+    fontSize: 14
   },
   dropDownStyle: {
     width: '70%',

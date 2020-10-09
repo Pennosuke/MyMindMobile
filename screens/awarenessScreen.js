@@ -44,18 +44,31 @@ export default class awarenessScreen extends Component {
 
   onSurveyFinished() {
     const { answers } = this.state;
-    const answersAsObj = {};
+    const prologueObj = this.props.route.params.prologueObj;
+    const spwbObj = this.props.route.params.spwbObj;
+    var awarenessObj = {};
     const currentTime = firebase.firestore.Timestamp.fromDate(new Date());
     const initTimestamp = !!this.props.route.params['initTimestamp'] ? this.props.route.params.initTimestamp : currentTime;
+    awarenessObj['mindfulness'] = 0;
     for (const elem of answers) {
-      answersAsObj[elem.contentId] = elem.value;
+      awarenessObj[elem.contentId] = elem.value;
+      awarenessObj['mindfulness'] += elem.value.value;
     }
-    answersAsObj['timestamp'] = currentTime;
-    answersAsObj['userName'] = firebase.auth().currentUser.displayName;
-    answersAsObj['initTimestamp'] = initTimestamp;
-    // console.log('answersAsObj', answersAsObj);
-    db.collection('แบบวัดการมีสติ').add(answersAsObj)
-    this.props.navigation.navigate('dassScreen', { data : DASS, initTimestamp: initTimestamp });
+    //awarenessObj['timestamp'] = currentTime;
+    awarenessObj['userName'] = firebase.auth().currentUser.displayName;
+    awarenessObj['initTimestamp'] = initTimestamp;
+    // console.log('awarenessObj', awarenessObj);
+    /*-------------------------------*/
+    // console.log('spwbObj', spwbObj)
+    // console.log('awarenessObj', awarenessObj)
+    /*-------------------------------*/
+    this.props.navigation.navigate('dassScreen', {
+      data : DASS,
+      initTimestamp: initTimestamp,
+      prologueObj: prologueObj,
+      spwbObj: spwbObj,
+      awarenessObj: awarenessObj
+    });
   }
   
   renderSpecialButton(buttonText ,onPressEvent) {
@@ -848,7 +861,7 @@ const styles = StyleSheet.create({
   },
   questionText: {
     marginBottom: 20,
-    fontSize: 20
+    fontSize: 18
   },
   textBox: {
     borderWidth: 1,
@@ -873,7 +886,7 @@ const styles = StyleSheet.create({
   },
   infoText: {
     marginBottom: 20,
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: 'Kanit-Regular'
   },
   charecterSize: {
@@ -893,7 +906,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     textAlign: "center",
     fontFamily: "Kanit-Regular",
-    fontSize: 16
+    fontSize: 14
   },
   smallInputStyle: {
     width: '60%',
@@ -904,7 +917,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     textAlign: "center",
     fontFamily: "Kanit-Regular",
-    fontSize: 16
+    fontSize: 14
   },
   dropDownStyle: {
     width: '70%',

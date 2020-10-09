@@ -4,9 +4,9 @@
     "slug": "MUMyMindMobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/MMM-icon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/MMM-splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },

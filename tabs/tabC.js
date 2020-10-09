@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Button, Alert, TouchableWithoutFeedback, TouchableHighlight, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Button, Alert, TouchableWithoutFeedback, TouchableHighlight, TouchableOpacity, ScrollView } from 'react-native';
 import firebase from '../constants/firebase';
 
 export default class tabC extends Component {
@@ -32,36 +32,36 @@ export default class tabC extends Component {
   render() {
     
     return (
-      <View style={
-        {flex: 1,
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        backgroundColor: 'white',
-        paddingVertical: 20,
-        paddingHorizontal: 10}}
-      >
-        <Text style={styles.title}>โปรไฟล์</Text>
-        <View style={{flex: 1}}>
-          <Text style={styles.content}>username : {global.userData.userName}</Text>
-          <Text style={styles.content}>email : {global.userData.email}</Text>
-          <Text style={styles.content}>ชื่อจริง-นามสกุล : {global.userData.realName}</Text>
-          <Text style={styles.content}>ระดับการศึกษา : {global.userData.education}</Text>
+      <ScrollView>
+        <View style={
+          {flex: 1,
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          paddingVertical: 20,
+          paddingHorizontal: 10}}
+        >
+          <Text style={styles.title}>โปรไฟล์</Text>
+          <View style={{flex: 1, marginBottom: 100}}>
+            <Text style={styles.content}>username : {global.userData.userName}</Text>
+            <Text style={styles.content}>email : {global.userData.email}</Text>
+            <Text style={styles.content}>ชื่อจริง-นามสกุล : {global.userData.realName}</Text>
+            <Text style={styles.content}>ระดับการศึกษา : {global.userData.education}</Text>
+          </View>
+
+          {/* <TouchableOpacity onPress={() => this.showData()}>
+            <View style={styles.roundedButton}>
+              <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>showData</Text>
+            </View>
+          </TouchableOpacity> */}
+
+          <TouchableOpacity onPress={() => this.signOut()}>
+            <View style={[styles.roundedButton,{backgroundColor: 'red'}]}>
+              <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>ออกจากระบบ</Text>
+            </View>
+          </TouchableOpacity>
         </View>
-
-        {/* <TouchableOpacity onPress={() => this.showData()}>
-          <View style={styles.roundedButton}>
-            <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>showData</Text>
-          </View>
-        </TouchableOpacity> */}
-
-        <TouchableOpacity onPress={() => this.signOut()}>
-          <View style={[styles.roundedButton,{backgroundColor: 'red'}]}>
-            <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>ออกจากระบบ</Text>
-          </View>
-        </TouchableOpacity>
-        
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     fontFamily: 'Kanit-Medium',
-    fontSize: 20
+    fontSize: 18
   },
   content: {
     textAlign: 'left',
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     fontFamily: 'Kanit-Regular',
-    fontSize: 18,
+    fontSize: 16,
   },
   topLeftButton: {
     alignItems: 'center',

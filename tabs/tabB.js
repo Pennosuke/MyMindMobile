@@ -1,8 +1,17 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Button, Alert, TouchableWithoutFeedback, TouchableHighlight, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Button, Alert, TouchableWithoutFeedback, TouchableHighlight, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { MockupData } from '../constants/MockupData';
-import { Program1, Homework1, Program2, Homework2 } from '../constants/โปรแกรมฝึกปฏิบัติ';
+import {
+  Program1,
+  Homework1,
+  Program2,
+  Homework2,
+  Program3,
+  Homework3,
+  Program4,
+  Homework4,
+} from '../constants/โปรแกรมฝึกปฏิบัติ';
 
 export default class tabB extends Component {
 
@@ -30,10 +39,19 @@ export default class tabB extends Component {
 
   getHour = (date) => {
     const splitDate = date.split(' ')
-    const Time = splitDate[1]
-    const TimeZone = splitDate[2]
-    const splitTime = Time.split(':')
-    return TimeZone === 'AM' ? (splitTime[0] === '12' ? 0 : parseInt(splitTime[0], 10)) : parseInt(splitTime[0], 10) + 12
+    var Time = ''
+    var TimeZone = ''
+    var splitTime = []
+    if(splitDate.length === 2) {
+      Time = splitDate[1]
+      splitTime = Time.split(':')
+      return parseInt(splitTime[0], 10)
+    } else if(splitDate.length === 3) {
+      Time = splitDate[1]
+      TimeZone = splitDate[2]
+      splitTime = Time.split(':')
+      return TimeZone === 'PM' ? (splitTime[0] === '12' ? 12 : parseInt(splitTime[0], 10) + 12) : (splitTime[0] === '12' ? 0 : parseInt(splitTime[0], 10))
+    }
   }
 
   getMinute = (date) => {
@@ -56,128 +74,54 @@ export default class tabB extends Component {
     return this.getSecond(date) + (this.getMinute(date) * 60) + (this.getHour(date) * 3600)
   }
 
-  getHomeworkValue = (collection) => {
+  renderHomeworkValue(collection, minimum) {
     if(!global.userArchivement[collection]) {
-      return 0;
-    } else if(global.userArchivement[collection].value > 3) {
-      return 3;
+      return ' (0/' + minimum + ' วัน)';
+    } else if(global.userArchivement[collection].totalDays < minimum) {
+      return ' (' + global.userArchivement[collection].totalDays + '/' + minimum + ' วัน)';
     } else {
-      return global.userArchivement[collection].value;
+      return ''
     }
   }
 
-  renderWaitingDate(collection,timestamp) {
-    var newSecond = this.getSecond(global.userArchivement[collection][timestamp]) + 20;
-    var plusMinute = 0;
-    if(newSecond >= 60) {
-      newSecond -= 60;
-      plusMinute = 1
-    }
-    var newMinute = this.getMinute(global.userArchivement[collection][timestamp]) + plusMinute;
-    var plusHour = 0;
-    if(newMinute >= 60) {
-      newMinute -= 60;
-      plusHour = 1
-    }
-    var newHour = this.getHour(global.userArchivement[collection][timestamp]) + plusHour;
-    var plusDay = 0;
-    if(newHour >= 24) {
-      newHour -= 24;
-      plusDay = 0
-    }
-    var newDay = this.getDay(global.userArchivement[collection][timestamp]) + plusDay;
-    var newMonth = this.getMonth(global.userArchivement[collection][timestamp]);
-    var newYear = this.getYear(global.userArchivement[collection][timestamp]);
-    const kom = [1,3,5,7,8,10,12];
-    const yon = [4,6,9,11];
-    if(kom.find(month => month === newMonth) !== undefined && newDay > 31) {
-      newDay -= 31;
-      newMonth++;
-    } else if(yon.find(month => month === newMonth) !== undefined && newDay > 30) {
-      newDay -= 30;
-      newMonth++;
-    } else if(newYear % 400 === 0 || (newYear % 4 === 0 && newYear % 100 !== 0) && newDay > 29) {
-      newDay -= 29;
-      newMonth++;
-    } else if(newDay > 28) {
-      newDay -= 28;
-      newMonth++;
-    }
-    if(newMonth > 12) {
-      newMonth -= 12;
-      newYear++;
-    }
-    return(
-      <Text style={[styles.buttonFont, styles.waitingFont]}>
-        เริ่มทำได้ในวันที่ {newDay}/{newMonth}/{newYear} เวลา {newHour}:{newMinute}:{newSecond} น.
-      </Text>
-    )
-  }
-
-  isAvailible(collection,timestamp,waitingTime) {
+  renderWaitingText(collection, name, minimumDay) {
     if(!global.userArchivement[collection]) {
-      // console.log('global.userArchivement[collection] === undefined case')
-      return false;
-    } else if (global.userArchivement[collection].value === 0) {
-      // console.log('global.userArchivement[collection].value === 0 case')
-      return false;
-    } else if (this.getYear(global.checkpointTime) > this.getYear(global.userArchivement[collection][timestamp])) {
-      // console.log('this.getYear(global.checkpointTime)', this.getYear(global.checkpointTime));
-      // console.log('this.getYear(global.userArchivement[collection][timestamp])', this.getYear(global.userArchivement[collection][timestamp]));
-      return true;
-    } else if (this.getMonth(global.checkpointTime) > this.getMonth(global.userArchivement[collection][timestamp])) {
-      // console.log('this.getMonth(global.checkpointTime)', this.getMonth(global.checkpointTime));
-      // console.log('this.getMonth(global.userArchivement[collection][timestamp])', this.getMonth(global.userArchivement[collection][timestamp]));
-      return true;
-    } else if (this.getDay(global.checkpointTime) > this.getDay(global.userArchivement[collection][timestamp])) {
-      // console.log('this.getDay(global.checkpointTime)', this.getDay(global.checkpointTime));
-      // console.log('this.getDay(global.userArchivement[collection][timestamp])', this.getDay(global.userArchivement[collection][timestamp]));
-      return true;
-    } else if (this.getTotalSecond(global.checkpointTime) - this.getTotalSecond(global.userArchivement[collection][timestamp]) >= waitingTime) {
-      // console.log('this.getTotalSecond(global.checkpointTime)', this.getTotalSecond(global.checkpointTime));
-      // console.log('this.getTotalSecond(global.userArchivement[collection][timestamp])', this.getTotalSecond(global.userArchivement[collection][timestamp]));
-      return true;
-    } else {
-      // console.log('last case')
-      return false;
+      return(
+        <Text style={[styles.buttonFont, styles.waitingFont]}>
+          โปรดทำ"{name}"ให้ครบ {minimumDay} วัน (0/{minimumDay} วัน)
+        </Text>
+      )
+    } else if(global.userArchivement[collection]['totalDays'] < minimumDay) {
+      return(
+        <Text style={[styles.buttonFont, styles.waitingFont]}>
+          โปรดทำ"{name}"ให้ครบ {minimumDay} วัน ({global.userArchivement[collection]['totalDays']}/{minimumDay} วัน)
+        </Text>
+      )
     }
   }
 
-  handleAvailable(beforeCollection,currentCollection,waitingTime) {
-    if(this.getHomeworkValue(currentCollection) > 0) {
-      return this.isAvailible(currentCollection,'latestTimestamp',waitingTime)
+  isAvailible(collection, minimum) {
+    if(!global.userArchivement[collection]) {
+      return false;
+    } else if (global.userArchivement[collection]['totalDays'] < minimum) {
+      return false;
     } else {
-      return this.isAvailible(beforeCollection,'firstTimestamp',waitingTime)
-    }
-    
-  }
-
-  handlerenderWaitingDate(beforeCollection,currentCollection) {
-    if(this.getHomeworkValue(currentCollection) > 0) {
-      return this.renderWaitingDate(currentCollection,'latestTimestamp')
-    } else {
-      return this.renderWaitingDate(beforeCollection,'firstTimestamp')
+      return true;
     }
   }
 
   renderProgram1Button() {
-    if(!!global.userArchivement['แบบประเมิน']) {
       return(
         <TouchableOpacity 
           onPress={() => this.props.navigation.navigate('TreatmentScreen', { data : Program1, collection : 'โปรแกรมที่_1_หายใจคลายเครียด', name: 'โปรแกรมที่ 1 หายใจคลายเครียด' })}
-          disabled={!this.isAvailible('แบบประเมิน','firstTimestamp',0)}
+          disabled={!this.isAvailible('แบบประเมิน', 1)}
         >
-          <View style={!this.isAvailible('แบบประเมิน','firstTimestamp',0) ? [styles.roundedButton, styles.disableButton] : styles.roundedButton}>
-            <Text style={!this.isAvailible('แบบประเมิน','firstTimestamp',0) ? [styles.buttonFont, styles.disablebuttonFont] : styles.buttonFont}>โปรแกรมที่ 1 “หายใจคลายเครียด”</Text>
-            {!this.isAvailible('แบบประเมิน','firstTimestamp',0) ? this.renderWaitingDate('แบบประเมิน','firstTimestamp') : <></>}
+          <View style={!this.isAvailible('แบบประเมิน', 1) ? [styles.roundedButton, styles.disableButton] : this.isAvailible('โปรแกรมที่_1_หายใจคลายเครียด', 1) ? [styles.roundedButton, styles.finishedButton] : styles.roundedButton}>
+            <Text style={!this.isAvailible('แบบประเมิน', 1) ? [styles.buttonFont, styles.disablebuttonFont] : styles.buttonFont}>โปรแกรมที่ 1 “หายใจคลายเครียด”</Text>
+            {!this.isAvailible('แบบประเมิน', 1) ? this.renderWaitingText('แบบประเมิน', 'แบบประเมิน', 1) : <></>}
           </View>
         </TouchableOpacity>
       )
-    } else {
-      return(
-        <></>
-      )
-    }
   }
 
   renderHomework1Button() {
@@ -185,16 +129,11 @@ export default class tabB extends Component {
       return(
         <TouchableOpacity 
           onPress={() => this.props.navigation.navigate('TreatmentScreen', { data : Homework1, collection : 'ทบทวนโปรแกรมที่_1_หายใจคลายเครียด', name: 'ทบทวนโปรแกรมที่ 1 หายใจคลายเครียด' })}
-          disabled={!this.handleAvailable('โปรแกรมที่_1_หายใจคลายเครียด','ทบทวนโปรแกรมที่_1_หายใจคลายเครียด',20)}
         >
-          <View style={!this.handleAvailable('โปรแกรมที่_1_หายใจคลายเครียด','ทบทวนโปรแกรมที่_1_หายใจคลายเครียด',20) ? [styles.roundedButton, styles.disableButton] : styles.roundedButton}>
-            <Text style={!this.handleAvailable('โปรแกรมที่_1_หายใจคลายเครียด','ทบทวนโปรแกรมที่_1_หายใจคลายเครียด',20) ? [styles.buttonFont, styles.disablebuttonFont] : styles.buttonFont}>
-              ทบทวนโปรแกรมที่ 1 ({this.getHomeworkValue('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด')}/3)
+          <View style={this.isAvailible('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด', 3) ? [styles.roundedButton, styles.finishedButton] : styles.roundedButton}>
+            <Text style={styles.buttonFont}>
+              ทบทวนโปรแกรมที่ 1{this.renderHomeworkValue('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด', 3)}
             </Text>
-            {
-              !this.handleAvailable('โปรแกรมที่_1_หายใจคลายเครียด','ทบทวนโปรแกรมที่_1_หายใจคลายเครียด',20) ?
-              this.handlerenderWaitingDate('โปรแกรมที่_1_หายใจคลายเครียด','ทบทวนโปรแกรมที่_1_หายใจคลายเครียด') : <></>
-            }
           </View>
         </TouchableOpacity>
       )
@@ -206,20 +145,17 @@ export default class tabB extends Component {
   }
 
   renderProgram2Button() {
-    if(this.getHomeworkValue('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด') >= 3) {
+    if(!!global.userArchivement['โปรแกรมที่_1_หายใจคลายเครียด']) {
       return(
         <TouchableOpacity 
           onPress={() => this.props.navigation.navigate('TreatmentScreen', { data : Program2, collection : 'โปรแกรมที่_2_ละเอียดลออดูกาย', name: 'โปรแกรมที่ 2 ละเอียดลออดูกาย' })}
-          disabled={!this.isAvailible('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด','latestTimestamp',20) && global.userArchivement['ทบทวนโปรแกรมที่_1_หายใจคลายเครียด'].value <= 3}
+          disabled={!this.isAvailible('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด', 3)}
         >
-          <View style={!this.isAvailible('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด','latestTimestamp',20) && global.userArchivement['ทบทวนโปรแกรมที่_1_หายใจคลายเครียด'].value <= 3 ? [styles.roundedButton, styles.disableButton] : styles.roundedButton}>
-            <Text style={!this.isAvailible('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด','latestTimestamp',20) && global.userArchivement['ทบทวนโปรแกรมที่_1_หายใจคลายเครียด'].value <= 3 ? [styles.buttonFont, styles.disablebuttonFont] : styles.buttonFont}>
+          <View style={!this.isAvailible('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด', 3) ? [styles.roundedButton, styles.disableButton] : this.isAvailible('โปรแกรมที่_2_ละเอียดลออดูกาย', 1) ? [styles.roundedButton, styles.finishedButton] : styles.roundedButton}>
+            <Text style={!this.isAvailible('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด', 3) ? [styles.buttonFont, styles.disablebuttonFont] : styles.buttonFont}>
               โปรแกรมที่ 2 “ละเอียดลออดูกาย”
             </Text>
-            {
-              !this.isAvailible('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด','latestTimestamp',20) && global.userArchivement['ทบทวนโปรแกรมที่_1_หายใจคลายเครียด'].value <= 3 ?
-              this.renderWaitingDate('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด','latestTimestamp') : <></>
-            }
+            {!this.isAvailible('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด', 3) ? this.renderWaitingText('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด', 'ทบทวนโปรแกรมที่ 1', 3) : <></>}
           </View>
         </TouchableOpacity>
       )
@@ -235,16 +171,95 @@ export default class tabB extends Component {
       return(
         <TouchableOpacity 
           onPress={() => this.props.navigation.navigate('TreatmentScreen', { data : Homework2, collection : 'ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย', name: 'ทบทวนโปรแกรมที่ 2 ละเอียดลออดูกาย' })}
-          disabled={!this.handleAvailable('โปรแกรมที่_2_ละเอียดลออดูกาย','ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย',20)}
         >
-          <View style={!this.handleAvailable('โปรแกรมที่_2_ละเอียดลออดูกาย','ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย',20) ? [styles.roundedButton, styles.disableButton] : styles.roundedButton}>
-            <Text style={!this.handleAvailable('โปรแกรมที่_2_ละเอียดลออดูกาย','ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย',20) ? [styles.buttonFont, styles.disablebuttonFont] : styles.buttonFont}>
-              ทบทวนโปรแกรมที่ 2 ({this.getHomeworkValue('ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย')}/3)
+          <View style={this.isAvailible('ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย', 3) ? [styles.roundedButton, styles.finishedButton] : styles.roundedButton}>
+            <Text style={styles.buttonFont}>
+              ทบทวนโปรแกรมที่ 2{this.renderHomeworkValue('ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย', 3)}
             </Text>
-            {
-              !this.handleAvailable('โปรแกรมที่_2_ละเอียดลออดูกาย','ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย',20) ?
-              this.handlerenderWaitingDate('โปรแกรมที่_2_ละเอียดลออดูกาย','ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย') : <></>
-            }
+          </View>
+        </TouchableOpacity>
+      )
+    } else {
+      return(
+        <></>
+      )
+    }
+  }
+
+  renderProgram3Button() {
+    if(!!global.userArchivement['โปรแกรมที่_2_ละเอียดลออดูกาย']) {
+      return(
+        <TouchableOpacity 
+          onPress={() => this.props.navigation.navigate('TreatmentScreen', { data : Program3, collection : 'โปรแกรมที่_3_ตระหนักรู้ในอารมณ์', name: 'โปรแกรมที่ 3 ตระหนักรู้ในอารมณ์' })}
+          disabled={!this.isAvailible('ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย', 3)}
+        >
+          <View style={!this.isAvailible('ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย', 3) ? [styles.roundedButton, styles.disableButton] : this.isAvailible('โปรแกรมที่_3_ตระหนักรู้ในอารมณ์', 1) ? [styles.roundedButton, styles.finishedButton] : styles.roundedButton}>
+            <Text style={!this.isAvailible('ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย', 3) ? [styles.buttonFont, styles.disablebuttonFont] : styles.buttonFont}>
+              โปรแกรมที่ 3 “ตระหนักรู้ในอารมณ์”
+            </Text>
+            {!this.isAvailible('ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย', 3) ? this.renderWaitingText('ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย', 'ทบทวนโปรแกรมที่ 2', 3) : <></>}
+          </View>
+        </TouchableOpacity>
+      )
+    } else {
+      return(
+        <></>
+      )
+    }
+  }
+
+  renderHomework3Button() {
+    if(!!global.userArchivement['โปรแกรมที่_3_ตระหนักรู้ในอารมณ์']) {
+      return(
+        <TouchableOpacity 
+          onPress={() => this.props.navigation.navigate('TreatmentScreen', { data : Homework3, collection : 'ทบทวนโปรแกรมที่_3_ตระหนักรู้ในอารมณ์', name: 'ทบทวนโปรแกรมที่ 3 ตระหนักรู้ในอารมณ์' })}
+        >
+          <View style={this.isAvailible('ทบทวนโปรแกรมที่_3_ตระหนักรู้ในอารมณ์', 3) ? [styles.roundedButton, styles.finishedButton] : styles.roundedButton}>
+            <Text style={styles.buttonFont}>
+              ทบทวนโปรแกรมที่ 3{this.renderHomeworkValue('ทบทวนโปรแกรมที่_3_ตระหนักรู้ในอารมณ์', 3)}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      )
+    } else {
+      return(
+        <></>
+      )
+    }
+  }
+
+  renderProgram4Button() {
+    if(!!global.userArchivement['โปรแกรมที่_3_ตระหนักรู้ในอารมณ์']) {
+      return(
+        <TouchableOpacity 
+          onPress={() => this.props.navigation.navigate('TreatmentScreen', { data : Program4, collection : 'โปรแกรมที่_4_ปรับความคิดพิชิตเศร้า', name: 'โปรแกรมที่ 4 ปรับความคิด.....พิชิตเศร้า' })}
+          disabled={!this.isAvailible('ทบทวนโปรแกรมที่_3_ตระหนักรู้ในอารมณ์', 3)}
+        >
+          <View style={!this.isAvailible('ทบทวนโปรแกรมที่_3_ตระหนักรู้ในอารมณ์', 3) ? [styles.roundedButton, styles.disableButton] : this.isAvailible('โปรแกรมที่_4_ปรับความคิดพิชิตเศร้า', 1) ? [styles.roundedButton, styles.finishedButton] : styles.roundedButton}>
+            <Text style={!this.isAvailible('ทบทวนโปรแกรมที่_3_ตระหนักรู้ในอารมณ์', 3) ? [styles.buttonFont, styles.disablebuttonFont] : styles.buttonFont}>
+              โปรแกรมที่ 4 “ปรับความคิด.....พิชิตเศร้า”
+            </Text>
+            {!this.isAvailible('ทบทวนโปรแกรมที่_3_ตระหนักรู้ในอารมณ์', 3) ? this.renderWaitingText('ทบทวนโปรแกรมที่_3_ตระหนักรู้ในอารมณ์', 'ทบทวนโปรแกรมที่ 3', 3) : <></>}
+          </View>
+        </TouchableOpacity>
+      )
+    } else {
+      return(
+        <></>
+      )
+    }
+  }
+
+  renderHomework4Button() {
+    if(!!global.userArchivement['โปรแกรมที่_4_ปรับความคิดพิชิตเศร้า']) {
+      return(
+        <TouchableOpacity 
+          onPress={() => this.props.navigation.navigate('TreatmentScreen', { data : Homework4, collection : 'ทบทวนโปรแกรมที่_4_ปรับความคิดพิชิตเศร้า', name: 'ทบทวนโปรแกรมที่ 4 ปรับความคิด.....พิชิตเศร้า' })}
+        >
+          <View style={this.isAvailible('ทบทวนโปรแกรมที่_4_ปรับความคิดพิชิตเศร้า', 3) ? [styles.roundedButton, styles.finishedButton] : styles.roundedButton}>
+            <Text style={styles.buttonFont}>
+              ทบทวนโปรแกรมที่ 4{this.renderHomeworkValue('ทบทวนโปรแกรมที่_4_ปรับความคิดพิชิตเศร้า', 3)}
+            </Text>
           </View>
         </TouchableOpacity>
       )
@@ -257,31 +272,36 @@ export default class tabB extends Component {
 
   render() {
     return (
-      <View 
-        style={{
-          flex: 1,
-          flexDirection: 'column',
-          justifyContent: 'flex-start',
-          alignItems: 'center',
-          backgroundColor: 'white',
-          paddingVertical: 20,
-          paddingHorizontal: 10
-        }}
-      >
-        <Text style={styles.title}>โปรแกรมการส่งเสริมสุขภาวะทางจิตใจ</Text>
-        <View style={
-          {flex: 1,
-          flexDirection: 'column',
-          justifyContent: 'flex-start',
-          alignItems: 'center',
-          paddingVertical: 20}}
+      <ScrollView>
+        <View 
+          style={{
+            flex: 1,
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            paddingVertical: 20,
+            paddingHorizontal: 10
+          }}
         >
-          {this.renderProgram1Button()}
-          {this.renderHomework1Button()}
-          {this.renderProgram2Button()}
-          {this.renderHomework2Button()}
+          <Text style={styles.title}>โปรแกรมการส่งเสริมสุขภาวะทางจิตใจ</Text>
+          <View style={
+            {flex: 1,
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            paddingVertical: 20}}
+          >
+            {this.renderProgram1Button()}
+            {this.renderHomework1Button()}
+            {this.renderProgram2Button()}
+            {this.renderHomework2Button()}
+            {this.renderProgram3Button()}
+            {this.renderHomework3Button()}
+            {this.renderProgram4Button()}
+            {this.renderHomework4Button()}
+          </View>
         </View>
-      </View>
+      </ScrollView>
     );
   }
 }
@@ -299,7 +319,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     fontFamily: 'Kanit-Medium',
-    fontSize: Dimensions.get('window').width >= 375 ? 20 : 16
+    fontSize: Dimensions.get('window').width >= 375 ? 18 : 14
   },
   topLeftButton: {
     alignItems: 'center',
@@ -326,12 +346,15 @@ const styles = StyleSheet.create({
   disableButton: {
     backgroundColor:"#dfdfdf"
   },
+  finishedButton: {
+    backgroundColor:"#2cc156"
+  },
   buttonFont: {
     textAlign: 'center',
     padding: 0,
     color: 'white',
     fontFamily: 'Kanit-Regular',
-    fontSize: Dimensions.get('window').width >= 375 ? 18 : 15
+    fontSize: Dimensions.get('window').width >= 375 ? 16 : 14
   },
   disablebuttonFont: {
     color: '#a3a3a3'
@@ -339,7 +362,7 @@ const styles = StyleSheet.create({
   waitingFont: {
     fontFamily: 'Kanit-Regular',
     color: '#535353',
-    fontSize: Dimensions.get('window').width >= 375 ? 15 : 12
+    fontSize: Dimensions.get('window').width >= 375 ? 12 : 10
   },
   hiddenButton: {
     justifyContent:"center",

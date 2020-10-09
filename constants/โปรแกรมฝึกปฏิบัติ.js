@@ -12,7 +12,7 @@ export const Program1 = [
     contentType: 'Video',
     contentText: 'ประโยชน์ที่น่าทึ่งของการหายใจอย่างถูกวิธี',
     videoUri: {uri: 'https://firebasestorage.googleapis.com/v0/b/mymindmobile-d9d9b.appspot.com/o/videos%2FVDO_%E0%B8%AB%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%A5%E0%B8%82_1._%E0%B8%9B%E0%B8%A3%E0%B8%B0%E0%B9%82%E0%B8%A2%E0%B8%8A%E0%B8%99%E0%B9%8C%E0%B8%97%E0%B8%B5%E0%B9%88%E0%B8%99%E0%B9%88%E0%B8%B2%E0%B8%97%E0%B8%B6%E0%B9%88%E0%B8%87%E0%B8%82%E0%B8%AD%E0%B8%87%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%AB%E0%B8%B2%E0%B8%A2%E0%B9%83%E0%B8%88.mp4?alt=media&token=a0c0725e-8506-4773-8c40-db7839da76a1'},
-    minTime: 60
+    minTime: 0
   },
   {
     contentId: '3',
@@ -33,7 +33,7 @@ export const Program1 = [
     contentText: '',
     questions: [
       {
-        questionText: 'มีความรู้สึกอย่างอื่นเพิ่มเติมกันอีกไหม๊คะ น้องๆ เขียนบอกพี่ได้เลยค่ะ',
+        questionText: 'มีความรู้สึกอย่างอื่นเพิ่มเติมกันอีกไหมคะ น้องๆ เขียนบอกพี่ได้เลยค่ะ',
         placeholderText: '',
         textBoxSize: 'large',
         needAnswer: false
@@ -123,11 +123,11 @@ export const Program1 = [
     contentText: 'ข้อที่4 ประโยชน์ของการหายใจอย่างถูกวิธีคือ (1 คะแนน)',
     choices: [
       {
-        choiceText: 'ก. เพิ่มพลังงานในร่างกาย ท้าให้อุณหภูมิของร่างกายสูงขึ้น',
+        choiceText: 'ก. เพิ่มพลังงานในร่างกาย ทำให้อุณหภูมิของร่างกายสูงขึ้น',
         value: 0
       },
       {
-        choiceText: 'ข. เพิ่มอัตราการเต้นของหัวใจ ท้าให้เราตื่นเต้น และร่าเริงตลอดเวลา',
+        choiceText: 'ข. เพิ่มอัตราการเต้นของหัวใจ ทำให้เราตื่นเต้น และร่าเริงตลอดเวลา',
         value: 0
       },
       {
@@ -150,7 +150,7 @@ export const Program1 = [
         value: 1
       },
       {
-        choiceText: 'ข. เพิ่มจ้านวนเม็ดเลือดแดงในเลือด',
+        choiceText: 'ข. เพิ่มจำนวนเม็ดเลือดแดงในเลือด',
         value: 0
       },
       {
@@ -209,7 +209,7 @@ export const Program1 = [
     contentType: 'Video',
     contentText: 'หายใจสลายเครียด',
     videoUri: {uri: 'https://firebasestorage.googleapis.com/v0/b/mymindmobile-d9d9b.appspot.com/o/videos%2FVDO_%E0%B8%AB%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%A5%E0%B8%82_2._%E0%B8%AB%E0%B8%B2%E0%B8%A2%E0%B9%83%E0%B8%88%E0%B8%AA%E0%B8%A5%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%84%E0%B8%A3%E0%B8%B5%E0%B8%A2%E0%B8%94.mp4?alt=media&token=71dac491-5c9d-4f1e-8cc6-8a17e5e0f374'},
-    minTime: 60
+    minTime: 0
   },
   {
     contentId: '16',
@@ -220,25 +220,29 @@ export const Program1 = [
         questionText: 'ความดันโลหิตตัวบน',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'ความดันโลหิตตัวล่าง',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'จำนวนครั้งของการเต้นหัวใจ ใน 1 นาที',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'ระดับอุณหภูมิร่างกาย',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
-        needAnswer: true
+        numeric: true,
+        needAnswer: false
       }
     ]
   },
@@ -260,7 +264,7 @@ export const Program1 = [
     contentType: 'Video',
     contentText: 'เอาล่ะค่ะ พร้อมฝึกกันแล้วนะคะ\nต่อไปนี้ ขอให้น้องชมวิดีโอ “การหายใจอย่างถูกวิธี” และฝึกไปพร้อมๆ กันค่ะ',
     videoUri: {uri: 'https://firebasestorage.googleapis.com/v0/b/mymindmobile-d9d9b.appspot.com/o/videos%2FVDO_%E0%B8%AB%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%A5%E0%B8%82_3._%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%AB%E0%B8%B2%E0%B8%A2%E0%B9%83%E0%B8%88%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B8%96%E0%B8%B9%E0%B8%81%E0%B8%A7%E0%B8%B4%E0%B8%98%E0%B8%B5.mp4?alt=media&token=68db6c42-cd97-4c88-9341-522d59101bda'},
-    minTime: 60
+    minTime: 0
   },
   {
     contentId: '20',
@@ -279,25 +283,29 @@ export const Program1 = [
         questionText: 'ความดันโลหิตตัวบน',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'ความดันโลหิตตัวล่าง',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'จำนวนครั้งของการเต้นหัวใจ ใน 1 นาที',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'ระดับอุณหภูมิร่างกาย',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
-        needAnswer: true
+        numeric: true,
+        needAnswer: false
       }
     ]
   },
@@ -347,25 +355,29 @@ export const Homework1 = [
         questionText: 'ความดันโลหิตตัวบน',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'ความดันโลหิตตัวล่าง',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'จำนวนครั้งของการเต้นหัวใจ ใน 1 นาที',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'ระดับอุณหภูมิร่างกาย',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
-        needAnswer: true
+        numeric: true,
+        needAnswer: false
       }
     ]
   },
@@ -387,7 +399,7 @@ export const Homework1 = [
     contentType: 'Video',
     contentText: 'เอาล่ะค่ะ พร้อมฝึกกันแล้วนะคะ\nต่อไปนี้ ขอให้น้องชมวิดีโอ “การหายใจอย่างถูกวิธี” และฝึกไปพร้อมๆ กันค่ะ',
     videoUri: {uri: 'https://firebasestorage.googleapis.com/v0/b/mymindmobile-d9d9b.appspot.com/o/videos%2FVDO_%E0%B8%AB%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%A5%E0%B8%82_3._%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%AB%E0%B8%B2%E0%B8%A2%E0%B9%83%E0%B8%88%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B8%96%E0%B8%B9%E0%B8%81%E0%B8%A7%E0%B8%B4%E0%B8%98%E0%B8%B5.mp4?alt=media&token=68db6c42-cd97-4c88-9341-522d59101bda'},
-    minTime: 60
+    minTime: 0
   },
   {
     contentId: '5',
@@ -406,25 +418,29 @@ export const Homework1 = [
         questionText: 'ความดันโลหิตตัวบน',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'ความดันโลหิตตัวล่าง',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'จำนวนครั้งของการเต้นหัวใจ ใน 1 นาที',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'ระดับอุณหภูมิร่างกาย',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
-        needAnswer: true
+        numeric: true,
+        needAnswer: false
       }
     ]
   },
@@ -461,25 +477,29 @@ export const Program2 = [
         questionText: 'ความดันโลหิตตัวบน',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'ความดันโลหิตตัวล่าง',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'จำนวนครั้งของการเต้นหัวใจ ใน 1 นาที',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'ระดับอุณหภูมิร่างกาย',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
-        needAnswer: true
+        numeric: true,
+        needAnswer: false
       }
     ]
   },
@@ -501,7 +521,7 @@ export const Program2 = [
     contentType: 'Video',
     contentText: 'เอาล่ะค่ะ พร้อมฝึกกันแล้วนะคะ\n ต่อไปนี้ ขอให้น้องๆ ชมวิดีโอและฝึกไปพร้อมๆ กันกับ VDO นี้นะคะ',
     videoUri: {uri: 'https://firebasestorage.googleapis.com/v0/b/mymindmobile-d9d9b.appspot.com/o/videos%2FVDO_%E0%B8%AB%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%A5%E0%B8%82_4.mp4?alt=media&token=80e376df-fd97-417a-87ca-b091d9415e91'},
-    minTime: 60
+    minTime: 0
   },
   {
     contentId: '6',
@@ -520,25 +540,29 @@ export const Program2 = [
         questionText: 'ความดันโลหิตตัวบน',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'ความดันโลหิตตัวล่าง',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'จำนวนครั้งของการเต้นหัวใจ ใน 1 นาที',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'ระดับอุณหภูมิร่างกาย',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
-        needAnswer: true
+        numeric: true,
+        needAnswer: false
       }
     ]
   },
@@ -588,25 +612,29 @@ export const Homework2 = [
         questionText: 'ความดันโลหิตตัวบน',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'ความดันโลหิตตัวล่าง',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'จำนวนครั้งของการเต้นหัวใจ ใน 1 นาที',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'ระดับอุณหภูมิร่างกาย',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
-        needAnswer: true
+        numeric: true,
+        needAnswer: false
       }
     ]
   },
@@ -628,7 +656,7 @@ export const Homework2 = [
     contentType: 'Video',
     contentText: 'เอาล่ะค่ะ พร้อมฝึกกันแล้วนะคะ\n ต่อไปนี้ ขอให้น้องๆ ชมวิดีโอและฝึกไปพร้อมๆ กันกับ VDO นี้นะคะ',
     videoUri: {uri: 'https://firebasestorage.googleapis.com/v0/b/mymindmobile-d9d9b.appspot.com/o/videos%2FVDO_%E0%B8%AB%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%A5%E0%B8%82_4.mp4?alt=media&token=80e376df-fd97-417a-87ca-b091d9415e91'},
-    minTime: 60
+    minTime: 0
   },
   {
     contentId: '5',
@@ -647,25 +675,29 @@ export const Homework2 = [
         questionText: 'ความดันโลหิตตัวบน',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'ความดันโลหิตตัวล่าง',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'จำนวนครั้งของการเต้นหัวใจ ใน 1 นาที',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'ระดับอุณหภูมิร่างกาย',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
-        needAnswer: true
+        numeric: true,
+        needAnswer: false
       }
     ]
   },
@@ -698,7 +730,7 @@ export const Program3 = [
     contentType: 'Video',
     contentText: 'อ้อ! อยากให้ตั้งใจดูด้วยนะคะ เพราะเราจะมีคำถามถามน้องๆ ด้วยนะคะ',
     videoUri: {uri: 'https://firebasestorage.googleapis.com/v0/b/mymindmobile-d9d9b.appspot.com/o/videos%2FVDO_%E0%B8%AB%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%A5%E0%B8%82_5._%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%95%E0%B8%A3%E0%B8%B0%E0%B8%AB%E0%B8%99%E0%B8%B1%E0%B8%81%E0%B8%A3%E0%B8%B9%E0%B9%89%E0%B9%83%E0%B8%99%E0%B8%AD%E0%B8%B2%E0%B8%A3%E0%B8%A1%E0%B8%93%E0%B9%8C.mp4?alt=media&token=a78a13c9-3358-4c67-99d1-941cac31b42f'},
-    minTime: 60
+    minTime: 0
   },
   {
     contentId: '3',
@@ -941,25 +973,29 @@ export const Program3 = [
         questionText: 'ความดันโลหิตตัวบน',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'ความดันโลหิตตัวล่าง',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'จำนวนครั้งของการเต้นหัวใจ ใน 1 นาที',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'ระดับอุณหภูมิร่างกาย',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
-        needAnswer: true
+        numeric: true,
+        needAnswer: false
       }
     ]
   },
@@ -978,14 +1014,20 @@ export const Program3 = [
   },
   {
     contentId: '17',
-    contentType: 'TextInput',
-    contentText: 'ต่อไปเราจะเริ่มเรียนรู้และฝึกกันแล้วนะคะ\n\n    ขอให้น้องๆ นึกถึงเหตุการณ์ที่เกิดขึ้นในชีวิตที่ผ่านมา ที่ทำให้น้องๆ รู้สึก “ชอบ” และช่วยเขียน เหตุการณ์นั้นพร้อมทั้งความรู้สึกที่เกิดขึ้นด้วยนะคะ\n\nเผื่อน้องๆ คิดไม่ออก พี่มีตัวอย่างคำตอบให้น้องๆ ด้วยนะคะ\n- ไปเที่ยวกับเพื่อน\n- ครูชมว่ามีน้้าใจ\n- พ่อ\/แม่ให้รางวัลที่ช่วยงานบ้าน\n- เพื่อนที่เราชอบยิ้มให้\n- สอบผ่าน',
+    contentType: 'PickerInput',
+    contentText: 'ต่อไปเราจะเริ่มเรียนรู้และฝึกกันแล้วนะคะ\n\n    ขอให้น้องๆ นึกถึงเหตุการณ์ที่เกิดขึ้นในชีวิตที่ผ่านมา ที่ทำให้น้องๆ รู้สึก “ชอบ” และเลือกเหตุการณ์นั้นด้วยนะคะ',
     questions: [
       {
         questionText: 'เหตุการณ์ที่ชอบ',
-        placeholderText: 'โปรดระบุ',
-        textBoxSize: 'large',
-        needAnswer: true
+        choices: [
+          'ไปเที่ยวกับเพื่อน',
+          'ครูชมว่ามีน้้าใจ',
+          'พ่อ/แม่ให้รางวัลที่ช่วยงานบ้าน',
+          'เพื่อนที่เราชอบยิ้มให้',
+          'สอบผ่าน',
+          'อื่นๆ'
+        ],
+        otherQuestionText: 'ช่วยเขียนเหตุการณ์อื่นๆ ที่ “ชอบ” ด้วยนะคะ'
       },
     ]
   },
@@ -1003,7 +1045,7 @@ export const Program3 = [
     ]
   },
   {
-    contentId: '18',
+    contentId: '19',
     contentType: 'PickerInput',
     contentText: '',
     questions: [
@@ -1025,20 +1067,26 @@ export const Program3 = [
     ]
   },
   {
-    contentId: '19',
-    contentType: 'TextInput',
-    contentText: '    ต่อไปนะคะ ขอให้น้องๆ นึกถึงเหตุการณ์ที่เกิดขึ้นในชีวิตที่ผ่านมาที่ทำให้น้องๆรู้สึก “ไม่ชอบ”\nช่วยเขียนเหตุการณ์นั้นพร้อมทั้งความรู้สึกที่เกิดขึ้นด้วยนะคะ\n\nเผื่อน้องๆ คิดไม่ออก พี่มีตัวอย่างคำตอบให้น้องๆ ด้วยนะคะ\n- ครูตำหนิว่าท้างานไม่เรียบร้อย\n- ถูกพ่อแม่ดุว่า\n- พ่อ\/แม่ปลุกให้ตื่นแต่เช้า\n- เพื่อนนินทา\n- พ่อ\/แม่ใช้ให้ทำงานให้',
+    contentId: '20',
+    contentType: 'PickerInput',
+    contentText: '    ต่อไปนะคะ ขอให้น้องๆ นึกถึงเหตุการณ์ที่เกิดขึ้นในชีวิตที่ผ่านมาที่ทำให้น้องๆรู้สึก “ไม่ชอบ”\nช่วยเลือกเหตุการณ์นั้นพร้อมทั้งความรู้สึกที่เกิดขึ้นด้วยนะคะ',
     questions: [
       {
         questionText: 'เหตุการณ์ที่ไม่ชอบ',
-        placeholderText: 'โปรดระบุ',
-        textBoxSize: 'large',
-        needAnswer: true
+        choices: [
+          'ครูตำหนิว่าทำงานไม่เรียบร้อย',
+          'ถูกพ่อแม่ดุว่า',
+          'พ่อ/แม่ปลุกให้ตื่นแต่เช้า',
+          'เพื่อนนินทา',
+          'พ่อ/แม่ใช้ให้ทำงานให้',
+          'อื่นๆ'
+        ],
+        otherQuestionText: 'ช่วยเขียนเหตุการณ์อื่นๆ ที่ “ไม่ชอบ” ด้วยนะคะ'
       },
     ]
   },
   {
-    contentId: '20',
+    contentId: '21',
     contentType: 'TextInput',
     contentText: '',
     questions: [
@@ -1051,7 +1099,7 @@ export const Program3 = [
     ]
   },
   {
-    contentId: '21',
+    contentId: '22',
     contentType: 'PickerInput',
     contentText: '',
     questions: [
@@ -1073,7 +1121,7 @@ export const Program3 = [
     ]
   },
   {
-    contentId: '22',
+    contentId: '23',
     contentType: 'Info',
     contentText: '    น้องๆ คะ หลังจากที่เราได้ฝึกการตระหนักรู้ในอารมณ์ของตัวเราเองแล้ว เรามาวัดความดันโลหิต การเต้นของหัวใจ และเลือกภาพความรู้สึกหลังการ ฝึกที่ตรงกับความรู้สึกของน้องๆ มากที่สุดนะคะ เลือกได้ไม่เกิน 3 ภาพค่ะ',
     options: {
@@ -1081,7 +1129,7 @@ export const Program3 = [
     }
   },
   {
-    contentId: '23',
+    contentId: '24',
     contentType: 'TextInput',
     contentText: 'ขอให้น้องวัดความดันโลหิต การเต้นของหัวใจก่อนนะคะ',
     questions: [
@@ -1089,43 +1137,47 @@ export const Program3 = [
         questionText: 'ความดันโลหิตตัวบน',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'ความดันโลหิตตัวล่าง',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'จำนวนครั้งของการเต้นหัวใจ ใน 1 นาที',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'ระดับอุณหภูมิร่างกาย',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
-        needAnswer: true
+        numeric: true,
+        needAnswer: false
       }
     ]
   },
   {
-    contentId: '24',
+    contentId: '25',
     contentType: 'EmotionButtons',
     contentText: 'ช่วยเลือกรูปภาพที่ตรงกับความรู้สึกของน้องมากที่สุดนะคะ (เลือกได้ไม่เกิน 3 ภาพค่ะ)',
     minEmotions: 1,
     maxEmotions: 3
   },
   {
-    contentId: '25',
+    contentId: '26',
     contentType: 'EmotionRating',
     contentText: 'ช่วยบอกระดับความรู้สึกที่น้องๆเลือกมาด้วยนะคะ',
-    answerIdRef: '24'
+    answerIdRef: '25'
   },
   {
-    contentId: '26',
+    contentId: '27',
     contentType: 'TextInput',
     contentText: '',
     questions: [
@@ -1138,7 +1190,7 @@ export const Program3 = [
     ]
   },
   {
-    contentId: '27',
+    contentId: '28',
     contentType: 'Info',
     contentText: '    น้องๆ คะ การตระหนักรู้ในอารมณ์ของตนเองจะเกิดประโยชน์กับน้องๆ เป็นอย่างมาก\n    หากน้องๆ ได้ฝึกฝนที่จะรับรู้อารมณ์ของตนเอง เรามีเวลาฝึกกัน 3 วัน เช่นเคยนะคะน้องๆ ขอให้น้องสังเกตและรับรู้อารมณ์\/ความรู้สึกที่เกิดขึ้น ในแต่ละวันและเขียนบันทึกความรู้สึกที่เกิดขึ้นในทุกวันเช่นเดียวกับที่เราทำกันในวันนี้นะคะ\n\n    และ ถ้าน้องพบว่า น้องมีอารมณ์ลบที่รุนแรง เช่น โกรธ โมโห น้องสามารถที่จะย้อนกลับไปฝึกการหายใจอย่างถูกวิธี และฝึกการรับรู้ทางร่างกาย ตามวิดีโอที่ 3 ในโปรแกรมที่ 1 และวิดีโอในโปรแกรมที่2 ที่เราได้ฝึกกันมาก่อนหน้านี้ได้นะคะ',
     options: {
@@ -1275,7 +1327,7 @@ export const Program4 = [
         value: 1
       },
       {
-        choiceText: 'ข. สายน้้า ที่ไหลไป และไม่มีวันไหลย้อนกลับ',
+        choiceText: 'ข. สายน้ำ ที่ไหลไป และไม่มีวันไหลย้อนกลับ',
         value: 0
       },
       {
@@ -1329,7 +1381,7 @@ export const Program4 = [
         value: 0
       },
       {
-        choiceText: 'ง. น้้า เข้าใจว่าอารมณ์ก็เหมือนสภาพอากาศในแต่ละวันที่เราพบเจอ จะไม่เหมือนกันไปทุกวัน',
+        choiceText: 'ง. น้ำ เข้าใจว่าอารมณ์ก็เหมือนสภาพอากาศในแต่ละวันที่เราพบเจอ จะไม่เหมือนกันไปทุกวัน',
         value: 0
       },
     ]
@@ -1472,7 +1524,7 @@ export const Program4 = [
   {
     contentId: '17',
     contentType: 'SortingQuestion',
-    contentText: 'ข้อที่ 4 ขอให้เรียงล้าดับของเทคนิคการปรับเปลี่ยนความคิด (1 คะแนน)',
+    contentText: 'ข้อที่ 4 ขอให้เรียงลำดับของเทคนิคการปรับเปลี่ยนความคิด (1 คะแนน)',
     choices: [
       'บอกความคิดที่ไม่สมเหตุสมผล',
       'การตระหนักรู้ถึงปัญหา',
@@ -1520,25 +1572,29 @@ export const Program4 = [
         questionText: 'ความดันโลหิตตัวบน',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'ความดันโลหิตตัวล่าง',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'จำนวนครั้งของการเต้นหัวใจ ใน 1 นาที',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
+        numeric: true,
         needAnswer: true
       },
       {
         questionText: 'ระดับอุณหภูมิร่างกาย',
         placeholderText: 'โปรดระบุ',
         textBoxSize: 'small',
-        needAnswer: true
+        numeric: true,
+        needAnswer: false
       }
     ]
   },
@@ -1558,20 +1614,21 @@ export const Program4 = [
   {
     contentId: '23',
     contentType: 'Info',
-    contentText: '    น้องๆ คะ ครั้งนี้การฝึกของเราจะเป็นการฝึกจากการเล่นเกมส์ สนใจอยากฝึกกันแล้วใช่ไหม๊คะ มาค่ะ....เรามาเล่นเกมส์กันเลยค่ะ',
+    contentText: '    น้องๆ คะ ครั้งนี้การฝึกของเราจะเป็นการฝึกจากการเล่นเกมส์ สนใจอยากฝึกกันแล้วใช่ไหมคะ มาค่ะ....เรามาเล่นเกมส์กันเลยค่ะ',
     options: {
       imageUri: require(`../assets/charecters/Character-02.png`)
     }
   },
-  /* {
+  {
     contentId: '24',
     contentType: 'Game',
-    contentText: '',
-  }, */
+    contentText: 'วิธีการเล่น :\n\nค่อยๆแตะหน้าจอ เพื่อให้เจ้านกบินค่อยๆบินขึ้น\n\nซึ่งทุกครั้งที่เจ้านกบินผ่านท่อได้ จะได้ 1 คะแนน\n\nถ้าน้องๆสามารถสะสมคะแนนจนได้ครบ 10 คะแนน น้องๆ ก็จะชนะทันที\n\nแต่ถ้าน้องๆ ปล่อยให้นกบินชนเพดาน, พื้น หรือ ท่อ เกมก็จะจบทันที\n\nแต่น้องๆสามารถเริ่มเล่นใหม่อีกครั้งได้เรื่อยๆ ด้วยการแตะหน้าจออีกครั้งนะคะ\n\nถ้าน้องๆพร้อมแล้ว กดปุ่ม "เล่นเกมส์" ได้เลยค่ะ',
+  },
   {
     contentId: '25',
     contentType: 'MainAfterGame',
-    contentText: 'หลังจากน้องๆ ได้เล่นเกมส์ น้องๆ สังเกตไหมคะว่า มีคำพูดอะไรเกิดขึ้นในใจบ้าง หรือน้องๆ รู้สึกอย่างไรบ้าง',
+    contentText: '    หลังจากน้องๆ ได้เล่นเกมส์ น้องๆ สังเกตไหมคะว่า มีคำพูดอะไรเกิดขึ้นในใจบ้าง หรือน้องๆ รู้สึกอย่างไรบ้าง',
+    extraText: '    น้องๆ มีคำพูดอะไรเกิดขึ้นในใจอีกบ้างไหมคะ?\n    ถ้าน้องๆมีคำพูดอะไรเกิดขึ้นนอกจากในตัวเลือก สามารถพิมพ์ลงในช่องว่างใต้ปุ่ม "ถัดไป" ได้เลยคะ',
     choices: [
       {
         choiceText: 'เย้! สำเร็จแล้ว',
@@ -1749,19 +1806,292 @@ export const Program4 = [
     contentId: '28',
     contentType: 'TextInputAfterGame',
     contentText: '',
-    answerIdRef: '25'
+    answerIdRef: '25',
+    otherIdRef: '26'
   },
   {
     contentId: '29',
+    contentType: 'Info',
+    contentText: 'น้องๆ คะ หลังจากที่เราได้ฝึกสังเกตความคิดและจัดการกับความคิดกันบ้างแล้ว เรามาวัดความดันโลหิต การเต้นของหัวใจ และเลือกภาพความรู้สึกที่ตรงกับความรู้สึกของน้องๆ มากที่สุด ไม่เกิน 3 ภาพนะคะ',
+    options: {
+      imageUri: require(`../assets/charecters/Character-02.png`)
+    }
+  },
+  {
+    contentId: '30',
     contentType: 'TextInput',
-    contentText: '',
+    contentText: 'ขอให้น้องวัดความดันโลหิต การเต้นของหัวใจก่อนนะคะ',
     questions: [
       {
         questionText: 'ความดันโลหิตตัวบน',
         placeholderText: 'โปรดระบุ',
+        textBoxSize: 'small',
+        numeric: true,
+        needAnswer: true
+      },
+      {
+        questionText: 'ความดันโลหิตตัวล่าง',
+        placeholderText: 'โปรดระบุ',
+        textBoxSize: 'small',
+        numeric: true,
+        needAnswer: true
+      },
+      {
+        questionText: 'จำนวนครั้งของการเต้นหัวใจ ใน 1 นาที',
+        placeholderText: 'โปรดระบุ',
+        textBoxSize: 'small',
+        numeric: true,
+        needAnswer: true
+      },
+      {
+        questionText: 'ระดับอุณหภูมิร่างกาย',
+        placeholderText: 'โปรดระบุ',
+        textBoxSize: 'small',
+        numeric: true,
+        needAnswer: false
+      }
+    ]
+  },
+  {
+    contentId: '31',
+    contentType: 'EmotionButtons',
+    contentText: 'ช่วยเลือกรูปภาพที่ตรงกับความรู้สึกของน้องมากที่สุดนะคะ (เลือกได้ไม่เกิน 3 ภาพค่ะ)',
+    minEmotions: 1,
+    maxEmotions: 3
+  },
+  {
+    contentId: '32',
+    contentType: 'EmotionRating',
+    contentText: 'ช่วยบอกระดับความรู้สึกที่น้องๆเลือกมาด้วยนะคะ',
+    answerIdRef: '31'
+  },
+  {
+    contentId: '33',
+    contentType: 'TextInput',
+    contentText: '',
+    questions: [
+      {
+        questionText: 'มีความรู้สึกอย่างอื่นเพิ่มเติมที่น้องๆ อยากจะบอก เขียนเพิ่มเติมได้เลยนะคะ',
+        placeholderText: '',
         textBoxSize: 'large',
         needAnswer: false
       },
     ]
+  },
+  {
+    contentId: '34',
+    contentType: 'Info',
+    contentText: '    น้องๆ คะ ความคิดและการจัดการกับความคิดจะเกิดประโยชน์กับน้องๆเป็นอย่างมาก หากน้องๆ ได้ฝึกฝนที่จะรับรู้ความคิดและจัดการกับความคิดของตนเอง\n    เรามีเวลากัน 3 วัน เช่นเคยนะคะน้องๆ ลองมาฝึกสังเกต ความคิดและจัดการกับความคิดที่เกิดขึ้นในแต่ละวัน อย่างที่เราได้ทำกันใน วันนี้นะคะ ที่สำคัญอย่าลืมบันทึกความดันโลหิต การเต้นของหัวใจ และ เลือกภาพความรู้สึกที่ตรงกับความรู้สึกของน้องๆ มากที่สุด 3 ภาพ ก่อนและหลังการฝึกด้วยนะคะ',
+    options: {
+      imageUri: require(`../assets/charecters/Character-02.png`)
+    }
+  },
+]
+
+export const Homework4 = [
+  {
+    contentId: '1',
+    contentType: 'Video',
+    contentText: 'มาชมวิดีโอ เพื่อทบทวนเรื่องการตระหนักรู้ความคิดและการจัดการความคิดกันนะคะ',
+    videoUri: {uri: 'https://firebasestorage.googleapis.com/v0/b/mymindmobile-d9d9b.appspot.com/o/videos%2FVDO_%E0%B8%AB%E0%B8%A1%E0%B8%B2%E0%B8%A2%E0%B9%80%E0%B8%A5%E0%B8%82_7._%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%95%E0%B8%A3%E0%B8%B0%E0%B8%AB%E0%B8%99%E0%B8%B1%E0%B8%81%E0%B8%A3%E0%B8%B9%E0%B9%89%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%84%E0%B8%B4%E0%B8%94%E0%B9%81%E0%B8%A5%E0%B8%B0%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%88%E0%B8%B1%E0%B8%94%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B8%84%E0%B8%A7%E0%B8%B2%E0%B8%A1%E0%B8%84%E0%B8%B4%E0%B8%94.mp4?alt=media&token=47239ae0-ce47-4710-b906-8c452d7b5e70'},
+    minTime: 0
+  },
+  {
+    contentId: '2',
+    contentType: 'Info',
+    contentText: '    ต่อไปจะเป็นการทบทวนฝึกจากการเล่นเกมส์นะคะ',
+    options: {
+      imageUri: require(`../assets/charecters/Character-02.png`)
+    }
+  },
+  {
+    contentId: '3',
+    contentType: 'Game',
+    contentText: 'วิธีการเล่น :\n\nค่อยๆแตะหน้าจอ เพื่อให้เจ้านกบินค่อยๆบินขึ้น\n\nซึ่งทุกครั้งที่เจ้านกบินผ่านท่อได้ จะได้ 1 คะแนน\n\nถ้าน้องๆสามารถสะสมคะแนนจนได้ครบ 10 คะแนน น้องๆ ก็จะชนะทันที\n\nแต่ถ้าน้องๆ ปล่อยให้นกบินชนเพดาน, พื้น หรือ ท่อ เกมก็จะจบทันที\n\nแต่น้องๆสามารถเริ่มเล่นใหม่อีกครั้งได้เรื่อยๆ ด้วยการแตะหน้าจออีกครั้งนะคะ\n\nถ้าน้องๆพร้อมแล้ว กดปุ่ม "เล่นเกมส์" ได้เลยค่ะ',
+  },
+  {
+    contentId: '4',
+    contentType: 'MainAfterGame',
+    contentText: '    หลังจากน้องๆ ได้เล่นเกมส์ น้องๆ สังเกตไหมคะว่า มีคำพูดอะไรเกิดขึ้นในใจบ้าง หรือน้องๆ รู้สึกอย่างไรบ้าง',
+    extraText: '    น้องๆ มีคำพูดอะไรเกิดขึ้นในใจอีกบ้างไหมคะ?\n    ถ้าน้องๆมีคำพูดอะไรเกิดขึ้นนอกจากในตัวเลือก สามารถพิมพ์ลงในช่องว่างใต้ปุ่ม "ถัดไป" ได้เลยคะ',
+    choices: [
+      {
+        choiceText: 'เย้! สำเร็จแล้ว',
+        expectedAnswer: 'ความคิด',
+        questions: [
+          {
+            questionText: 'กำลังรู้สึกอะไรอยู่หรือคะ',
+            placeholderText: '',
+            textBoxSize: 'large',
+            needAnswer: true
+          },
+        ]
+      },
+      {
+        choiceText: 'เบื่อโว้ย',
+        expectedAnswer: 'ความรู้สึก',
+        questions: [
+          {
+            questionText: 'ที่เบื่อ คิดอะไรอยู่หรือคะ',
+            placeholderText: '',
+            textBoxSize: 'large',
+            needAnswer: true
+          },
+          {
+            questionText: 'ถ้าไม่อยากรู้สึกเบื่อต้องคิดอย่างไรดีคะ',
+            placeholderText: '',
+            textBoxSize: 'large',
+            needAnswer: true
+          },
+        ]
+      },
+      {
+        choiceText: 'เซ็ง! ชะมัด',
+        expectedAnswer: 'ความรู้สึก',
+        questions: [
+          {
+            questionText: 'ที่เซ็ง! เนี่ยคิดอะไรอยู่หรือคะ',
+            placeholderText: '',
+            textBoxSize: 'large',
+            needAnswer: true
+          },
+          {
+            questionText: 'ถ้าไม่อยากรู้สึกเซ็งต้องคิดอย่างไรดีคะ',
+            placeholderText: '',
+            textBoxSize: 'large',
+            needAnswer: true
+          },
+        ]
+      },
+      {
+        choiceText: 'ยากจัง ทำไม่ได้หรอก',
+        expectedAnswer: 'ความคิด',
+        questions: [
+          {
+            questionText: 'รู้สึกอย่างไรคะที่ทำไม่ได้',
+            placeholderText: '',
+            textBoxSize: 'large',
+            needAnswer: true
+          },
+          {
+            questionText: 'ถ้าไม่อยากรู้สึกแบบนี้ น่าจะคิดอย่างไรดีคะ',
+            placeholderText: '',
+            textBoxSize: 'large',
+            needAnswer: true
+          },
+        ]
+      },
+      {
+        choiceText: 'เฮ้อ! ยากจริง แต่เราต้องทำได้',
+        expectedAnswer: 'ความคิด',
+        questions: [
+          {
+            questionText: 'คิดอย่างนี้แล้วน้องรู้สึกอย่างไรคะ',
+            placeholderText: '',
+            textBoxSize: 'large',
+            needAnswer: true
+          },
+        ]
+      },
+      {
+        choiceText: 'ต้องสำเร็จ กี่ครั้งกี่ครั้งก็ต้องทำได้',
+        expectedAnswer: 'ความคิด',
+        questions: [
+          {
+            questionText: 'คิดอย่างนี้แล้วน้องรู้สึกอย่างไรคะ',
+            placeholderText: '',
+            textBoxSize: 'large',
+            needAnswer: true
+          },
+        ]
+      },
+      {
+        choiceText: 'เราต้องชนะ',
+        expectedAnswer: 'ความคิด',
+        questions: [
+          {
+            questionText: 'คิดอย่างนี้แล้วน้องรู้สึกอย่างไรคะ',
+            placeholderText: '',
+            textBoxSize: 'large',
+            needAnswer: true
+          },
+        ]
+      },
+      {
+        choiceText: 'อึดอัดมาก',
+        expectedAnswer: 'ความรู้สึก',
+        questions: [
+          {
+            questionText: 'ที่รู้สึกอึดอัดแบบนี้ เพราะคิดอะไรอยู่หรือคะ',
+            placeholderText: '',
+            textBoxSize: 'large',
+            needAnswer: true
+          },
+          {
+            questionText: 'ถ้าไม่อยากรู้สึกอึดอัดแบบนี้ ต้องคิดอย่างไรดีคะ',
+            placeholderText: '',
+            textBoxSize: 'large',
+            needAnswer: true
+          },
+        ]
+      },
+      {
+        choiceText: 'ช่างมัน!',
+        expectedAnswer: 'ความคิด',
+        questions: [
+          {
+            questionText: 'คิดอย่างนี้แล้วน้องรู้สึกอย่างไรคะ',
+            placeholderText: '',
+            textBoxSize: 'large',
+            needAnswer: true
+          },
+        ]
+      },
+      {
+        choiceText: 'ปล่อยมันไป',
+        expectedAnswer: 'ความคิด',
+        questions: [
+          {
+            questionText: 'คิดอย่างนี้แล้วน้องรู้สึกอย่างไรคะ',
+            placeholderText: '',
+            textBoxSize: 'large',
+            needAnswer: true
+          },
+        ]
+      }
+    ]
+  },
+  {
+    contentId: '5',
+    contentType: 'SelectionGroupAfterGame',
+    contentText: 'คำพูดที่น้องเลือกนั้นเป็น ความคิด หรือ ความรู้สึก คะ',
+    choices: [
+      {
+        choiceText: 'ความคิด',
+      },
+      {
+        choiceText: 'ความรู้สึก',
+      }
+    ],
+    answerIdRef: '4'
+  },
+  {
+    contentId: '6',
+    contentType: 'QuestionValidateAfterGame',
+    contentTextPass: 'ถูกต้องค่ะ',
+    contentTextFail: 'ยังผิดอยู่ค่ะ ลองตอบใหม่นะคะ',
+    minScore: 1,
+    answerIdRef: '5',
+    options: {
+      imageUriPass: require(`../assets/charecters/Character-03.png`),
+      imageUriFail: require(`../assets/charecters/Character-02.png`)
+    }
+  },
+  {
+    contentId: '7',
+    contentType: 'TextInputAfterGame',
+    contentText: '',
+    answerIdRef: '4',
+    otherIdRef: '5'
   },
 ]

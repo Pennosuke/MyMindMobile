@@ -136,7 +136,7 @@ export default class SignupScreen extends Component {
             displayName: this.state.userName,
           })
           //Create the user doc in the users collection
-          db.collection('userData').doc(createdUser.user.uid).set({
+          db.collection('userData').doc(this.state.userName).set({
             userName: this.state.userName,
             realName: this.state.realName,
             phoneNumber: this.state.phoneNumber,
@@ -147,8 +147,6 @@ export default class SignupScreen extends Component {
             GPA: this.state.GPA,
             religion: this.state.religion,
             address: this.state.address,
-            phoneNumber: this.state.phoneNumber,
-            email: this.state.email,
             revenueSource: this.state.revenueSource,
             revenueValue: this.state.revenueValue,
             revenueFreq: this.state.revenueFreq,
@@ -158,14 +156,9 @@ export default class SignupScreen extends Component {
             dadEducation: this.state.dadEducation,
             momEducation: this.state.momEducation
           });
-          const currentTime = firebase.firestore.Timestamp.fromDate(new Date());
-          /*db.collection('userArchivement').doc(this.state.userName).set({
-            แบบประเมิน: {
-              latestTimestamp: currentTime,
-              firstTimestamp: currentTime,
-              value: 0
-            }
-          })*/
+          db.collection('userArchivement').doc(this.state.userName).set({
+            userName: this.state.userName
+          })
           // console.log('User registered successfully!');
           this.setState({
             realName: '',
@@ -191,8 +184,14 @@ export default class SignupScreen extends Component {
           this.props.navigation.replace('Init');
         })
         .catch(error => {
-          // console.log(error.message);
-          Alert.alert(error.message);
+          // console.log('error.code', error.code);
+          if(error.code === 'auth/weak-password') {
+            Alert.alert('รหัสผ่านควรมีอย่างน้อย 6 ตัวอักษร');
+          } else if (error.code === 'auth/invalid-email') {
+            Alert.alert('รูปแบบอีเมลไม่ถูกต้อง กรุณากรอกใหม่');
+          } else {
+            Alert.alert(error.messege);
+          }
         });
       }, 1000);
       this.setState({isLoading: false});
@@ -233,6 +232,7 @@ export default class SignupScreen extends Component {
             <TextInput
               style={styles.inputStyle}
               placeholder="อายุ"
+              keyboardType="number-pad"
               value={this.state.age}
               onChangeText={(val) => this.updateInputVal(val, 'age')}
             />
@@ -260,6 +260,7 @@ export default class SignupScreen extends Component {
             <TextInput
               style={styles.inputStyle}
               placeholder="ผลการเรียนที่ผ่านมา (GPA)"
+              keyboardType="number-pad"
               value={this.state.GPA}
               onChangeText={(val) => this.updateInputVal(val, 'GPA')}
             />
@@ -303,6 +304,7 @@ export default class SignupScreen extends Component {
                 <TextInput
                   style={[styles.inputStyle,{height: 40, width: '90%', padding: 0}]}
                   placeholder="จำนวนเงิน"
+                  keyboardType="number-pad"
                   value={this.state.revenueValue}
                   onChangeText={(val) => this.updateInputVal(val, 'revenueValue')}
                 />
@@ -385,6 +387,7 @@ export default class SignupScreen extends Component {
             <TextInput
               style={styles.inputStyle}
               placeholder="หมายเลขโทรศัพท์มือถือ"
+              keyboardType="number-pad"
               value={this.state.phoneNumber}
               onChangeText={(val) => this.updateInputVal(val, 'phoneNumber')}
             />
@@ -451,12 +454,6 @@ export default class SignupScreen extends Component {
               title="สมัครสมาชิก"
               onPress={() => this.registerUser()}
             />
-
-            <Text 
-              style={styles.loginText}
-              onPress={() => this.props.navigation.navigate('Login')}>
-              เป็นสมาชิกอยู่แล้ว? กดที่นี่เพื่อเข้าสู่ระบบ
-            </Text>                          
           </View>
         </View>
         </ScrollView>
@@ -502,6 +499,6 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     paddingRight: 10,
     fontFamily: 'Kanit-Regular',
-    fontSize: 18,
+    fontSize: 16,
   },
 });

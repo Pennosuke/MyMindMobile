@@ -1,4 +1,4 @@
-export default Images = {
+const Images = {
     background: require('./background.png'),
     floor: require('./floor.png'),
     pipeCore: require('./pipe_core.png'),
@@ -7,3 +7,5 @@ export default Images = {
     bird2: require('./bird2.png'),
     bird3: require('./bird3.png'),
 }
+
+export default Images

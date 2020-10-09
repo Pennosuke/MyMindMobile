@@ -1,15 +1,11 @@
 import { Video } from 'expo-av';
 import React, { Component } from 'react';
-import { Dimensions, Image, Picker, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Image, Picker, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, StatusBar } from 'react-native';
 import SelectionGroup, { SelectionHandler } from 'react-native-selection-group';
 import { emotions } from '../constants/MockupData';
 import * as firebase from 'firebase';
 import 'firebase/firestore';
 import { db } from '../constants/firebase'
-import Matter from "matter-js";
-import { GameEngine } from "react-native-game-engine";
-import { gameConstants } from '../constants/gameConstants';
-import Physics, { resetPipes } from '../components/Physics';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -44,65 +40,8 @@ export default class TreatmentScreen extends Component {
       videoHandlers: [],
       currentChoiceAfterGame: {},
       expectedAnswerAfterGame: null,
-      gameRunning: true,
-      gameScore: 0
+      gameHandlers: false
     };
-    this.gameEngine = null;
-    this.entities = this.setupWorld();
-  }
-
-  setupWorld() {
-    let engine = Matter.Engine.create({ enableSleeping: false });
-    let world = engine.world;
-    world.gravity.y = 0.0;
-    let bird = Matter.Bodies.rectangle( gameConstants.MAX_WIDTH / 2, gameConstants.MAX_HEIGHT / 2, gameConstants.BIRD_WIDTH, gameConstants.BIRD_HEIGHT);
-    let floor1 = Matter.Bodies.rectangle(
-      gameConstants.MAX_WIDTH / 2,
-      gameConstants.MAX_HEIGHT - 25,
-      gameConstants.MAX_WIDTH + 4,
-      50,
-      { isStatic: true }
-    );
-    let floor2 = Matter.Bodies.rectangle(
-      gameConstants.MAX_WIDTH + (gameConstants.MAX_WIDTH / 2),
-      gameConstants.MAX_HEIGHT - 25,
-      gameConstants.MAX_WIDTH + 4,
-      50,
-      { isStatic: true }
-    );
-    Matter.World.add(world, [bird, floor1, floor2]);
-    Matter.Events.on(engine, 'collisionStart', (event) => {
-      var pairs = event.pairs;
-      this.gameEngine.dispatch({ type: "game-over"});
-    });
-    return {
-      physics: { engine: engine, world: world },
-      floor1: { body: floor1, renderer: Floor },
-      floor2: { body: floor2, renderer: Floor },
-      bird: { body: bird, pose: 1, renderer: Bird},
-    }
-  }
-
-  onEvent(e) {
-    if (e.type === "game-over"){
-      //Alert.alert("Game Over");
-      this.setState({
-        running: false
-      });
-    } else if (e.type === "score") {
-      this.setState({
-        score: this.state.score + 1
-      })
-    }
-  }
-
-  reset() {
-    resetPipes();
-    this.gameEngine.swap(this.setupWorld());
-    this.setState({
-        running: true,
-        score: 0
-    });
   }
 
   async saveArchivementData(currentTime,document) {
@@ -146,7 +85,7 @@ export default class TreatmentScreen extends Component {
       <View style={{ flexGrow: 1, marginTop: 10, marginBottom: 10 }}>
         <TouchableOpacity onPress={onPressEvent}>
           <View style={styles.nonSelectionButton}>
-            <Text style={{textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>
+            <Text style={{textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14}}>
               {buttonText}
             </Text>
           </View>
@@ -160,7 +99,7 @@ export default class TreatmentScreen extends Component {
       <View style={{ flexGrow: 1, maxWidth: 100, marginTop: 10, marginBottom: 10 }}>
         <TouchableOpacity onPress={onPressEvent} disabled={!enabledCondition}>
           <View style={enabledCondition ? styles.navButton : styles.disableNavButton}>
-            <Text style={enabledCondition ? {textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16} : {textAlign: 'center', color: '#a3a3a3', fontFamily: 'Kanit-Regular', fontSize: 16}}>
+            <Text style={enabledCondition ? {textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14} : {textAlign: 'center', color: '#a3a3a3', fontFamily: 'Kanit-Regular', fontSize: 14}}>
               ย้อนกลับ
             </Text>
           </View>
@@ -176,7 +115,7 @@ export default class TreatmentScreen extends Component {
         <View style={{ flexGrow: 1, maxWidth: 100, marginTop: 10, marginBottom: 10 }}>
           <TouchableOpacity onPress={NextEvent} disabled={!enabledCondition}>
             <View style={enabledCondition ? styles.navButton : styles.disableNavButton}>
-              <Text style={enabledCondition ? {textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16} : {textAlign: 'center', color: '#a3a3a3', fontFamily: 'Kanit-Regular', fontSize: 16}}>
+              <Text style={enabledCondition ? {textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14} : {textAlign: 'center', color: '#a3a3a3', fontFamily: 'Kanit-Regular', fontSize: 14}}>
                 ถัดไป
               </Text>
             </View>
@@ -189,7 +128,7 @@ export default class TreatmentScreen extends Component {
         <View style={{ flexGrow: 1, maxWidth: 100, marginTop: 10, marginBottom: 10 }}>
           <TouchableOpacity onPress={FinishedEvent} disabled={!enabledCondition}>
             <View style={enabledCondition ? [styles.navButton,{backgroundColor: SELECTED}] : styles.disableNavButton}>
-              <Text style={enabledCondition ? {textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16} : {textAlign: 'center', color: '#a3a3a3', fontFamily: 'Kanit-Regular', fontSize: 16}}>
+              <Text style={enabledCondition ? {textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14} : {textAlign: 'center', color: '#a3a3a3', fontFamily: 'Kanit-Regular', fontSize: 14}}>
                 เสร็จสิ้น
               </Text>
             </View>
@@ -356,7 +295,7 @@ export default class TreatmentScreen extends Component {
       >
         <TouchableOpacity onPress={onPress} key={`button_${index}`}>
           <View style={isSelected ? styles.selectionButton : styles.nonSelectionButton}>
-            <Text style={{textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>
+            <Text style={{textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14}}>
               {data.choiceText}
             </Text>
           </View>
@@ -604,6 +543,7 @@ export default class TreatmentScreen extends Component {
         otherValue: ''
       })
     }
+
     if (!state.answers.find(ans => ans.contentId === currentContentId)) {
       console.log('questions', questions);
       state.answers.push({
@@ -621,7 +561,7 @@ export default class TreatmentScreen extends Component {
           {
             this.state.answers[currentAnswerIndex].value.map(( question, index ) =>
               <View key={index}>
-                <Text style = {[styles.infoText,{ textAlign: 'center', marginLeft: 0, marginBottom: 5, fontSize: 16 }]}>
+                <Text style = {[styles.infoText,{ textAlign: 'center', marginLeft: 0, marginBottom: 5, fontSize: 14 }]}>
                   {question.questionText}
                 </Text>
                 <Picker
@@ -635,6 +575,28 @@ export default class TreatmentScreen extends Component {
                 >
                   {this.pickerChoices(questions[index].choices)}
                 </Picker>
+                { 
+                  this.state.answers[currentAnswerIndex].value[index].value === 'อื่นๆ' ? (
+                    <View>
+                      <Text style = {[styles.infoText,{ textAlign: 'center', marginLeft: 0, marginBottom: 5, fontSize: 14 }]}>
+                        {questions[0].otherQuestionText}
+                      </Text>
+                      <TextInput
+                        style={styles.inputStyle}
+                        placeholder="โปรดระบุ"
+                        multiline
+                        numberOfLines={6}
+                        value={this.state.answers[currentAnswerIndex].value[index].otherValue}
+                        onChangeText={(val) => {
+                          state.answers[currentAnswerIndex].value[index].otherValue = val;
+                          this.setState(state);
+                        }}
+                      />
+                    </View>
+                  ) : (
+                    <></>
+                  )
+                }
               </View>
             )
           }
@@ -652,12 +614,20 @@ export default class TreatmentScreen extends Component {
             this.renderNextOrFinishButton(
               survey,
               () => {
+                if(this.state.answers[currentAnswerIndex].value[0].value !== 'อื่นๆ') {
+                  state.answers[currentAnswerIndex].value[0].otherChoiceValue = '';
+                  this.setState(state);
+                }
                 this.setState({ currentStep: currentStep + 1});
               },
               () => {
+                if(this.state.answers[currentAnswerIndex].value[0].value !== 'อื่นๆ') {
+                  state.answers[currentAnswerIndex].value[0].otherChoiceValue = '';
+                  this.setState(state);
+                }
                 this.onSurveyFinished();
               },
-              !this.state.answers[currentAnswerIndex].value.find(ans => ans.value === '0')
+              (this.state.answers[currentAnswerIndex].value[0].value === 'อื่นๆ' && !!this.state.answers[currentAnswerIndex].value[0].otherValue.length) || (this.state.answers[currentAnswerIndex].value[0].value !== 'อื่นๆ' && this.state.answers[currentAnswerIndex].value[0].value !== '0')
             )
           }
         </View>
@@ -834,7 +804,7 @@ export default class TreatmentScreen extends Component {
           { 
             this.state.answers[currentAnswerIndex].value.map((question,index) => 
               <View key={index}>
-                <Text style = {[styles.infoText,{ textAlign: 'center', marginLeft: 0, marginBottom: 5, fontSize: 16 }]}>
+                <Text style = {[styles.infoText,{ textAlign: 'center', marginLeft: 0, marginBottom: 5, fontSize: 14 }]}>
                   {question.questionText}
                 </Text>
                 <TextInput
@@ -923,7 +893,8 @@ export default class TreatmentScreen extends Component {
   renderMainAfterGame(survey,stepIndex) {
     const state = this.state;
     const { currentStep, currentChoiceAfterGame } = this.state;
-    const { contentId, contentText, choices } = survey[stepIndex];
+    const { contentId, contentText, extraText , choices } = survey[stepIndex];
+    console.log('extraText = ', extraText);
     const defaultValue = {
       otherChoiceValue: '',
       choices: []
@@ -933,15 +904,17 @@ export default class TreatmentScreen extends Component {
         contentId : contentId,
         value: defaultValue
       });
-      console.log('state', state);
       this.setState(state);
     }
     console.log('choices', choices);
+    console.log('state',state);
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === contentId);
     return (
       <View style={styles.surveyContainer}>
         <View style={{ marginLeft: 10, marginRight: 10 }}>
-          <Text style={styles.infoText}>{contentText}</Text>
+          <Text style={styles.infoText}>
+            {!!state.answers[currentAnswerIndex].value.choices.length ? extraText : contentText}
+          </Text>
           {choices.map(( choice, index ) =>
             <View
               key={index}
@@ -963,8 +936,8 @@ export default class TreatmentScreen extends Component {
                   <Text
                     style={
                       this.isDisabledAfterGame(choice.choiceText, state.answers[currentAnswerIndex].value.choices) ?
-                      {textAlign: 'center', color: '#a3a3a3', fontFamily: 'Kanit-Regular', fontSize: 16}
-                      : {textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}
+                      {textAlign: 'center', color: '#a3a3a3', fontFamily: 'Kanit-Regular', fontSize: 14}
+                      : {textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14}
                     }
                   >
                     {choice.choiceText}
@@ -979,21 +952,58 @@ export default class TreatmentScreen extends Component {
             this.renderNextOrFinishButton(
               survey,
               () => {
-                if(!!state.answers[currentAnswerIndex].value.choices.length && !currentChoiceAfterGame[contentId]) {
-                  this.setState({ currentStep: currentStep + 4});
-                } else {
-                  this.pushAnswerAfterGame(choices, currentAnswerIndex, contentId);
-                  this.setState({ currentStep: currentStep + 1});
-                }
+                this.pushAnswerAfterGame(choices, currentAnswerIndex, contentId);
+                this.setState({ currentStep: currentStep + 1});
               },
               () => {
                 this.pushAnswerAfterGame(choices, currentAnswerIndex, contentId);
                 this.onSurveyFinished();
               },
-              !!currentChoiceAfterGame[contentId] || !!state.answers[currentAnswerIndex].value.choices.length
+              !!currentChoiceAfterGame[contentId]
             )
           }
         </View>
+        {
+          state.answers[currentAnswerIndex].value.choices.length > 0 ? (
+            <View>
+              <View style={{marginTop: 10, marginLeft: 10, marginRight: 10}}>
+                <Text style = {[styles.infoText,{ textAlign: 'center', marginLeft: 0, marginBottom: 5, fontSize: 14 }]}>
+                  น้องๆ มีคำพูดอะไรเกิดขึ้นในใจนอกเหนือจากในตัวเลือกไหมคะ ?
+                </Text>
+                <TextInput
+                  style={styles.inputStyle}
+                  multiline
+                  numberOfLines={6}
+                  value={this.state.answers[currentAnswerIndex].value.otherChoiceValue}
+                  onChangeText={(val) => {
+                    state.answers[currentAnswerIndex].value.otherChoiceValue = val;
+                    this.setState(state);
+                  }}
+                />
+              </View>
+              <Text style = {[styles.infoText,{ textAlign: 'center', marginLeft: 0, marginBottom: 5, fontSize: 14 }]}>
+                ถ้าน้องๆ ไม่มีคำพูดอื่นแล้ว สามารถกดปุ่ม "ไม่มีแล้ว" ได้เลยนะคะ
+              </Text>
+              <View style={styles.navButtonContainerStyle}>
+                <View style={{ flexGrow: 1, maxWidth: 100, marginTop: 10, marginBottom: 10 }}>
+                  <TouchableOpacity onPress={() => {
+                    currentStep < survey.length - 4 ?
+                    this.setState({ currentStep: currentStep + 4})
+                    : this.onSurveyFinished()
+                  }}>
+                    <View style={styles.navButton}>
+                      <Text style={{textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14}}>
+                        ไม่มีแล้ว
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
+          ) : (
+            <></>
+          )
+        }
       </View>
     )
   }
@@ -1018,7 +1028,7 @@ export default class TreatmentScreen extends Component {
     return (
       <View style={styles.surveyContainer}>
         <View style={{ marginLeft: 10, marginRight: 10 }}>
-    <Text style={styles.infoText}>คำพูด "{currentChoiceAfterGame[answerIdRef]}" ที่น้องเลือกนั้น{'\n'}เป็น ความคิด หรือ ความรู้สึก คะ ?</Text>
+          <Text style={styles.infoText}>คำพูด "{currentChoiceAfterGame[answerIdRef]}" ที่น้องเลือกนั้น{'\n'}เป็น ความคิด หรือ ความรู้สึก คะ ?</Text>
           {choices.map(( choice, index ) =>
             <View
               key={index}
@@ -1031,7 +1041,7 @@ export default class TreatmentScreen extends Component {
                     styles.selectionButton : styles.nonSelectionButton
                   }
                 >
-                  <Text style={{textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>
+                  <Text style={{textAlign: 'center', color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14}}>
                     {choice.choiceText}
                   </Text>
                 </View>
@@ -1135,7 +1145,7 @@ export default class TreatmentScreen extends Component {
   renderTextInputAfterGame(survey,stepIndex) {
     const state = this.state;
     const { currentStep, currentChoiceAfterGame } = this.state;
-    const { contentText, answerIdRef } = survey[stepIndex]
+    const { contentText, answerIdRef, otherIdRef } = survey[stepIndex]
     const refContentIndex = survey.findIndex(elem => elem.contentId === answerIdRef);
     const refChoiceIndex = survey[refContentIndex].choices.findIndex(choice => choice.choiceText === currentChoiceAfterGame[answerIdRef]);
     const { questions } = survey[refContentIndex].choices[refChoiceIndex];
@@ -1160,7 +1170,7 @@ export default class TreatmentScreen extends Component {
           { 
             questions.map((question,index) => 
               <View key={index}>
-                <Text style = {[styles.infoText,{ textAlign: 'center', marginLeft: 0, marginBottom: 5, fontSize: 16 }]}>
+                <Text style = {[styles.infoText,{ textAlign: 'center', marginLeft: 0, marginBottom: 5, fontSize: 14 }]}>
                   {question.questionText}
                 </Text>
                 <TextInput
@@ -1187,12 +1197,14 @@ export default class TreatmentScreen extends Component {
               survey,
               () => {
                 state.currentChoiceAfterGame[answerIdRef] = null;
+                state.currentChoiceAfterGame[otherIdRef] = null;
                 state.expectedAnswerAfterGame = null;
                 state.currentStep = currentStep - 3;
                 this.setState(state);
               },
               () => {
                 state.currentChoiceAfterGame[answerIdRef] = null;
+                state.currentChoiceAfterGame[otherIdRef] = null;
                 state.expectedAnswerAfterGame = null;
                 state.currentStep = currentStep - 3;
                 this.setState(state);
@@ -1209,12 +1221,22 @@ export default class TreatmentScreen extends Component {
   renderGame(survey,stepIndex) {
     const { currentStep } = this.state;
     const { contentText } = survey[stepIndex];
+    console.log('state',this.state);
     return (
       <View style={styles.surveyContainer}>
         <View style={{ marginLeft: 10, marginRight: 10 }}>
-          <View style={styles.gameContainer}>
-            <Text style={styles.infoText}>{contentText}</Text>
-          </View>
+          <Text style={styles.infoText}>
+            {contentText}
+          </Text>
+          {this.renderSpecialButton(
+            'เล่นเกมส์',
+            () => {
+              if(!this.state.gameHandlers) {
+                this.setState({gameHandlers: true})
+              }
+              this.props.navigation.navigate('GameScreen')
+            }
+          )}
         </View>
         <View style={styles.navButtonContainerStyle}>
           {
@@ -1234,7 +1256,7 @@ export default class TreatmentScreen extends Component {
               () => {
                 this.onSurveyFinished();
               },
-              true
+              this.state.gameHandlers
             )
           }
         </View>
@@ -1412,7 +1434,7 @@ export default class TreatmentScreen extends Component {
       <View style={styles.background}>
         <ScrollView style={{flex:1 ,width:'100%'}}>
           <View style={{width:'100%', height: '100%' }}>
-            <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>
+            <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>
                 {this.state.currentStep + 1} / {survey.length}
             </Text>
             <View style={styles.mainSurveyContainer}>
@@ -1426,11 +1448,6 @@ export default class TreatmentScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  gameContainer: {
-    widht: ((windowWidth * 0.9) - 40),
-    height: (((windowWidth * 0.9) - 40) * 4 / 3),
-    backgroundColor: BLUE
-  },
   container: {
     minWidth: '70%',
     maxWidth: '90%',
@@ -1482,7 +1499,7 @@ const styles = StyleSheet.create({
   },
   questionText: {
     marginBottom: 20,
-    fontSize: 20
+    fontSize: 18
   },
   textBox: {
     borderWidth: 1,
@@ -1507,7 +1524,7 @@ const styles = StyleSheet.create({
   },
   infoText: {
     marginBottom: 20,
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: 'Kanit-Regular'
   },
   charecterSize: {
@@ -1527,7 +1544,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     textAlign: "center",
     fontFamily: "Kanit-Regular",
-    fontSize: 16
+    fontSize: 14
   },
   smallInputStyle: {
     width: '60%',
@@ -1538,7 +1555,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     textAlign: "center",
     fontFamily: "Kanit-Regular",
-    fontSize: 16
+    fontSize: 14
   },
   dropDownStyle: {
     width: '90%',

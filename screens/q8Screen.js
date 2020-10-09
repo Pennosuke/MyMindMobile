@@ -66,21 +66,49 @@ export default class q8Screen extends Component {
     xhr.send(data);
   }
 
+  getDay(date) {
+    const splitDate = date.split('/')
+    return parseInt(splitDate[1], 10)
+  }
+  
+  getMonth(date) {
+    const splitDate = date.split('/')
+    return parseInt(splitDate[0], 10)
+  }
+  
+  getYear(date) {
+    const splitDate = date.split('/')
+    const moreSplitDate = splitDate[2].split(' ')
+    return parseInt(moreSplitDate[0], 10)
+  }
+
   async saveArchivementData(currentTime) {
     const archivesnapshot = await db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).get()
     if(!!archivesnapshot.data() && !!archivesnapshot.data()['แบบประเมิน']) {
-      db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).set({
-        ['แบบประเมิน'] : {
-          latestTimestamp: currentTime,
-          value: archivesnapshot.data()['แบบประเมิน'].value + 1
-        }
-      }, { merge: true })
+      const currentDate = currentTime.toDate().toLocaleDateString();
+      if(this.getYear(currentDate) > this.getYear(global.userArchivement['แบบประเมิน']['latestTimestamp']) || this.getMonth(currentDate) > this.getMonth(global.userArchivement['แบบประเมิน']['latestTimestamp']) || this.getDay(currentDate) > this.getDay(global.userArchivement['แบบประเมิน']['latestTimestamp'])) {
+        db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).set({
+          ['แบบประเมิน'] : {
+            latestTimestamp: currentTime,
+            value: archivesnapshot.data()['แบบประเมิน'].value + 1,
+            totalDays: archivesnapshot.data()['แบบประเมิน'].totalDays + 1
+          }
+        }, { merge: true })
+      } else {
+        db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).set({
+          ['แบบประเมิน'] : {
+            latestTimestamp: currentTime,
+            value: archivesnapshot.data()['แบบประเมิน'].value + 1,
+          }
+        }, { merge: true })
+      }
     } else {
       db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).set({
         ['แบบประเมิน'] : {
           latestTimestamp: currentTime,
           firstTimestamp: currentTime,
-          value: 1
+          value: 1,
+          totalDays: 1
         }
       }, { merge: true })
     }
@@ -90,8 +118,10 @@ export default class q8Screen extends Component {
     if(!!archivesnapshotAfter.data()) {
       global.userArchivement = archivesnapshotAfter.data();
       Object.keys(global.userArchivement).forEach((key) => {
-        global.userArchivement[key].firstTimestamp = global.userArchivement[key].firstTimestamp.toDate().toLocaleDateString() + ' ' + global.userArchivement[key].firstTimestamp.toDate().toLocaleTimeString();
-        global.userArchivement[key].latestTimestamp = global.userArchivement[key].latestTimestamp.toDate().toLocaleDateString() + ' ' + global.userArchivement[key].latestTimestamp.toDate().toLocaleTimeString();
+        if(key !== 'userName') {
+          global.userArchivement[key].firstTimestamp = global.userArchivement[key].firstTimestamp.toDate().toLocaleDateString() + ' ' + global.userArchivement[key].firstTimestamp.toDate().toLocaleTimeString();
+          global.userArchivement[key].latestTimestamp = global.userArchivement[key].latestTimestamp.toDate().toLocaleDateString() + ' ' + global.userArchivement[key].latestTimestamp.toDate().toLocaleTimeString();
+        }
       })
     }
     // console.log('DASS global.userArchivement', global.userArchivement);
@@ -99,30 +129,55 @@ export default class q8Screen extends Component {
 
   onSurveyFinished() {
     const { answers } = this.state;
-    const answersAsObj = {
-      '1': 0,
-      '2': 0,
-      '3': 0,
-      '4': 0,
-      '5': 0,
-      '6': 0,
-      '7': 0,
-      '8': 0,
-      '9': 0,
-      'contact': {value : false}
+    const prologueObj = this.props.route.params.prologueObj;
+    const spwbObj = this.props.route.params.spwbObj;
+    const awarenessObj = this.props.route.params.awarenessObj;
+    const dassObj = this.props.route.params.dassObj;
+    var q8Obj = {
+      '1': {choiceText: '', value: 0},
+      '2': {choiceText: '', value: 0},
+      '3': {choiceText: '', value: 0},
+      '4': {choiceText: '', value: 0},
+      '5': {choiceText: '', value: 0},
+      '6': {choiceText: '', value: 0},
+      '7': {choiceText: '', value: 0},
+      '8': {choiceText: '', value: 0},
+      '9': {choiceText: '', value: 0},
+      'contact': {value : false},
+      'q8score': 0
     };
     for (const elem of answers) {
-      answersAsObj[elem.contentId] = elem.value;
+      q8Obj[elem.contentId] = elem.value;
+      q8Obj['q8score'] += elem.value.value;
     }
     const currentTime = firebase.firestore.Timestamp.fromDate(new Date());
     const initTimestamp = !!this.props.route.params['initTimestamp'] ? this.props.route.params.initTimestamp : currentTime;
-    answersAsObj['timestamp'] = currentTime;
-    answersAsObj['userName'] = firebase.auth().currentUser.displayName;
-    answersAsObj['initTimestamp'] = initTimestamp;
-    // console.log('answersAsObj', answersAsObj);
-    db.collection('แบบประเมินการฆ่าตัวตาย').add(answersAsObj)
+    q8Obj['userName'] = firebase.auth().currentUser.displayName;
+    q8Obj['initTimestamp'] = initTimestamp;
+
+    prologueObj['timestamp'] = currentTime;
+    spwbObj['timestamp'] = currentTime;
+    awarenessObj['timestamp'] = currentTime;
+    dassObj['timestamp'] = currentTime;
+    q8Obj['timestamp'] = currentTime;
+
+    const DocTime = currentTime.toDate().toLocaleTimeString();
+    const DocDate = currentTime.toDate().toLocaleDateString().split('/');
+    const newDocName = global.userData.userName + ' ' + DocDate[1] + '-' + DocDate[0] + '-' + DocDate[2] + ' ' + DocTime;
+    /*-------------------------------*/
+    // console.log('prologueObj', prologueObj)
+    // console.log('spwbObj', spwbObj)
+    // console.log('awarenessObj', awarenessObj)
+    // console.log('dassObj', dassObj)
+    // console.log('q8Obj', q8Obj)
+    /*-------------------------------*/
+    db.collection('บทนำแบบประเมิน').doc(newDocName).set(prologueObj);
+    db.collection('แบบวัดสุขภาวะทางจิตใจ').doc(newDocName).set(spwbObj);
+    db.collection('แบบวัดการมีสติ').doc(newDocName).set(awarenessObj);
+    db.collection('แบบสอบถามวัดภาวะสุขภาพจิต').doc(newDocName).set(dassObj);
+    db.collection('แบบประเมินการฆ่าตัวตาย').doc(newDocName).set(q8Obj);
     this.saveArchivementData(currentTime);
-    this.sendLineNotifyMessege(answersAsObj['contact'].value);
+    this.sendLineNotifyMessege(q8Obj['contact'].value);
     this.props.navigation.replace('CompletedSurvey', { score :this.props.route.params.score });
   }
 
@@ -849,7 +904,7 @@ export default class q8Screen extends Component {
       <View style={styles.background}>
         <ScrollView style={{flex:1 ,width:'100%'}}>
           <View style={{width:'100%', height: '100%' }}>
-            <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 18}}>
+            <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>
                 {this.state.currentStep + 1} / {survey.length}
             </Text>
             <View style={styles.mainSurveyContainer}>
@@ -914,7 +969,7 @@ const styles = StyleSheet.create({
   },
   questionText: {
     marginBottom: 20,
-    fontSize: 20
+    fontSize: 18
   },
   textBox: {
     borderWidth: 1,
@@ -939,7 +994,7 @@ const styles = StyleSheet.create({
   },
   infoText: {
     marginBottom: 20,
-    fontSize: 18,
+    fontSize: 16,
     fontFamily: 'Kanit-Regular'
   },
   charecterSize: {
@@ -959,7 +1014,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     textAlign: "center",
     fontFamily: "Kanit-Regular",
-    fontSize: 16
+    fontSize: 14
   },
   smallInputStyle: {
     width: '60%',
@@ -970,7 +1025,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     textAlign: "center",
     fontFamily: "Kanit-Regular",
-    fontSize: 16
+    fontSize: 14
   },
   dropDownStyle: {
     width: '70%',

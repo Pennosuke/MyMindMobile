@@ -1,6 +1,7 @@
 import Matter from "matter-js";
 import Pipe from './Pipe';
 import PipeTop from './PipeTop';
+import { gameConstants } from '../constants/gameConstants';
 
 let tick = 0;
 let pose = 1;
@@ -15,8 +16,8 @@ export const resetPipes = () => {
 }
 
 export const generatePipes = () => {
-  let topPipeHeight = randomBetween(100, (Constants.MAX_HEIGHT / 2) - 100);
-  let bottomPipeHeight = Constants.MAX_HEIGHT - topPipeHeight - Constants.GAP_SIZE;
+  let topPipeHeight = randomBetween(100, (gameConstants.MAX_HEIGHT / 2) - 100);
+  let bottomPipeHeight = gameConstants.MAX_HEIGHT - topPipeHeight - gameConstants.GAP_SIZE;
 
   let sizes = [topPipeHeight, bottomPipeHeight]
 
@@ -30,14 +31,14 @@ export const generatePipes = () => {
 export const addPipesAtLocation = (x, world, entities) => {
   let [pipe1Height, pipe2Height] = generatePipes();
 
-  let pipeTopWidth = Constants.PIPE_WIDTH + 20;
+  let pipeTopWidth = gameConstants.PIPE_WIDTH + 20;
   let pipeTopHeight = (pipeTopWidth / 205) * 95;
 
   pipe1Height = pipe1Height - pipeTopHeight;
 
   let pipe1Top = Matter.Bodies.rectangle(
     x,
-    pipe1Height + (pipeTopHeight / 2),
+    pipe1Height + (pipeTopHeight / 2) + 50,
     pipeTopWidth,
     pipeTopHeight,
     { isStatic: true}
@@ -45,8 +46,8 @@ export const addPipesAtLocation = (x, world, entities) => {
 
   let pipe1 = Matter.Bodies.rectangle(
     x,
-    pipe1Height / 2,
-    Constants.PIPE_WIDTH,
+    (pipe1Height / 2) + 50,
+    gameConstants.PIPE_WIDTH,
     pipe1Height,
     { isStatic: true}
   );
@@ -55,7 +56,7 @@ export const addPipesAtLocation = (x, world, entities) => {
 
   let pipe2Top = Matter.Bodies.rectangle(
     x,
-    Constants.MAX_HEIGHT - 50 - pipe2Height - (pipeTopHeight / 2),
+    gameConstants.MAX_HEIGHT - 50 - pipe2Height - (pipeTopHeight / 2),
     pipeTopWidth,
     pipeTopHeight,
     { isStatic: true}
@@ -63,8 +64,8 @@ export const addPipesAtLocation = (x, world, entities) => {
 
   let pipe2 = Matter.Bodies.rectangle(
     x,
-    Constants.MAX_HEIGHT - 50 - (pipe2Height / 2),
-    Constants.PIPE_WIDTH,
+    gameConstants.MAX_HEIGHT - 50 - (pipe2Height / 2),
+    gameConstants.PIPE_WIDTH,
     pipe2Height,
     { isStatic: true}
   );
@@ -96,20 +97,23 @@ const Physics = (entities, { touches, time, dispatch }) => {
   let world = entities.physics.world;
   let bird = entities.bird.body;
 
+  // console.log('touches', touches)
   let hadTouches = false;
   touches.filter(t => t.type === "press").forEach(t => {
     if (!hadTouches){
-      if (world.gravity.y === 0.0){
-        world.gravity.y = 1.2;
+      // console.log('world',world);
 
-        addPipesAtLocation((Constants.MAX_WIDTH * 2) - (Constants.PIPE_WIDTH / 2), world, entities);
-        addPipesAtLocation((Constants.MAX_WIDTH * 3) - (Constants.PIPE_WIDTH / 2), world, entities);
+      if (world.gravity.y === 0.0){
+        world.gravity.y = 0.6;
+
+        addPipesAtLocation((gameConstants.MAX_WIDTH * 2) - (gameConstants.PIPE_WIDTH / 2), world, entities);
+        addPipesAtLocation((gameConstants.MAX_WIDTH * 3) - (gameConstants.PIPE_WIDTH / 2), world, entities);
       }
 
       hadTouches = true;
       Matter.Body.setVelocity( bird, {
         x: bird.velocity.x,
-        y: -10
+        y: -13
       });
     }
 
@@ -119,7 +123,7 @@ const Physics = (entities, { touches, time, dispatch }) => {
 
   Object.keys(entities).forEach(key => {
     if (key.indexOf("pipe") === 0 && entities.hasOwnProperty(key)){
-      Matter.Body.translate(entities[key].body, {x: -2, y: 0});
+      Matter.Body.translate(entities[key].body, {x: -5, y: 0});
 
       if (key.indexOf("Top") !== -1 && parseInt(key.replace("pipe", "")) % 2 === 0){
         if (entities[key].body.position.x <= bird.position.x && !entities[key].scored){
@@ -127,22 +131,22 @@ const Physics = (entities, { touches, time, dispatch }) => {
           dispatch({ type: "score" });
         }
 
-        if (entities[key].body.position.x <= -1 * (Constants.PIPE_WIDTH / 2)){
+        if (entities[key].body.position.x <= -1 * (gameConstants.PIPE_WIDTH / 2)){
           let pipeIndex = parseInt(key.replace("pipe", ""));
           delete(entities["pipe" + (pipeIndex - 1) + "Top"]);
           delete(entities["pipe" + (pipeIndex - 1)]);
           delete(entities["pipe" + pipeIndex + "Top"]);
           delete(entities["pipe" + pipeIndex]);
 
-          addPipesAtLocation((Constants.MAX_WIDTH * 2) - (Constants.PIPE_WIDTH / 2), world, entities);
+          addPipesAtLocation((gameConstants.MAX_WIDTH * 2) - (gameConstants.PIPE_WIDTH / 2), world, entities);
         }
       }
 
     } else if (key.indexOf("floor") === 0){
-      if (entities[key].body.position.x <= -1 * Constants.MAX_WIDTH / 2){
-        Matter.Body.setPosition(entities[key].body, { x: Constants.MAX_WIDTH + (Constants.MAX_WIDTH / 2), y: entities[key].body.position.y})
+      if (entities[key].body.position.x <= -1 * ( (gameConstants.MAX_WIDTH / 2) - 10) ){
+        Matter.Body.setPosition(entities[key].body, { x: gameConstants.MAX_WIDTH + (gameConstants.MAX_WIDTH / 2), y: entities[key].body.position.y})
       } else {
-        Matter.Body.translate(entities[key].body, {x: -2, y: 0});
+        Matter.Body.translate(entities[key].body, {x: -5, y: 0});
       }
     }
   })
@@ -153,6 +157,7 @@ const Physics = (entities, { touches, time, dispatch }) => {
     if (pose > 3){
       pose = 1;
     }
+    pose = 1;
     entities.bird.pose = pose;
   }
 

@@ -1,13 +1,26 @@
 import React, { Component } from 'react';
 import { StyleSheet, Text, View, ScrollView, Button, Alert, TouchableWithoutFeedback, TouchableHighlight, TouchableOpacity, Dimensions } from 'react-native';
-import { Program1, Homework1, Program2, Homework2, MockupData } from '../constants/โปรแกรมฝึกปฏิบัติ_ทดสอบ';
+import {
+  Program1,
+  Homework1,
+  Program2,
+  Homework2,
+  Program3,
+  Homework3,
+  Program4,
+  Homework4,
+  MockupData
+} from '../constants/โปรแกรมฝึกปฏิบัติ_ทดสอบ';
 import { SPWB, awareness, DASS, Q8 } from '../constants/แบบประเมิน';
+
+import * as ScreenOrientation from 'expo-screen-orientation';
 
 export default class tabTest extends Component {
 
   constructor() {
     super();
     this.state = { 
+      isRotate: false
     }
   }
 
@@ -166,7 +179,7 @@ export default class tabTest extends Component {
           onPress={() => this.props.navigation.navigate('TreatmentScreen', { data : Program1, collection : 'โปรแกรมที่_1_หายใจคลายเครียด', name: 'โปรแกรมที่ 1 หายใจคลายเครียด' })}
           disabled={!this.isAvailible('แบบประเมิน','firstTimestamp',0)}
         >
-          <View style={!this.isAvailible('แบบประเมิน','firstTimestamp',0) ? [styles.roundedButton, styles.disableButton] : styles.roundedButton}>
+          <View style={!this.isAvailible('แบบประเมิน','firstTimestamp',0) ? [styles.roundedButton, styles.disableButton] : !!global.userArchivement['โปรแกรมที่_1_หายใจคลายเครียด'] ? [styles.roundedButton, styles.finishedButton] : styles.roundedButton}>
             <Text style={!this.isAvailible('แบบประเมิน','firstTimestamp',0) ? [styles.buttonFont, styles.disablebuttonFont] : styles.buttonFont}>โปรแกรมที่ 1 “หายใจคลายเครียด”</Text>
             {!this.isAvailible('แบบประเมิน','firstTimestamp',0) ? this.renderWaitingDate('แบบประเมิน','firstTimestamp') : <></>}
           </View>
@@ -186,7 +199,7 @@ export default class tabTest extends Component {
           onPress={() => this.props.navigation.navigate('TreatmentScreen', { data : Homework1, collection : 'ทบทวนโปรแกรมที่_1_หายใจคลายเครียด', name: 'ทบทวนโปรแกรมที่ 1 หายใจคลายเครียด' })}
           disabled={!this.handleAvailable('โปรแกรมที่_1_หายใจคลายเครียด','ทบทวนโปรแกรมที่_1_หายใจคลายเครียด',20)}
         >
-          <View style={!this.handleAvailable('โปรแกรมที่_1_หายใจคลายเครียด','ทบทวนโปรแกรมที่_1_หายใจคลายเครียด',20) ? [styles.roundedButton, styles.disableButton] : styles.roundedButton}>
+          <View style={!this.handleAvailable('โปรแกรมที่_1_หายใจคลายเครียด','ทบทวนโปรแกรมที่_1_หายใจคลายเครียด',20) ? [styles.roundedButton, styles.disableButton] : this.getHomeworkValue('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด') >= 3 ? [styles.roundedButton, styles.finishedButton] : styles.roundedButton}>
             <Text style={!this.handleAvailable('โปรแกรมที่_1_หายใจคลายเครียด','ทบทวนโปรแกรมที่_1_หายใจคลายเครียด',20) ? [styles.buttonFont, styles.disablebuttonFont] : styles.buttonFont}>
               ทบทวนโปรแกรมที่ 1 ({this.getHomeworkValue('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด')}/3)
             </Text>
@@ -211,7 +224,7 @@ export default class tabTest extends Component {
           onPress={() => this.props.navigation.navigate('TreatmentScreen', { data : Program2, collection : 'โปรแกรมที่_2_ละเอียดลออดูกาย', name: 'โปรแกรมที่ 2 ละเอียดลออดูกาย' })}
           disabled={!this.isAvailible('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด','latestTimestamp',20) && global.userArchivement['ทบทวนโปรแกรมที่_1_หายใจคลายเครียด'].value <= 3}
         >
-          <View style={!this.isAvailible('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด','latestTimestamp',20) && global.userArchivement['ทบทวนโปรแกรมที่_1_หายใจคลายเครียด'].value <= 3 ? [styles.roundedButton, styles.disableButton] : styles.roundedButton}>
+          <View style={!this.isAvailible('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด','latestTimestamp',20) && global.userArchivement['ทบทวนโปรแกรมที่_1_หายใจคลายเครียด'].value <= 3 ? [styles.roundedButton, styles.disableButton] : !!global.userArchivement['โปรแกรมที่_2_ละเอียดลออดูกาย'] ? [styles.roundedButton, styles.finishedButton] : styles.roundedButton}>
             <Text style={!this.isAvailible('ทบทวนโปรแกรมที่_1_หายใจคลายเครียด','latestTimestamp',20) && global.userArchivement['ทบทวนโปรแกรมที่_1_หายใจคลายเครียด'].value <= 3 ? [styles.buttonFont, styles.disablebuttonFont] : styles.buttonFont}>
               โปรแกรมที่ 2 “ละเอียดลออดูกาย”
             </Text>
@@ -236,7 +249,7 @@ export default class tabTest extends Component {
           onPress={() => this.props.navigation.navigate('TreatmentScreen', { data : Homework2, collection : 'ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย', name: 'ทบทวนโปรแกรมที่ 2 ละเอียดลออดูกาย' })}
           disabled={!this.handleAvailable('โปรแกรมที่_2_ละเอียดลออดูกาย','ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย',20)}
         >
-          <View style={!this.handleAvailable('โปรแกรมที่_2_ละเอียดลออดูกาย','ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย',20) ? [styles.roundedButton, styles.disableButton] : styles.roundedButton}>
+          <View style={!this.handleAvailable('โปรแกรมที่_2_ละเอียดลออดูกาย','ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย',20) ? [styles.roundedButton, styles.disableButton] : this.getHomeworkValue('ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย') >= 3 ? [styles.roundedButton, styles.finishedButton] : styles.roundedButton}>
             <Text style={!this.handleAvailable('โปรแกรมที่_2_ละเอียดลออดูกาย','ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย',20) ? [styles.buttonFont, styles.disablebuttonFont] : styles.buttonFont}>
               ทบทวนโปรแกรมที่ 2 ({this.getHomeworkValue('ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย')}/3)
             </Text>
@@ -254,9 +267,128 @@ export default class tabTest extends Component {
     }
   }
 
+  renderProgram3Button() {
+    if(this.getHomeworkValue('ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย') >= 3) {
+      return(
+        <TouchableOpacity 
+          onPress={() => this.props.navigation.navigate('TreatmentScreen', { data : Program3, collection : 'โปรแกรมที่_3_ตระหนักรู้ในอารมณ์', name: 'โปรแกรมที่ 3 ตระหนักรู้ในอารมณ์' })}
+          disabled={!this.isAvailible('ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย','latestTimestamp',20) && global.userArchivement['ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย'].value <= 3}
+        >
+          <View style={!this.isAvailible('ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย','latestTimestamp',20) && global.userArchivement['ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย'].value <= 3 ? [styles.roundedButton, styles.disableButton] : !!global.userArchivement['โปรแกรมที่_3_ตระหนักรู้ในอารมณ์'] ? [styles.roundedButton, styles.finishedButton] : styles.roundedButton}>
+            <Text style={!this.isAvailible('ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย','latestTimestamp',20) && global.userArchivement['ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย'].value <= 3 ? [styles.buttonFont, styles.disablebuttonFont] : styles.buttonFont}>
+              โปรแกรมที่ 3 “ตระหนักรู้ในอารมณ์”
+            </Text>
+            {
+              !this.isAvailible('ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย','latestTimestamp',20) && global.userArchivement['ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย'].value <= 3 ?
+              this.renderWaitingDate('ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย','latestTimestamp') : <></>
+            }
+          </View>
+        </TouchableOpacity>
+      )
+    } else {
+      return(
+        <></>
+      )
+    }
+  }
+
+  renderHomework3Button() {
+    if(!!global.userArchivement['โปรแกรมที่_3_ตระหนักรู้ในอารมณ์']) {
+      return(
+        <TouchableOpacity 
+          onPress={() => this.props.navigation.navigate('TreatmentScreen', { data : Homework3, collection : 'ทบทวนโปรแกรมที่_3_ตระหนักรู้ในอารมณ์', name: 'ทบทวนโปรแกรมที่ 3 ตระหนักรู้ในอารมณ์' })}
+          disabled={!this.handleAvailable('โปรแกรมที่_3_ตระหนักรู้ในอารมณ์','ทบทวนโปรแกรมที่_3_ตระหนักรู้ในอารมณ์',20)}
+        >
+          <View style={!this.handleAvailable('โปรแกรมที่_3_ตระหนักรู้ในอารมณ์','ทบทวนโปรแกรมที่_3_ตระหนักรู้ในอารมณ์',20) ? [styles.roundedButton, styles.disableButton] : this.getHomeworkValue('ทบทวนโปรแกรมที่_3_ตระหนักรู้ในอารมณ์') >= 3 ? [styles.roundedButton, styles.finishedButton] : styles.roundedButton}>
+            <Text style={!this.handleAvailable('โปรแกรมที่_3_ตระหนักรู้ในอารมณ์','ทบทวนโปรแกรมที่_3_ตระหนักรู้ในอารมณ์',20) ? [styles.buttonFont, styles.disablebuttonFont] : styles.buttonFont}>
+              ทบทวนโปรแกรมที่ 3 ({this.getHomeworkValue('ทบทวนโปรแกรมที่_3_ตระหนักรู้ในอารมณ์')}/3)
+            </Text>
+            {
+              !this.handleAvailable('โปรแกรมที่_3_ตระหนักรู้ในอารมณ์','ทบทวนโปรแกรมที่_3_ตระหนักรู้ในอารมณ์',20) ?
+              this.handlerenderWaitingDate('โปรแกรมที่_3_ตระหนักรู้ในอารมณ์','ทบทวนโปรแกรมที่_3_ตระหนักรู้ในอารมณ์') : <></>
+            }
+          </View>
+        </TouchableOpacity>
+      )
+    } else {
+      return(
+        <></>
+      )
+    }
+  }
+
+  renderProgram4Button() {
+    if(this.getHomeworkValue('ทบทวนโปรแกรมที่_3_ตระหนักรู้ในอารมณ์') >= 3) {
+      return(
+        <TouchableOpacity 
+          onPress={() => this.props.navigation.navigate('TreatmentScreen', { data : Program4, collection : 'โปรแกรมที่_4_ปรับความคิดพิชิตเศร้า', name: 'โปรแกรมที่ 4 ปรับความคิด.....พิชิตเศร้า' })}
+          disabled={!this.isAvailible('ทบทวนโปรแกรมที่_3_ตระหนักรู้ในอารมณ์','latestTimestamp',20) && global.userArchivement['ทบทวนโปรแกรมที่_3_ตระหนักรู้ในอารมณ์'].value <= 3}
+        >
+          <View style={!this.isAvailible('ทบทวนโปรแกรมที่_3_ตระหนักรู้ในอารมณ์','latestTimestamp',20) && global.userArchivement['ทบทวนโปรแกรมที่_3_ตระหนักรู้ในอารมณ์'].value <= 3 ? [styles.roundedButton, styles.disableButton] : !!global.userArchivement['โปรแกรมที่_4_ปรับความคิดพิชิตเศร้า'] ? [styles.roundedButton, styles.finishedButton] : styles.roundedButton}>
+            <Text style={!this.isAvailible('ทบทวนโปรแกรมที่_3_ตระหนักรู้ในอารมณ์','latestTimestamp',20) && global.userArchivement['ทบทวนโปรแกรมที่_3_ตระหนักรู้ในอารมณ์'].value <= 3 ? [styles.buttonFont, styles.disablebuttonFont] : styles.buttonFont}>
+              โปรแกรมที่ 4 “ปรับความคิด.....พิชิตเศร้า”
+            </Text>
+            {
+              !this.isAvailible('ทบทวนโปรแกรมที่_3_ตระหนักรู้ในอารมณ์','latestTimestamp',20) && global.userArchivement['ทบทวนโปรแกรมที่_3_ตระหนักรู้ในอารมณ์'].value <= 3 ?
+              this.renderWaitingDate('ทบทวนโปรแกรมที่_3_ตระหนักรู้ในอารมณ์','latestTimestamp') : <></>
+            }
+          </View>
+        </TouchableOpacity>
+      )
+    } else {
+      return(
+        <></>
+      )
+    }
+  }
+
+  renderHomework4Button() {
+    if(!!global.userArchivement['โปรแกรมที่_4_ปรับความคิดพิชิตเศร้า']) {
+      return(
+        <TouchableOpacity 
+          onPress={() => this.props.navigation.navigate('TreatmentScreen', { data : Homework4, collection : 'ทบทวนโปรแกรมที่_4_ปรับความคิดพิชิตเศร้า', name: 'ทบทวนโปรแกรมที่ 4 ตระหนักรู้ในอารมณ์' })}
+          disabled={!this.handleAvailable('โปรแกรมที่_4_ปรับความคิดพิชิตเศร้า','ทบทวนโปรแกรมที่_4_ปรับความคิดพิชิตเศร้า',20)}
+        >
+          <View style={!this.handleAvailable('โปรแกรมที่_4_ปรับความคิดพิชิตเศร้า','ทบทวนโปรแกรมที่_4_ปรับความคิดพิชิตเศร้า',20) ? [styles.roundedButton, styles.disableButton] : this.getHomeworkValue('ทบทวนโปรแกรมที่_4_ปรับความคิดพิชิตเศร้า') >= 3 ? [styles.roundedButton, styles.finishedButton] : styles.roundedButton }>
+            <Text style={!this.handleAvailable('โปรแกรมที่_4_ปรับความคิดพิชิตเศร้า','ทบทวนโปรแกรมที่_4_ปรับความคิดพิชิตเศร้า',20) ? [styles.buttonFont, styles.disablebuttonFont] : styles.buttonFont}>
+              ทบทวนโปรแกรมที่ 4 ({this.getHomeworkValue('ทบทวนโปรแกรมที่_4_ปรับความคิดพิชิตเศร้า')}/3)
+            </Text>
+            {
+              !this.handleAvailable('โปรแกรมที่_4_ปรับความคิดพิชิตเศร้า','ทบทวนโปรแกรมที่_4_ปรับความคิดพิชิตเศร้า',20) ?
+              this.handlerenderWaitingDate('โปรแกรมที่_4_ปรับความคิดพิชิตเศร้า','ทบทวนโปรแกรมที่_4_ปรับความคิดพิชิตเศร้า') : <></>
+            }
+          </View>
+        </TouchableOpacity>
+      )
+    } else {
+      return(
+        <></>
+      )
+    }
+  }
+
   doQuestionare = (data) => {
     const initTimestamp = firebase.firestore.Timestamp.fromDate(new Date());
     this.props.navigation.navigate('prologueScreen', { data : data, initTimestamp: initTimestamp })
+  }
+
+  async changeScreenOrientation () {
+    await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_RIGHT);
+  }
+
+  async changeScreenOrientationPotrait () {
+    await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
+  }
+
+  heavyRotation() {
+    if(this.state.isRotate){
+      this.setState({isRotate:false})
+      this.changeScreenOrientationPotrait()
+    }
+    else {
+      this.setState({isRotate:true})
+      this.changeScreenOrientation()
+    }
   }
 
   render() {
@@ -282,59 +414,64 @@ export default class tabTest extends Component {
             alignItems: 'center',
             paddingVertical: 20}}
           >
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('MockUpScreen', { data : MockupData})}>
+            <TouchableOpacity onPress={() => this.heavyRotation()}>
               <View style={styles.roundedButton}>
-                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>MockUpScreen</Text>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14}}>heavyRotation</Text>
               </View>
             </TouchableOpacity>
+            {/* <TouchableOpacity onPress={() => this.props.navigation.navigate('MockUpScreen', { data : MockupData})}>
+              <View style={styles.roundedButton}>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14}}>MockUpScreen</Text>
+              </View>
+            </TouchableOpacity> */}
             <TouchableOpacity onPress={() => this.props.navigation.navigate('spwbScreen', { data : SPWB})}>
               <View style={styles.roundedButton}>
-                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>ทดสอบแบบวัดสุขภาวะทางจิตใจ</Text>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14}}>ทดสอบแบบวัดสุขภาวะทางจิตใจ</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => this.props.navigation.navigate('awarenessScreen', { data : awareness})}>
               <View style={styles.roundedButton}>
-                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>ทดสอบแบบวัดการมีสติ</Text>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14}}>ทดสอบแบบวัดการมีสติ</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => this.props.navigation.navigate('dassScreen', { data : DASS})}>
               <View style={styles.roundedButton}>
-                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>ทดสอบแบบสอบถามวัดภาวะสุขภาพจิต</Text>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14}}>ทดสอบแบบสอบถามวัดภาวะสุขภาพจิต</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => this.props.navigation.navigate('q8Screen', { data : Q8, score : 11})}>
               <View style={styles.roundedButton}>
-                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>ทดสอบแบบประเมินQ8(ซึมเศร้าค่อนข้างมาก)</Text>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14}}>ทดสอบแบบประเมินQ8(ซึมเศร้าค่อนข้างมาก)</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => this.props.navigation.navigate('q8Screen', { data : Q8, score : 14})}>
               <View style={styles.roundedButton}>
-                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>ทดสอบแบบประเมินQ8(ซึมเศร้าสูงมาก)</Text>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14}}>ทดสอบแบบประเมินQ8(ซึมเศร้าสูงมาก)</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => this.props.navigation.navigate('CompletedSurvey', { score : 0 })}>
               <View style={styles.roundedButton}>
-                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>ทดสอบหน้าประกาศผลประเมิน(สุขภาพจิตดี)</Text>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14}}>ทดสอบหน้าประกาศผลประเมิน(สุขภาพจิตดี)</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => this.props.navigation.navigate('CompletedSurvey', { score : 5 })}>
               <View style={styles.roundedButton}>
-                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>ทดสอบหน้าประกาศผลประเมิน(ซึมเศร้าเล็กน้อย)</Text>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14}}>ทดสอบหน้าประกาศผลประเมิน(ซึมเศร้าเล็กน้อย)</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => this.props.navigation.navigate('CompletedSurvey', { score : 7 })}>
               <View style={styles.roundedButton}>
-                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>ทดสอบหน้าประกาศผลประเมิน(ซึมเศร้าปานกลาง)</Text>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14}}>ทดสอบหน้าประกาศผลประเมิน(ซึมเศร้าปานกลาง)</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => this.props.navigation.navigate('CompletedSurvey', { score : 11 })}>
               <View style={styles.roundedButton}>
-                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>ทดสอบหน้าประกาศผลประเมิน(ซึมเศร้าค่อนข้างมาก)</Text>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14}}>ทดสอบหน้าประกาศผลประเมิน(ซึมเศร้าค่อนข้างมาก)</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => this.props.navigation.navigate('CompletedSurvey', { score : 14 })}>
               <View style={styles.roundedButton}>
-                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 16}}>ทดสอบหน้าประกาศผลประเมิน(ซึมเศร้าสูงมาก)</Text>
+                <Text style={{textAlign: 'center', padding: 20, color: 'white', fontFamily: 'Kanit-Regular', fontSize: 14}}>ทดสอบหน้าประกาศผลประเมิน(ซึมเศร้าสูงมาก)</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -350,6 +487,10 @@ export default class tabTest extends Component {
             {this.renderHomework1Button()}
             {this.renderProgram2Button()}
             {this.renderHomework2Button()}
+            {this.renderProgram3Button()}
+            {this.renderHomework3Button()}
+            {this.renderProgram4Button()}
+            {this.renderHomework4Button()}
           </View>
         </View>
       </ScrollView>
@@ -370,7 +511,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     fontFamily: 'Kanit-Medium',
-    fontSize: Dimensions.get('window').width >= 375 ? 18 : 15
+    fontSize: Dimensions.get('window').width >= 375 ? 16 : 14
   },
   subtitle: {
     textAlign: 'center',
@@ -378,7 +519,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     paddingRight: 10,
     fontFamily: 'Kanit-Medium',
-    fontSize: Dimensions.get('window').width >= 375 ? 20 : 16
+    fontSize: Dimensions.get('window').width >= 375 ? 18 : 14
   },
   topLeftButton: {
     alignItems: 'center',
@@ -405,12 +546,15 @@ const styles = StyleSheet.create({
   disableButton: {
     backgroundColor:"#dfdfdf"
   },
+  finishedButton: {
+    backgroundColor:"#2cc156"
+  },
   buttonFont: {
     textAlign: 'center',
     padding: 0,
     color: 'white',
     fontFamily: 'Kanit-Regular',
-    fontSize: Dimensions.get('window').width >= 375 ? 18 : 15
+    fontSize: Dimensions.get('window').width >= 375 ? 16 : 14
   },
   disablebuttonFont: {
     color: '#a3a3a3'
@@ -418,7 +562,7 @@ const styles = StyleSheet.create({
   waitingFont: {
     fontFamily: 'Kanit-Regular',
     color: '#535353',
-    fontSize: Dimensions.get('window').width >= 375 ? 15 : 12
+    fontSize: Dimensions.get('window').width >= 375 ? 12 : 10
   },
   hiddenButton: {
     justifyContent:"center",

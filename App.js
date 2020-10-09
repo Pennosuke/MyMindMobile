@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native'
+import { View, Text, Button, StyleSheet, SafeAreaView } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import * as ScreenOrientation from 'expo-screen-orientation';
+import { DeviceMotion } from 'expo-sensors';
+
 import { HomeScreen } from './screens/HomeScreen'
 import LoadingScreen from './screens/LoadingScreen'
 import LoginScreen from './screens/LoginScreen'
 import SignupScreen from './screens/SignupScreen'
+import ResetPassword from './screens/ResetPassword'
 import InitScreen from './screens/InitScreen'
 
 import prologueScreen from './screens/prologueScreen'
@@ -16,10 +20,17 @@ import q8Screen from './screens/q8Screen'
 import CompletedSurvey from './screens/CompletedSurvey'
 import ContactScreen from './screens/ContactScreen'
 
+import spwbResultScreen from './screens/spwbResultScreen'
+import awarenessResultScreen from './screens/awarenessResultScreen'
+import dassResultScreen from './screens/dassResultScreen'
+
 import TreatmentScreen from './screens/TreatmentScreen'
 import MockUpScreen from './screens/MockupScreen'
 
+import GameScreen from './screens/GameScreen'
+
 import * as Font from 'expo-font';
+import { DangerZone } from 'expo';
 
 const AppStack = createStackNavigator();
 class AppStackScreen extends Component {
@@ -31,7 +42,7 @@ class AppStackScreen extends Component {
           component={HomeScreen}
           options={{
             headerLeft: null,
-            headerStyle: {backgroundColor: '#3CFB72'},
+            headerStyle: {backgroundColor: '#31d140'},
             headerTintColor: '#fff',
             headerTitleStyle: { alignSelf: 'center', fontFamily: 'Kanit-Regular' }
           }}
@@ -91,10 +102,34 @@ class AppStackScreen extends Component {
           component={ContactScreen}
           options={
             {
-              title: 'ข้อมูลติดต่อผู้เชี่ยวชาญ',
+              title: 'ข้อมูลติดต่อแหล่งช่วยเหลือ',
               headerTitleStyle: { alignSelf: 'center', fontFamily: 'Kanit-Regular' }
             }
           }
+        />
+        <AppStack.Screen 
+          name="spwbResultScreen"
+          component={spwbResultScreen}
+          options={{
+            title: 'ผลแบบวัดสุขภาวะทางจิตใจ',
+            headerTitleStyle: { fontFamily: 'Kanit-Regular' }
+          }}
+        />
+        <AppStack.Screen 
+          name="awarenessResultScreen"
+          component={awarenessResultScreen}
+          options={{
+            title: 'ผลแบบวัดการมีสติ',
+            headerTitleStyle: { fontFamily: 'Kanit-Regular' }
+          }}
+        />
+        <AppStack.Screen 
+          name="dassResultScreen"
+          component={dassResultScreen}
+          options={{
+            title: 'ผลแบบสอบถามวัดภาวะสุขภาพจิต',
+            headerTitleStyle: { fontFamily: 'Kanit-Regular' }
+          }}
         />
         <AppStack.Screen
           name="TreatmentScreen"
@@ -114,6 +149,16 @@ class AppStackScreen extends Component {
             }
           }
         />
+        <AppStack.Screen
+          name="GameScreen"
+          component={GameScreen}
+          options={
+            {
+              title: 'เกมส์',
+              headerTitleStyle: { alignSelf: 'center', fontFamily: 'Kanit-Regular' }
+            }
+          }
+        />
       </AppStack.Navigator>
     )
   }
@@ -123,6 +168,7 @@ const Stack = createStackNavigator();
 export class App extends Component {
   state = {
     fontsLoaded: false,
+    rotate: 0
   };
 
   async componentDidMount() {
@@ -140,6 +186,7 @@ export class App extends Component {
     const { fontsLoaded } = this.state;
     if( fontsLoaded ) {
       return (
+        <SafeAreaView style={{flex: 1}}>
         <NavigationContainer>
           <Stack.Navigator
             initialRouteName="Init"
@@ -170,8 +217,13 @@ export class App extends Component {
             <Stack.Screen 
               name="Signup" 
               component={SignupScreen} 
-              options={{ title: 'Signup' }}
-            />       
+              options={{ title: 'สมัครสมาชิก' }}
+            />
+            <Stack.Screen 
+              name="ResetPassword" 
+              component={ResetPassword} 
+              options={{ title: 'รีเซ็ตรหัสผ่าน' }}
+            />
             <Stack.Screen 
               name="AppStackScreen" 
               component={AppStackScreen} 
@@ -179,6 +231,7 @@ export class App extends Component {
             />
           </Stack.Navigator>
         </NavigationContainer>
+        </SafeAreaView>
       )
     } else {
       return ( <LoadingScreen /> );
