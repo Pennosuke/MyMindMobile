@@ -64,11 +64,11 @@ export default class TreatmentScreen extends Component {
   }
 
   async saveArchivementData(currentTime,document) {
-    const archivesnapshot = await db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).get()
+    const archivesnapshot = await db.collection('userArchivement').doc(global.userData.userName).get()
     if(!!archivesnapshot.data() && !!archivesnapshot.data()[document]) {
       const currentDate = currentTime.toDate().toLocaleDateString();
       if(this.getYear(currentDate) > this.getYear(global.userArchivement[document]['latestTimestamp']) || this.getMonth(currentDate) > this.getMonth(global.userArchivement[document]['latestTimestamp']) || this.getDay(currentDate) > this.getDay(global.userArchivement[document]['latestTimestamp'])) {
-        db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).set({
+        db.collection('userArchivement').doc(global.userData.userName).set({
           [document] : {
             latestTimestamp: currentTime,
             value: archivesnapshot.data()[document].value + 1,
@@ -76,7 +76,7 @@ export default class TreatmentScreen extends Component {
           }
         }, { merge: true })
       } else {
-        db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).set({
+        db.collection('userArchivement').doc(global.userData.userName).set({
           [document] : {
             latestTimestamp: currentTime,
             value: archivesnapshot.data()[document].value + 1,
@@ -84,7 +84,7 @@ export default class TreatmentScreen extends Component {
         }, { merge: true })
       }
     } else {
-      db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).set({
+      db.collection('userArchivement').doc(global.userData.userName).set({
         [document] : {
           latestTimestamp: currentTime,
           firstTimestamp: currentTime,

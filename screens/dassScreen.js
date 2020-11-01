@@ -59,11 +59,11 @@ export default class dassScreen extends Component {
   }
 
   async saveArchivementData(currentTime) {
-    const archivesnapshot = await db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).get()
+    const archivesnapshot = await db.collection('userArchivement').doc(global.userData.userName).get()
     if(!!archivesnapshot.data() && !!archivesnapshot.data()['แบบประเมิน']) {
       const currentDate = currentTime.toDate().toLocaleDateString();
       if(this.getYear(currentDate) > this.getYear(global.userArchivement['แบบประเมิน']['latestTimestamp']) || this.getMonth(currentDate) > this.getMonth(global.userArchivement['แบบประเมิน']['latestTimestamp']) || this.getDay(currentDate) > this.getDay(global.userArchivement['แบบประเมิน']['latestTimestamp'])) {
-        db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).set({
+        db.collection('userArchivement').doc(global.userData.userName).set({
           ['แบบประเมิน'] : {
             latestTimestamp: currentTime,
             value: archivesnapshot.data()['แบบประเมิน'].value + 1,

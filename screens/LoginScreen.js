@@ -61,6 +61,115 @@ export default class LoginScreen extends Component {
     }
   }
 
+  getDay(date) {
+    const splitDate = date.split('/')
+    return parseInt(splitDate[1], 10)
+  }
+  
+  getMonth(date) {
+    const splitDate = date.split('/')
+    return parseInt(splitDate[0], 10)
+  }
+  
+  getYear(date) {
+    const splitDate = date.split('/')
+    const moreSplitDate = splitDate[2].split(' ')
+    return parseInt(moreSplitDate[0], 10)
+  }
+
+  //บทนำแบบประเมิน
+  //แบบวัดสุขภาวะทางจิตใจ
+  //แบบวัดการมีสติ
+  //แบบสอบถามวัดภาวะสุขภาพจิต
+  //โปรแกรมที่_1_หายใจคลายเครียด
+  //ทบทวนโปรแกรมที่_1_หายใจคลายเครียด
+  //โปรแกรมที่_2_ละเอียดลออดูกาย
+  //ทบทวนโปรแกรมที่_2_ละเอียดลออดูกาย
+  //ทบทวนโปรแกรมที่_3_ตระหนักรู้ในอารมณ์
+  //ทบทวนโปรแกรมที่_3_ตระหนักรู้ในอารมณ์
+
+  Dbug() {
+    const colName = "ทบทวนโปรแกรมที่_4_ปรับความคิดพิชิตเศร้า";
+    const legitData = {};
+    
+    /*preset the data*/
+    db.collection(colName)
+    //.where("userName", "==", oldId)
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        //console.log(doc.id, " => ", doc.data());
+        //console.log('doc.id =>', doc.id)
+        const DocName = doc.id.split(' ')
+        const DataUsername = doc.data().userName
+        const DataTimestamp = doc.data().timestamp
+        //console.log('DataUsername =>', DataUsername)
+        //console.log('DataTimestamp =>', DataTimestamp)
+        const FormatTimestamp = DataTimestamp.toDate().toLocaleDateString()
+        if(!!legitData[DataUsername]) {
+          const FormatLatest = legitData[DataUsername].latestTimestamp.toDate().toLocaleDateString();
+          //console.log('FormatTimestamp =>', FormatTimestamp)
+          //console.log('FormatLatest =>', FormatLatest)
+          //console.log('this.getDay(FormatTimestamp) =>', this.getDay('10/17/2020'))
+          //console.log('this.getDay(FormatLatest) =>', this.getDay(FormatLatest))
+          if (this.getDay(FormatTimestamp) > this.getDay(FormatLatest)) {
+            legitData[DataUsername].latestTimestamp = DataTimestamp
+            legitData[DataUsername].totalDays++
+            legitData[DataUsername].value++
+          } else {
+            legitData[DataUsername].value++
+          }
+        } else {
+          legitData[DataUsername] = {
+            latestTimestamp: DataTimestamp,
+            totalDays: 1,
+            value: 1,
+          }
+        }
+        /*
+        var NewDocName = newId + ' ' + DocName[2] + ' ' + DocName[3];
+        var NewDocData = doc.data();
+        NewDocData['userName'] = newId;
+        console.log(doc.id, " => ", NewDocName);
+        db.collection(colName).doc(newId).set(NewDocData);
+        */
+      });
+    })
+    .catch(function(error) {
+      console.log("Error getting documents: ", error);
+    });
+    console.log('legitData', legitData);
+
+    /*rewrite the data*/
+    const targetCol = 'userArchivement';
+    db.collection(targetCol)
+    //.where("userName", "==", oldId)
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        //console.log(doc.id, " => ", doc.data());
+        const newData = doc.data()
+        const currentName = doc.data().userName
+        if(!!legitData[currentName]) {
+          console.log(doc.id, 'yes')
+          newData[colName] = {
+            firstTimestamp: doc.data()[colName].firstTimestamp,
+            latestTimestamp: legitData[currentName].latestTimestamp,
+            totalDays: legitData[currentName].totalDays,
+            value: legitData[currentName].value
+          }
+          console.log('targetCol =', targetCol, ': doc.id =', doc.id)
+          db.collection(targetCol).doc(doc.id).set(newData)
+          console.log('rewrite!')
+        } else {
+          console.log(doc.id, 'no')
+        }
+      });
+    })
+    .catch(function(error) {
+      console.log("Error getting documents: ", error);
+    });
+  }
   render() {
     if(this.state.isLoading){
       return(
@@ -71,6 +180,11 @@ export default class LoginScreen extends Component {
     }    
     return (
       <View style={styles.container}>
+        {/* <Button
+          color="#3740FE"
+          title="Dbug"
+          onPress={() => this.Dbug()}
+        /> */}
         <TextInput
           style={styles.inputStyle}
           placeholder="อีเมล"

@@ -55,7 +55,7 @@ export default class awarenessScreen extends Component {
       awarenessObj['mindfulness'] += elem.value.value;
     }
     //awarenessObj['timestamp'] = currentTime;
-    awarenessObj['userName'] = firebase.auth().currentUser.displayName;
+    awarenessObj['userName'] = global.userData.userName;
     awarenessObj['initTimestamp'] = initTimestamp;
     // console.log('awarenessObj', awarenessObj);
     /*-------------------------------*/
