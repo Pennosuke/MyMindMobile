@@ -300,6 +300,22 @@ export default class tabB extends Component {
             {this.renderProgram4Button()}
             {this.renderHomework4Button()}
           </View>
+          {/* <Text style={styles.title}>โปรแกรมเสริม</Text>
+          <View style={
+            {flex: 1,
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            paddingVertical: 20}}
+          >
+            <TouchableOpacity>
+              <View style={[styles.roundedButton, {backgroundColor: "#d59c2a"}]}>
+                <Text style={styles.buttonFont}>
+                  โปรแกรมพิเศษที่ 1
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View> */}
         </View>
       </ScrollView>
     );

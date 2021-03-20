@@ -159,6 +159,18 @@ export default class SignupScreen extends Component {
           db.collection('userArchivement').doc(this.state.userName).set({
             userName: this.state.userName
           })
+          db.collection('extraArchivement').doc(this.state.userName).set({
+            userName: this.state.userName
+          })
+          db.collection('overviewData').doc(this.state.userName).set({
+            userName: this.state.userName,
+            realName: this.state.realName,
+            phoneNumber: this.state.phoneNumber,
+            email: this.state.email,
+            sex: this.state.sex,
+            age: this.state.age,
+            education: this.state.education,
+          })
           // console.log('User registered successfully!');
           this.setState({
             realName: '',

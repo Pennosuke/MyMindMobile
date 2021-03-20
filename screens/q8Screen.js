@@ -82,25 +82,72 @@ export default class q8Screen extends Component {
     return parseInt(moreSplitDate[0], 10)
   }
 
-  async saveArchivementData(currentTime) {
-    const archivesnapshot = await db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).get()
+  renderResult(evaluationScore){
+    if(evaluationScore <= 4) {
+      return 'สุขภาพจิตดี'
+    } else if(evaluationScore <= 6) {
+      return 'ซึมเศร้าเล็กน้อย'
+    } else if(evaluationScore <= 10) {
+      return 'ซึมเศร้าปานกลาง'
+    } else if(evaluationScore <= 13) {
+      return 'ซึมเศร้าค่อนข้างมาก'
+    } else {
+      return 'ซึมเศร้าในระดับสูงมาก'
+    }
+  }
+
+  async saveOverviewData(dassObj, evaluationValue, evaluationTotalDays, currentTime) {
+    if(!!dassObj && !!evaluationValue && !!evaluationTotalDays && !!currentTime) {
+      console.log('init saveOverviewData!!!')
+      console.log('evaluationValue', evaluationValue)
+      console.log('evaluationTotalDays', evaluationTotalDays)
+      const overviewSnapshot = await db.collection('overviewData').doc(global.userData.userName).get()
+      var newOverviewData = overviewSnapshot.data()
+      newOverviewData['score'] = dassObj['depression']
+      newOverviewData['result'] = this.renderResult(dassObj['depression'])
+      newOverviewData['evaluationTotalDays'] = evaluationTotalDays
+      newOverviewData['evaluationValue'] = evaluationValue
+      newOverviewData['evaluationTimestamp'] = currentTime
+      console.log('newOverviewData', newOverviewData)
+      db.collection('overviewData').doc(global.userData.userName).set(newOverviewData)
+    }
+  }
+
+  async saveArchivementData(currentTime, dassObj) {
+    const archivesnapshot = await db.collection('userArchivement').doc(global.userData.userName).get()
+    var evaluationValue = 1
+    var evaluationTotalDays = 1
     if(!!archivesnapshot.data() && !!archivesnapshot.data()['แบบประเมิน']) {
       const currentDate = currentTime.toDate().toLocaleDateString();
       if(this.getYear(currentDate) > this.getYear(global.userArchivement['แบบประเมิน']['latestTimestamp']) || this.getMonth(currentDate) > this.getMonth(global.userArchivement['แบบประเมิน']['latestTimestamp']) || this.getDay(currentDate) > this.getDay(global.userArchivement['แบบประเมิน']['latestTimestamp'])) {
-        db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).set({
+        evaluationValue = archivesnapshot.data()['แบบประเมิน'].value + 1
+        evaluationTotalDays = archivesnapshot.data()['แบบประเมิน'].totalDays + 1
+        console.log('case 1')
+        console.log('evaluationValue', evaluationValue)
+        console.log('evaluationTotalDays', evaluationTotalDays)
+        db.collection('userArchivement').doc(global.userData.userName).set({
           ['แบบประเมิน'] : {
             latestTimestamp: currentTime,
             value: archivesnapshot.data()['แบบประเมิน'].value + 1,
             totalDays: archivesnapshot.data()['แบบประเมิน'].totalDays + 1
           }
-        }, { merge: true })
+        }, { merge: true }).then(
+          this.saveOverviewData(dassObj, evaluationValue, evaluationTotalDays, currentTime)
+        )
       } else {
+        evaluationValue = archivesnapshot.data()['แบบประเมิน'].value + 1
+        evaluationTotalDays = archivesnapshot.data()['แบบประเมิน'].totalDays
+        console.log('case 2')
+        console.log('evaluationValue', evaluationValue)
+        console.log('evaluationTotalDays', evaluationTotalDays)
         db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).set({
           ['แบบประเมิน'] : {
             latestTimestamp: currentTime,
             value: archivesnapshot.data()['แบบประเมิน'].value + 1,
           }
-        }, { merge: true })
+        }, { merge: true }).then(
+          this.saveOverviewData(dassObj, evaluationValue, evaluationTotalDays, currentTime)
+        )
       }
     } else {
       db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).set({
@@ -110,8 +157,15 @@ export default class q8Screen extends Component {
           value: 1,
           totalDays: 1
         }
-      }, { merge: true })
+      }, { merge: true }).then(
+        db.collection('userArchivement').doc(global.userData.userName).set({
+          ['userName'] : global.userData.userName
+        }, { merge: true })
+      ).then(
+        this.saveOverviewData(dassObj, evaluationValue, evaluationTotalDays, currentTime)
+      )
     }
+    
     const currentTimeAfter = firebase.firestore.Timestamp.fromDate(new Date());
     global.checkpointTime = currentTimeAfter.toDate().toLocaleDateString() + ' ' + currentTimeAfter.toDate().toLocaleTimeString();
     const archivesnapshotAfter = await db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).get()

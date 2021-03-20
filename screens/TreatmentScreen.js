@@ -63,25 +63,72 @@ export default class TreatmentScreen extends Component {
     return parseInt(moreSplitDate[0], 10)
   }
 
+  getProgramValue(programName) {
+    var programProp = programName.split('_')
+    if (programProp.length === 1) {
+      return 1
+    } else {
+      var value = 0
+      if (programProp[0] === 'ทบทวนโปรแกรมที่') {
+        value = value + 1
+      }
+      var programNo = parseInt(programProp[1])
+      value = value + (programNo * 10)
+      return value
+    }
+  }
+
+  async saveOverviewData(programName, programTotalDays, programValue, programTimestamp) {
+    if(!!programName && !!programTotalDays && !!programValue && !!programTimestamp) {
+      console.log('init saveOverviewData!!!')
+      const overviewSnapshot = await db.collection('overviewData').doc(global.userData.userName).get()
+      var newOverviewData = overviewSnapshot.data()
+      var oldProgramName = newOverviewData['programName']
+      console.log('programName', programName)
+      console.log('oldProgramName', oldProgramName)
+      console.log('this.getProgramValue(programName)', this.getProgramValue(programName))
+      console.log('this.getProgramValue(oldProgramName)', this.getProgramValue(oldProgramName))
+      if(this.getProgramValue(programName) >= this.getProgramValue(oldProgramName)) {
+        newOverviewData['programName'] = programName
+        newOverviewData['programTotalDays'] = programTotalDays
+        newOverviewData['programValue'] = programValue
+        newOverviewData['programTimestamp'] = programTimestamp
+        console.log('newOverviewData', newOverviewData)
+        db.collection('overviewData').doc(global.userData.userName).set(newOverviewData)
+      }
+    }
+  }
+
   async saveArchivementData(currentTime,document) {
     const archivesnapshot = await db.collection('userArchivement').doc(global.userData.userName).get()
+    var programValue = 1
+    var programTotalDays = 1
     if(!!archivesnapshot.data() && !!archivesnapshot.data()[document]) {
       const currentDate = currentTime.toDate().toLocaleDateString();
+      console.log('global.userArchivement[document]', global.userArchivement[document])
       if(this.getYear(currentDate) > this.getYear(global.userArchivement[document]['latestTimestamp']) || this.getMonth(currentDate) > this.getMonth(global.userArchivement[document]['latestTimestamp']) || this.getDay(currentDate) > this.getDay(global.userArchivement[document]['latestTimestamp'])) {
+        programValue = archivesnapshot.data()[document].value + 1
+        programTotalDays = archivesnapshot.data()[document].totalDays + 1
         db.collection('userArchivement').doc(global.userData.userName).set({
           [document] : {
             latestTimestamp: currentTime,
             value: archivesnapshot.data()[document].value + 1,
             totalDays: archivesnapshot.data()[document].totalDays + 1
           }
-        }, { merge: true })
+        }, { merge: true }).then(
+          this.saveOverviewData(document, programTotalDays, programValue, currentTime)
+        )
       } else {
+        programValue = archivesnapshot.data()[document].value + 1
+        programTotalDays = archivesnapshot.data()[document].totalDays
         db.collection('userArchivement').doc(global.userData.userName).set({
           [document] : {
             latestTimestamp: currentTime,
             value: archivesnapshot.data()[document].value + 1,
           }
-        }, { merge: true })
+        }, { merge: true }).then(
+          this.saveOverviewData(document, programTotalDays, programValue, currentTime)
+        )
       }
     } else {
       db.collection('userArchivement').doc(global.userData.userName).set({
@@ -91,7 +138,54 @@ export default class TreatmentScreen extends Component {
           value: 1,
           totalDays: 1
         }
-      }, { merge: true })
+      }, { merge: true }).then(
+        db.collection('userArchivement').doc(global.userData.userName).set({
+          ['userName'] : global.userData.userName
+        }, { merge: true })
+      ).then(
+        this.saveOverviewData(document, programTotalDays, programValue, currentTime)
+      )
+    }
+  }
+
+  async saveExtraArchivementData(currentTime,document) {
+    const archivesnapshot = await db.collection('extraArchivement').doc(global.userData.userName).get()
+    if(!!archivesnapshot.data() && !!archivesnapshot.data()[document]) {
+      const oldData = archivesnapshot.data()
+      const currentDate = currentTime.toDate().toLocaleDateString();
+      const oldDate = oldData[document]['latestTimestamp'].toDate().toLocaleDateString();
+      if(this.getYear(currentDate) > this.getYear(oldDate) || this.getMonth(currentDate) > this.getMonth(oldDate) || this.getDay(currentDate) > this.getDay(oldDate)) {
+        console.log('case 1')
+        db.collection('extraArchivement').doc(global.userData.userName).set({
+          [document] : {
+            latestTimestamp: currentTime,
+            value: oldData[document].value + 1,
+            totalDays: oldData[document].totalDays + 1
+          }
+        }, { merge: true })
+      } else {
+        console.log('case 2')
+        db.collection('extraArchivement').doc(global.userData.userName).set({
+          [document] : {
+            latestTimestamp: currentTime,
+            value: oldData[document].value + 1,
+          }
+        }, { merge: true })
+      }
+    } else {
+      console.log('case 3')
+      db.collection('extraArchivement').doc(global.userData.userName).set({
+        [document] : {
+          latestTimestamp: currentTime,
+          firstTimestamp: currentTime,
+          value: 1,
+          totalDays: 1
+        },
+      }, { merge: true }).then(
+        db.collection('extraArchivement').doc(global.userData.userName).set({
+          ['userName'] : global.userData.userName
+        }, { merge: true })
+      )
     }
   }
 
@@ -108,8 +202,13 @@ export default class TreatmentScreen extends Component {
     const DocDate = currentTime.toDate().toLocaleDateString().split('/');
     const newDocName = global.userData.userName + ' ' + DocDate[1] + '-' + DocDate[0] + '-' + DocDate[2] + ' ' + DocTime;
     // console.log('answersAsObj', answersAsObj);
-    db.collection(this.props.route.params.collection).doc(newDocName).set(answersAsObj)
-    this.saveArchivementData(currentTime,this.props.route.params.collection);
+    if(!!(this.props.route.params.isExtra)) {
+      db.collection('extraProgram').doc('answerData').collection(this.props.route.params.collection).doc(newDocName).set(answersAsObj)
+      this.saveExtraArchivementData(currentTime,this.props.route.params.collection);
+    } else {
+      db.collection(this.props.route.params.collection).doc(newDocName).set(answersAsObj)
+      this.saveArchivementData(currentTime,this.props.route.params.collection);
+    }
     this.props.navigation.navigate('Init');
   }
   

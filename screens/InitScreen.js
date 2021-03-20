@@ -20,6 +20,7 @@ export default class InitScreen extends Component {
           global.userData = {};
           global.userArchivement = {};
           global.checkpointTime = '';
+          global.extraProgram = []
 
           const datasnapshot = await db.collection('userData').where('userName', '==', firebase.auth().currentUser.displayName).get()
           const getUserData = datasnapshot.docs.map(doc => ({
@@ -56,9 +57,29 @@ export default class InitScreen extends Component {
           }
           const currentTime = firebase.firestore.Timestamp.fromDate(new Date());
           global.checkpointTime = currentTime.toDate().toLocaleDateString() + ' ' + currentTime.toDate().toLocaleTimeString();
+
+          const extraSnapshot = await db.collection('extraProgram').doc('archivement').collection('all').orderBy('programName').get()
+          if (extraSnapshot.docs.length > 0) {
+            var getActiveData = []
+            var i = 0
+            for(const doc of extraSnapshot.docs) {
+              if (doc.data().isActive) {
+                var docData = {
+                  key: i,
+                  programName: doc.data().programName,
+                  contents: doc.data().contents,
+                }
+                getActiveData.push(docData)
+                i = i + 1
+              }
+            }
+            global.extraProgram = getActiveData
+          }
+
           // console.log('init global.userData', global.userData);
           // console.log('init global.userArchivement', global.userArchivement);
           // console.log('init global.checkpointTime', global.checkpointTime);
+          // console.log('init global.extraProgram', global.extraProgram)
           this.props.navigation.replace('AppStackScreen', { screen: 'MUMyMind'});
         }
         else {
