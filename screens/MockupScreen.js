@@ -74,10 +74,10 @@ export default class TreatmentScreen extends Component {
     const currentTime = firebase.firestore.Timestamp.fromDate(new Date());
     answersAsObj['timestamp'] = currentTime;
     answersAsObj['userName'] = firebase.auth().currentUser.displayName;
-    console.log('answersAsObj', answersAsObj);
+    // console.log('answersAsObj', answersAsObj);
     // db.collection(this.props.route.params.collection).add(answersAsObj)
     // this.saveArchivementData(currentTime,this.props.route.params.collection);
-    this.props.navigation.navigate('MUMyMind');
+    this.props.navigation.navigate('MyMind');
   }
   
   renderSpecialButton(buttonText ,onPressEvent) {
@@ -139,52 +139,52 @@ export default class TreatmentScreen extends Component {
   }
 
   updateTextInputVal(val, targetId, currentAnswerIndex, needAnswer) {
-    console.log('val', val);
-    console.log('targetId', targetId);
-    console.log('currentAnswerIndex', currentAnswerIndex);
-    console.log('needAnswer', needAnswer);
+    // console.log('val', val);
+    // console.log('targetId', targetId);
+    // console.log('currentAnswerIndex', currentAnswerIndex);
+    // console.log('needAnswer', needAnswer);
     const state = this.state;
     const { currentStep } = this.state;
     state.answers[currentAnswerIndex].value[targetId].value = val;
     if(needAnswer) {
-      console.log('before', state.textInputHandlers[currentStep][targetId]);
-      console.log('!!(val.length)', !!(val.length));
+      // console.log('before', state.textInputHandlers[currentStep][targetId]);
+      // console.log('!!(val.length)', !!(val.length));
       state.textInputHandlers[currentStep][targetId] = !!(val.length);
-      console.log('after', state.textInputHandlers[currentStep][targetId]);
+      // console.log('after', state.textInputHandlers[currentStep][targetId]);
     }
     this.setState(state);
-    console.log(state);
+    // console.log(state);
   }
 
   updateOtherTextInputVal(val, targetId, currentAnswerIndex) {
-    console.log('val', val);
-    console.log('targetId', targetId);
-    console.log('currentAnswerIndex', currentAnswerIndex);
+    // console.log('val', val);
+    // console.log('targetId', targetId);
+    // console.log('currentAnswerIndex', currentAnswerIndex);
     const state = this.state;
     state.answers[currentAnswerIndex].value[targetId].otherValue = val;
     this.setState(state);
-    console.log(state);
+    // console.log(state);
   }
 
   updateEmotionRatingVal(val, targetId, currentAnswerIndex) {
-    console.log('val', val);
-    console.log('targetId', targetId);
-    console.log('currentAnswerIndex', currentAnswerIndex);
+    // console.log('val', val);
+    // console.log('targetId', targetId);
+    // console.log('currentAnswerIndex', currentAnswerIndex);
     const state = this.state;
     state.answers[currentAnswerIndex].value[targetId].value = val;
     this.setState(state);
-    console.log(state);
+    // console.log(state);
   }
 
   updatePickerInputVal(val, targetId, currentAnswerIndex) {
-    console.log('val', val);
-    console.log('targetId', targetId);
-    console.log('currentAnswerIndex', currentAnswerIndex);
+    // console.log('val', val);
+    // console.log('targetId', targetId);
+    // console.log('currentAnswerIndex', currentAnswerIndex);
     if(val !== '0') {
       const state = this.state;
       state.answers[currentAnswerIndex].value[targetId].value = val;
       this.setState(state);
-      console.log(state);
+      // console.log(state);
     }
   }
 
@@ -199,23 +199,23 @@ export default class TreatmentScreen extends Component {
   }
 
   updateSortingInputVal(val, targetId, currentAnswerIndex, expectedAnswer, score) {
-    console.log('val', val);
-    console.log('targetId', targetId);
-    console.log('currentAnswerIndex', currentAnswerIndex);
+    // console.log('val', val);
+    // console.log('targetId', targetId);
+    // console.log('currentAnswerIndex', currentAnswerIndex);
     if(val !== '0') {
       const state = this.state;
       state.answers[currentAnswerIndex].value.answers[targetId] = val;
       this.setState(state);
-      console.log('state.answers[currentAnswerIndex].value.answers', state.answers[currentAnswerIndex].value.answers);
-      console.log('expectedAnswer', expectedAnswer);
-      console.log('this.arraysEqual(state.answers[currentAnswerIndex].value.answers,expectedAnswer)', this.arraysEqual(state.answers[currentAnswerIndex].value.answers,expectedAnswer));
+      // console.log('state.answers[currentAnswerIndex].value.answers', state.answers[currentAnswerIndex].value.answers);
+      // console.log('expectedAnswer', expectedAnswer);
+      // console.log('this.arraysEqual(state.answers[currentAnswerIndex].value.answers,expectedAnswer)', this.arraysEqual(state.answers[currentAnswerIndex].value.answers,expectedAnswer));
       if(this.arraysEqual(state.answers[currentAnswerIndex].value.answers,expectedAnswer)) {
         state.answers[currentAnswerIndex].value.value = score;
         this.setState(state);
       } else {
         state.answers[currentAnswerIndex].value.value = 0;
       }
-      console.log(state);
+      // console.log(state);
     }
   }
 
@@ -233,7 +233,7 @@ export default class TreatmentScreen extends Component {
       });
       this.setState(state);
     }
-    console.log('state', state);
+    // console.log('state', state);
   }
 
   isThisEmotionSelected(emotionName, currentAnswerIndex) {
@@ -284,7 +284,7 @@ export default class TreatmentScreen extends Component {
       state.videoHandlers[currentAnswerIndex].value.playTime = 0;
       this.setState(state);
     }
-    console.log('state',state);
+    // console.log('state',state);
   };
 
   renderSelectionButton(data, index, isSelected, onPress) {
@@ -325,7 +325,7 @@ export default class TreatmentScreen extends Component {
         contentId : currentContentId,
         value: defaultValue
       });
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
@@ -335,7 +335,7 @@ export default class TreatmentScreen extends Component {
         value: defaultValue
       },currentAnswerIndex);
     }
-    console.log('this.state', this.state);
+    // console.log('this.state', this.state);
     return (
       <View style={styles.surveyContainer}>
         <View style={{ marginLeft: 10, marginRight: 10 }}>
@@ -401,7 +401,7 @@ export default class TreatmentScreen extends Component {
         contentId : currentContentId,
         value: defaultValue
       });
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.videoHandlers.findIndex(ans => ans.contentId === currentContentId);
@@ -465,7 +465,7 @@ export default class TreatmentScreen extends Component {
           value: 0
         }
       });
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
@@ -535,8 +535,8 @@ export default class TreatmentScreen extends Component {
     const currentContentId = survey[stepIndex].contentId;
     const defaultValue = [];
     for(const elem of questions) {
-      console.log('elem', elem);
-      console.log('elem.questionText', elem.questionText);
+      // console.log('elem', elem);
+      // console.log('elem.questionText', elem.questionText);
       defaultValue.push({
         questionText: elem.questionText,
         value: '0',
@@ -545,12 +545,12 @@ export default class TreatmentScreen extends Component {
     }
 
     if (!state.answers.find(ans => ans.contentId === currentContentId)) {
-      console.log('questions', questions);
+      // console.log('questions', questions);
       state.answers.push({
         contentId : currentContentId,
         value: defaultValue
       });
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
@@ -645,7 +645,7 @@ export default class TreatmentScreen extends Component {
         contentId : currentContentId,
         value: defaultValue
       });
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === answerIdRef);
@@ -722,7 +722,7 @@ export default class TreatmentScreen extends Component {
         contentId : currentContentId,
         value: defaultValue
       });
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
@@ -792,10 +792,10 @@ export default class TreatmentScreen extends Component {
         value: defaultValue
       });
       state.textInputHandlers[currentStep] = defaultHandlers;
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
-    console.log('this.state', this.state);
+    // console.log('this.state', this.state);
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === currentContentId);
     return (
       <View style={styles.surveyContainer}>
@@ -878,7 +878,7 @@ export default class TreatmentScreen extends Component {
       state.currentChoiceAfterGame[contentId] = val;
     }
     this.setState(state);
-    console.log('state', state);
+    // console.log('state', state);
   }
 
   isSelectedAfterGame(val, contentId) {
@@ -894,7 +894,7 @@ export default class TreatmentScreen extends Component {
     const state = this.state;
     const { currentStep, currentChoiceAfterGame } = this.state;
     const { contentId, contentText, extraText , choices } = survey[stepIndex];
-    console.log('extraText = ', extraText);
+    // console.log('extraText = ', extraText);
     const defaultValue = {
       otherChoiceValue: '',
       choices: []
@@ -906,8 +906,8 @@ export default class TreatmentScreen extends Component {
       });
       this.setState(state);
     }
-    console.log('choices', choices);
-    console.log('state',state);
+    // console.log('choices', choices);
+    // console.log('state',state);
     const currentAnswerIndex = state.answers.findIndex(ans => ans.contentId === contentId);
     return (
       <View style={styles.surveyContainer}>
@@ -1021,10 +1021,10 @@ export default class TreatmentScreen extends Component {
         contentId : answerIdRef,
         value: defaultValue
       });
-      console.log('state', state);
+      // console.log('state', state);
       this.setState(state);
     }
-    console.log('choices', choices);
+    // console.log('choices', choices);
     return (
       <View style={styles.surveyContainer}>
         <View style={{ marginLeft: 10, marginRight: 10 }}>
@@ -1120,26 +1120,26 @@ export default class TreatmentScreen extends Component {
   }
 
   updateTextInputValAfterGame(val, targetId, currentAnswerIndex, currentChoiceIndex, needAnswer) {
-    console.log('val', val);
-    console.log('targetId', targetId);
-    console.log('currentAnswerIndex', currentAnswerIndex);
-    console.log('needAnswer', needAnswer);
+    // console.log('val', val);
+    // console.log('targetId', targetId);
+    // console.log('currentAnswerIndex', currentAnswerIndex);
+    // console.log('needAnswer', needAnswer);
 
     const state = this.state;
     const { currentStep } = this.state;
     state.answers[currentAnswerIndex].value.choices[currentChoiceIndex].questions[targetId].value = val;
     
     if(needAnswer) {
-      console.log('before', state.textInputHandlers[currentStep][targetId]);
-      console.log('!!(val.length)', !!(val.length));
+      // console.log('before', state.textInputHandlers[currentStep][targetId]);
+      // console.log('!!(val.length)', !!(val.length));
 
       state.textInputHandlers[currentStep][targetId] = !!(val.length);
 
-      console.log('after', state.textInputHandlers[currentStep][targetId]);
+      // console.log('after', state.textInputHandlers[currentStep][targetId]);
     }
 
     this.setState(state);
-    console.log(state);
+    // console.log(state);
   }
 
   renderTextInputAfterGame(survey,stepIndex) {
@@ -1151,9 +1151,9 @@ export default class TreatmentScreen extends Component {
     const { questions } = survey[refContentIndex].choices[refChoiceIndex];
     const currentAnswerIndex = this.state.answers.findIndex(ans => ans.contentId === answerIdRef);
     const currentChoiceIndex = this.state.answers[currentAnswerIndex].value.choices.findIndex(choice => choice.choiceText === currentChoiceAfterGame[answerIdRef]);
-    console.log('currentAnswerIndex', currentAnswerIndex);
-    console.log('currentChoiceIndex', currentChoiceIndex);
-    console.log('this.state.answers[currentAnswerIndex].value.choices[currentChoiceIndex]', this.state.answers[currentAnswerIndex].value.choices[currentChoiceIndex])
+    // console.log('currentAnswerIndex', currentAnswerIndex);
+    // console.log('currentChoiceIndex', currentChoiceIndex);
+    // console.log('this.state.answers[currentAnswerIndex].value.choices[currentChoiceIndex]', this.state.answers[currentAnswerIndex].value.choices[currentChoiceIndex])
     const defaultHandlers = [];
     for (const question of questions) {
       defaultHandlers.push(!question.needAnswer);
@@ -1221,7 +1221,7 @@ export default class TreatmentScreen extends Component {
   renderGame(survey,stepIndex) {
     const { currentStep } = this.state;
     const { contentText } = survey[stepIndex];
-    console.log('state',this.state);
+    // console.log('state',this.state);
     return (
       <View style={styles.surveyContainer}>
         <View style={{ marginLeft: 10, marginRight: 10 }}>

@@ -42,13 +42,27 @@ export default class q8Screen extends Component {
     };
   }
 
+  renderResult(evaluationScore){
+    if(evaluationScore <= 4) {
+      return 'สุขภาพจิตดี'
+    } else if(evaluationScore <= 6) {
+      return 'ซึมเศร้าเล็กน้อย'
+    } else if(evaluationScore <= 10) {
+      return 'ซึมเศร้าปานกลาง'
+    } else if(evaluationScore <= 13) {
+      return 'ซึมเศร้าค่อนข้างมาก'
+    } else {
+      return 'ซึมเศร้าในระดับสูงมาก'
+    }
+  }
+
   async sendLineNotifyMessege(allowContact) {
     var data = "message=ทดสอบการแจ้งเตือนจาก app";
     var userDataMessege = `message=ผู้ใช้ ${global.userData.userName} (${global.userData.realName})`;
     var mentalResultMessege = this.props.route.params.score >= 14 ? `มีภาวะซึมเศร้าสูงมาก (${this.props.route.params.score} คะแนน)` : `มีภาวะซึมเศร้าค่อนข้างสูง (${this.props.route.params.score} คะแนน)`;
     var contactMessege = allowContact ? `ยินดีที่จะให้โทรไปที่เบอร์ ${global.userData.phoneNumber}` : "ยังไม่ยินดีที่จะให้โทรไป";
     var data = `${userDataMessege} ${mentalResultMessege} ${contactMessege}`;
-    // console.log('data',data)
+    console.log('LINEdata',data)
 
     var xhr = new XMLHttpRequest();
 
@@ -82,25 +96,11 @@ export default class q8Screen extends Component {
     return parseInt(moreSplitDate[0], 10)
   }
 
-  renderResult(evaluationScore){
-    if(evaluationScore <= 4) {
-      return 'สุขภาพจิตดี'
-    } else if(evaluationScore <= 6) {
-      return 'ซึมเศร้าเล็กน้อย'
-    } else if(evaluationScore <= 10) {
-      return 'ซึมเศร้าปานกลาง'
-    } else if(evaluationScore <= 13) {
-      return 'ซึมเศร้าค่อนข้างมาก'
-    } else {
-      return 'ซึมเศร้าในระดับสูงมาก'
-    }
-  }
-
   async saveOverviewData(dassObj, evaluationValue, evaluationTotalDays, currentTime) {
     if(!!dassObj && !!evaluationValue && !!evaluationTotalDays && !!currentTime) {
-      console.log('init saveOverviewData!!!')
-      console.log('evaluationValue', evaluationValue)
-      console.log('evaluationTotalDays', evaluationTotalDays)
+      // console.log('init saveOverviewData!!!')
+      // console.log('evaluationValue', evaluationValue)
+      // console.log('evaluationTotalDays', evaluationTotalDays)
       const overviewSnapshot = await db.collection('overviewData').doc(global.userData.userName).get()
       var newOverviewData = overviewSnapshot.data()
       newOverviewData['score'] = dassObj['depression']
@@ -108,7 +108,7 @@ export default class q8Screen extends Component {
       newOverviewData['evaluationTotalDays'] = evaluationTotalDays
       newOverviewData['evaluationValue'] = evaluationValue
       newOverviewData['evaluationTimestamp'] = currentTime
-      console.log('newOverviewData', newOverviewData)
+      // console.log('newOverviewData', newOverviewData)
       db.collection('overviewData').doc(global.userData.userName).set(newOverviewData)
     }
   }
@@ -122,9 +122,9 @@ export default class q8Screen extends Component {
       if(this.getYear(currentDate) > this.getYear(global.userArchivement['แบบประเมิน']['latestTimestamp']) || this.getMonth(currentDate) > this.getMonth(global.userArchivement['แบบประเมิน']['latestTimestamp']) || this.getDay(currentDate) > this.getDay(global.userArchivement['แบบประเมิน']['latestTimestamp'])) {
         evaluationValue = archivesnapshot.data()['แบบประเมิน'].value + 1
         evaluationTotalDays = archivesnapshot.data()['แบบประเมิน'].totalDays + 1
-        console.log('case 1')
-        console.log('evaluationValue', evaluationValue)
-        console.log('evaluationTotalDays', evaluationTotalDays)
+        // console.log('case 1')
+        // console.log('evaluationValue', evaluationValue)
+        // console.log('evaluationTotalDays', evaluationTotalDays)
         db.collection('userArchivement').doc(global.userData.userName).set({
           ['แบบประเมิน'] : {
             latestTimestamp: currentTime,
@@ -137,9 +137,9 @@ export default class q8Screen extends Component {
       } else {
         evaluationValue = archivesnapshot.data()['แบบประเมิน'].value + 1
         evaluationTotalDays = archivesnapshot.data()['แบบประเมิน'].totalDays
-        console.log('case 2')
-        console.log('evaluationValue', evaluationValue)
-        console.log('evaluationTotalDays', evaluationTotalDays)
+        // console.log('case 2')
+        // console.log('evaluationValue', evaluationValue)
+        // console.log('evaluationTotalDays', evaluationTotalDays)
         db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).set({
           ['แบบประเมิน'] : {
             latestTimestamp: currentTime,
@@ -225,11 +225,25 @@ export default class q8Screen extends Component {
     // console.log('dassObj', dassObj)
     // console.log('q8Obj', q8Obj)
     /*-------------------------------*/
+
+    var depressionResult = this.renderResult(this.props.route.params.score)
+    var depressionphoneNumber = q8Obj['contact'].value ? global.userData.phoneNumber : '-'
+    var depressionObj = {
+      userName: global.userData.userName,
+      realName: global.userData.realName,
+      timestamp: currentTime,
+      score: this.props.route.params.score,
+      result: depressionResult,
+      allowContact: q8Obj['contact'].value,
+      phoneNumber: depressionphoneNumber,
+    }
+
     db.collection('บทนำแบบประเมิน').doc(newDocName).set(prologueObj);
     db.collection('แบบวัดสุขภาวะทางจิตใจ').doc(newDocName).set(spwbObj);
     db.collection('แบบวัดการมีสติ').doc(newDocName).set(awarenessObj);
     db.collection('แบบสอบถามวัดภาวะสุขภาพจิต').doc(newDocName).set(dassObj);
     db.collection('แบบประเมินการฆ่าตัวตาย').doc(newDocName).set(q8Obj);
+    db.collection('depressionAlert').doc(newDocName).set(depressionObj)
     this.saveArchivementData(currentTime);
     this.sendLineNotifyMessege(q8Obj['contact'].value);
     this.props.navigation.replace('CompletedSurvey', { score :this.props.route.params.score });

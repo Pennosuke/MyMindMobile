@@ -225,7 +225,7 @@ export default class Survey extends Component {
       }
     }
     db.collection('แบบวัดสุขภาวะทางจิตใจ').doc('mockupINWZA007').collection('ALSOmockupINWZA007').add(mockupdata);
-    this.props.navigation.replace('MUMyMind');
+    this.props.navigation.replace('MyMind');
   }
 
   async showData() {

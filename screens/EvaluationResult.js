@@ -40,7 +40,7 @@ export default class EvaluationResult extends Component {
           <View style={{ flexGrow: 1, maxWidth: 100, marginTop: 10, marginBottom: 10 }}>
             <Button
               title={'กลับสู่หน้าหลัก'}
-              onPress={() => this.props.navigation.navigate('MUMyMind')}
+              onPress={() => this.props.navigation.navigate('MyMind')}
               color='#22459E'
             />
           </View>

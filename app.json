@@ -1,12 +1,12 @@
 {
   "expo": {
-    "name": "MUMyMindMobile",
-    "slug": "MUMyMindMobile",
+    "name": "MyMindMobile",
+    "slug": "MyMindMobile",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/MMM-icon.png",
+    "icon": "./assets/MM-icon.png",
     "splash": {
-      "image": "./assets/MMM-splash.png",
+      "image": "./assets/MM-splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },

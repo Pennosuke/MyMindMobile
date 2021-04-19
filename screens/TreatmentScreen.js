@@ -80,20 +80,20 @@ export default class TreatmentScreen extends Component {
 
   async saveOverviewData(programName, programTotalDays, programValue, programTimestamp) {
     if(!!programName && !!programTotalDays && !!programValue && !!programTimestamp) {
-      console.log('init saveOverviewData!!!')
+      // console.log('init saveOverviewData!!!')
       const overviewSnapshot = await db.collection('overviewData').doc(global.userData.userName).get()
       var newOverviewData = overviewSnapshot.data()
       var oldProgramName = newOverviewData['programName']
-      console.log('programName', programName)
-      console.log('oldProgramName', oldProgramName)
-      console.log('this.getProgramValue(programName)', this.getProgramValue(programName))
-      console.log('this.getProgramValue(oldProgramName)', this.getProgramValue(oldProgramName))
+      // console.log('programName', programName)
+      // console.log('oldProgramName', oldProgramName)
+      // console.log('this.getProgramValue(programName)', this.getProgramValue(programName))
+      // console.log('this.getProgramValue(oldProgramName)', this.getProgramValue(oldProgramName))
       if(this.getProgramValue(programName) >= this.getProgramValue(oldProgramName)) {
         newOverviewData['programName'] = programName
         newOverviewData['programTotalDays'] = programTotalDays
         newOverviewData['programValue'] = programValue
         newOverviewData['programTimestamp'] = programTimestamp
-        console.log('newOverviewData', newOverviewData)
+        // console.log('newOverviewData', newOverviewData)
         db.collection('overviewData').doc(global.userData.userName).set(newOverviewData)
       }
     }
@@ -105,7 +105,7 @@ export default class TreatmentScreen extends Component {
     var programTotalDays = 1
     if(!!archivesnapshot.data() && !!archivesnapshot.data()[document]) {
       const currentDate = currentTime.toDate().toLocaleDateString();
-      console.log('global.userArchivement[document]', global.userArchivement[document])
+      // console.log('global.userArchivement[document]', global.userArchivement[document])
       if(this.getYear(currentDate) > this.getYear(global.userArchivement[document]['latestTimestamp']) || this.getMonth(currentDate) > this.getMonth(global.userArchivement[document]['latestTimestamp']) || this.getDay(currentDate) > this.getDay(global.userArchivement[document]['latestTimestamp'])) {
         programValue = archivesnapshot.data()[document].value + 1
         programTotalDays = archivesnapshot.data()[document].totalDays + 1
@@ -155,7 +155,7 @@ export default class TreatmentScreen extends Component {
       const currentDate = currentTime.toDate().toLocaleDateString();
       const oldDate = oldData[document]['latestTimestamp'].toDate().toLocaleDateString();
       if(this.getYear(currentDate) > this.getYear(oldDate) || this.getMonth(currentDate) > this.getMonth(oldDate) || this.getDay(currentDate) > this.getDay(oldDate)) {
-        console.log('case 1')
+        // console.log('case 1')
         db.collection('extraArchivement').doc(global.userData.userName).set({
           [document] : {
             latestTimestamp: currentTime,
@@ -164,7 +164,7 @@ export default class TreatmentScreen extends Component {
           }
         }, { merge: true })
       } else {
-        console.log('case 2')
+        // console.log('case 2')
         db.collection('extraArchivement').doc(global.userData.userName).set({
           [document] : {
             latestTimestamp: currentTime,
@@ -173,7 +173,7 @@ export default class TreatmentScreen extends Component {
         }, { merge: true })
       }
     } else {
-      console.log('case 3')
+      // console.log('case 3')
       db.collection('extraArchivement').doc(global.userData.userName).set({
         [document] : {
           latestTimestamp: currentTime,

@@ -38,7 +38,7 @@ class AppStackScreen extends Component {
     return(
       <AppStack.Navigator>
         <AppStack.Screen
-          name="MUMyMind"
+          name="MyMind"
           component={HomeScreen}
           options={{
             headerLeft: null,

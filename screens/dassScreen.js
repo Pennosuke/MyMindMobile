@@ -74,9 +74,9 @@ export default class dassScreen extends Component {
 
   async saveOverviewData(dassObj, evaluationValue, evaluationTotalDays, currentTime) {
     if(!!dassObj && !!evaluationValue && !!evaluationTotalDays && !!currentTime) {
-      console.log('init saveOverviewData!!!')
-      console.log('evaluationValue', evaluationValue)
-      console.log('evaluationTotalDays', evaluationTotalDays)
+      // console.log('init saveOverviewData!!!')
+      // console.log('evaluationValue', evaluationValue)
+      // console.log('evaluationTotalDays', evaluationTotalDays)
       const overviewSnapshot = await db.collection('overviewData').doc(global.userData.userName).get()
       var newOverviewData = overviewSnapshot.data()
       newOverviewData['score'] = dassObj['depression']
@@ -84,7 +84,7 @@ export default class dassScreen extends Component {
       newOverviewData['evaluationTotalDays'] = evaluationTotalDays
       newOverviewData['evaluationValue'] = evaluationValue
       newOverviewData['evaluationTimestamp'] = currentTime
-      console.log('newOverviewData', newOverviewData)
+      // console.log('newOverviewData', newOverviewData)
       db.collection('overviewData').doc(global.userData.userName).set(newOverviewData)
     }
   }
@@ -98,9 +98,9 @@ export default class dassScreen extends Component {
       if(this.getYear(currentDate) > this.getYear(global.userArchivement['แบบประเมิน']['latestTimestamp']) || this.getMonth(currentDate) > this.getMonth(global.userArchivement['แบบประเมิน']['latestTimestamp']) || this.getDay(currentDate) > this.getDay(global.userArchivement['แบบประเมิน']['latestTimestamp'])) {
         evaluationValue = archivesnapshot.data()['แบบประเมิน'].value + 1
         evaluationTotalDays = archivesnapshot.data()['แบบประเมิน'].totalDays + 1
-        console.log('case 1')
-        console.log('evaluationValue', evaluationValue)
-        console.log('evaluationTotalDays', evaluationTotalDays)
+        // console.log('case 1')
+        // console.log('evaluationValue', evaluationValue)
+        // console.log('evaluationTotalDays', evaluationTotalDays)
         db.collection('userArchivement').doc(global.userData.userName).set({
           ['แบบประเมิน'] : {
             latestTimestamp: currentTime,
@@ -113,9 +113,9 @@ export default class dassScreen extends Component {
       } else {
         evaluationValue = archivesnapshot.data()['แบบประเมิน'].value + 1
         evaluationTotalDays = archivesnapshot.data()['แบบประเมิน'].totalDays
-        console.log('case 2')
-        console.log('evaluationValue', evaluationValue)
-        console.log('evaluationTotalDays', evaluationTotalDays)
+        // console.log('case 2')
+        // console.log('evaluationValue', evaluationValue)
+        // console.log('evaluationTotalDays', evaluationTotalDays)
         db.collection('userArchivement').doc(firebase.auth().currentUser.displayName).set({
           ['แบบประเมิน'] : {
             latestTimestamp: currentTime,

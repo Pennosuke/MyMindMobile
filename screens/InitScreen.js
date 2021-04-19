@@ -80,7 +80,7 @@ export default class InitScreen extends Component {
           // console.log('init global.userArchivement', global.userArchivement);
           // console.log('init global.checkpointTime', global.checkpointTime);
           // console.log('init global.extraProgram', global.extraProgram)
-          this.props.navigation.replace('AppStackScreen', { screen: 'MUMyMind'});
+          this.props.navigation.replace('AppStackScreen', { screen: 'MyMind'});
         }
         else {
           this.props.navigation.replace('Login');
@@ -92,7 +92,7 @@ export default class InitScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={{fontFamily: 'Kanit-Medium', fontSize: 48, color: '#008000'}}>MUMyMind</Text>
+        <Text style={{fontFamily: 'Kanit-Medium', fontSize: 48, color: '#008000'}}>MyMind</Text>
         <ActivityIndicator size="large"></ActivityIndicator>
       </View>
     );
